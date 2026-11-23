@@ -9,6 +9,7 @@ Live: https://mmbalbuenajr-hue.github.io/Portfolio/
 | Aequitas Law | https://mmbalbuenajr-hue.github.io/Portfolio/Aequitas/ |
 | Ottoline Booksellers | https://mmbalbuenajr-hue.github.io/Portfolio/Ottoline/ |
 | Ashline Freight | https://mmbalbuenajr-hue.github.io/Portfolio/Ashline/ |
+| AERIS ONE | https://mmbalbuenajr-hue.github.io/Portfolio/Aeris/ |
 
 ## Adding a project
 

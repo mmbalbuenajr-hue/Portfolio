@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AERIS ONE — The whole sky, in full resolution</title>
+<meta name="description" content="AERIS ONE is a 249 g camera drone with a 48 MP sensor, 4K/120 10-bit video, omnidirectional obstacle sensing and up to 34 minutes of flight. Reserve from $999.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* black & white, plus one accent: the amber of the propeller tips, used sparingly */
+  --accent: #f0a01e;
+  --ink: #ffffff; --muted: rgba(255,255,255,.62); --bg: #000000; --num: rgba(255,255,255,.09);
+  --line: rgba(255,255,255,.14); --pad: clamp(18px, 3.2vw, 46px);
+  --serif: "Instrument Serif", "Times New Roman", serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; }
+body { font-family: "Poppins", system-ui, sans-serif; color: var(--ink); background: var(--bg); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent); color: #000; }
+
+.eyebrow { display: flex; align-items: center; gap: 12px; font-size: 11.5px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+.eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--accent); }
+
+/* NAV */
+.nav { position: fixed; z-index: 30; top: 0; left: 0; right: 0; display: flex; align-items: center; padding: 20px var(--pad) 0; pointer-events: none; color: #fff; }
+.nav > * { pointer-events: auto; }
+.logo { display: flex; align-items: center; gap: 12px; margin-right: clamp(32px,6vw,90px); }
+.logo .mark { width: 30px; height: 30px; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.logo:hover .mark { transform: rotate(90deg); }
+.logo .word { font-weight: 600; font-size: 15px; letter-spacing: .32em; margin-right: -.32em; }
+.nav__links { display: flex; gap: clamp(22px,3.4vw,46px); font-size: 14px; font-weight: 400; color: rgba(255,255,255,.75); }
+.nav__links a { position: relative; transition: color .3s ease; }
+.nav__links a:hover { color: #fff; }
+.nav__links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
+.nav__links a:hover::after { transform: scaleX(1); }
+.nav__cta { margin-left: auto; font-weight: 500; font-size: 14px; padding: 11px 20px; border-radius: 999px; background: #fff; color: #000; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+.nav__cta:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1.5px var(--accent), 0 8px 30px rgba(255,255,255,.18); }
+
+/* REC BADGE */
+.badge { position: fixed; z-index: 30; right: var(--pad); bottom: 22px; display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.7); font-variant-numeric: tabular-nums; }
+.badge i { width: 7px; height: 7px; border-radius: 50%; background: #ff3b30; animation: blink 1.4s steps(2, jump-none) infinite; }
+.badge b { font-weight: 600; color: #fff; }
+@keyframes blink { 50% { opacity: .2; } }
+
+/* DRONE CANVAS */
+#drone { position: fixed; inset: 0; z-index: 20; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+#drone.ready { opacity: 1; }
+
+/* SECTIONS */
+section { position: relative; min-height: 100vh; height: 100vh; overflow: hidden; }
+
+/* HERO */
+.hero { height: 320vh; min-height: 0; overflow: visible; z-index: 3; background: #000; }
+.hero__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; color: #fff; }
+.hero__media { position: absolute; inset: 0; will-change: transform; }
+.hero__media { background: #000; }
+.hero__media canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* neutral black grade, only where type sits: a thin band under the nav and a floor for the title card.
+   The middle of the frame is untouched so the footage reads in its true colour. */
+.hero__grade { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 16%, rgba(0,0,0,0) 56%, rgba(0,0,0,.62) 100%); }
+.hero__card { position: absolute; left: var(--pad); bottom: clamp(92px, 13vh, 136px); z-index: 2; color: #fff; will-change: transform, opacity, filter; transform-origin: 0 100%; }
+.hero__kicker { display: flex; align-items: center; gap: 12px; font-size: 11.5px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.78); margin-bottom: 22px; opacity: 0; }
+.hero__kicker::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.18); }
+.loaded .hero__kicker { animation: fade 1s .25s ease forwards; }
+.hero h1 { font-weight: 500; font-size: clamp(42px, 5.6vw, 100px); line-height: .98; letter-spacing: -.045em; color: #fff; text-shadow: 0 4px 30px rgba(0,0,0,.3); }
+.hero h1 .line:nth-child(2) span { color: rgba(255,255,255,.72); }
+.hero h1 .line { display: block; overflow: hidden; padding-bottom: .08em; }
+.hero h1 .line span { display: inline-block; transform: translateY(110%); }
+.loaded .hero h1 .line span { animation: rise 1.1s cubic-bezier(.2,.8,.15,1) forwards; }
+.hero h1 .line:nth-child(2) span { animation-delay: .12s; }
+@keyframes rise { to { transform: translateY(0); } }
+.hero__side { position: absolute; right: var(--pad); bottom: clamp(92px, 13vh, 136px); width: min(290px,80vw); z-index: 2; opacity: 0; color: #fff; }
+.loaded .hero__side { animation: fade 1s .7s ease forwards; }
+.hero__sidewrap { position: absolute; inset: 0; pointer-events: none; z-index: 2; will-change: transform, opacity; }
+.hero__sidewrap > * { pointer-events: auto; }
+.hero__side p { font-size: clamp(14px,1.1vw,16.5px); line-height: 1.55; color: rgba(255,255,255,.82); font-weight: 400; text-shadow: 0 2px 16px rgba(0,0,0,.4); }
+.hero__side .join { margin-top: 26px; }
+@keyframes fade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.join { display: inline-flex; align-items: center; gap: 14px; margin-top: 40px; font-weight: 600; font-size: clamp(15px,1.4vw,19px); }
+.join i { width: 25px; height: 32px; border: 1.8px solid currentColor; border-radius: 10px; display: grid; place-items: center; transition: transform .35s ease, background .35s; }
+.join i svg { width: 9px; height: 9px; }
+.join:hover i { transform: translateX(4px); }
+
+/* scroll beats */
+.hero__beats { position: absolute; left: var(--pad); bottom: clamp(92px, 13vh, 136px); width: min(560px, 82vw); z-index: 2; pointer-events: none; }
+.beat { position: absolute; left: 0; bottom: 0; width: 100%; opacity: 0; will-change: transform, opacity; }
+.beat small { display: flex; align-items: center; gap: 14px; font-size: 11.5px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.75); margin-bottom: 18px; }
+.beat small::before { content: ""; width: 34px; height: 1.5px; background: var(--accent); }
+.beat h2 { font-weight: 500; font-size: clamp(36px, 4.6vw, 80px); line-height: 1; letter-spacing: -.045em; text-shadow: 0 4px 30px rgba(0,0,0,.3); }
+.beat h2 em { font-style: normal; color: rgba(255,255,255,.72); }
+.beat p { margin-top: 18px; max-width: 400px; font-size: clamp(14px,1.05vw,16px); line-height: 1.55; color: rgba(255,255,255,.8); text-shadow: 0 2px 16px rgba(0,0,0,.4); }
+
+/* frame counter + progress rail */
+/* flight HUD: chapter rail + live telemetry, synced to the footage */
+.hero__meta { position: absolute; right: var(--pad); top: 50%; transform: translateY(-50%); z-index: 2; width: 220px; color: #fff; opacity: 0; font-variant-numeric: tabular-nums; text-shadow: 0 1px 14px rgba(0,0,0,.55); }
+.chapters { list-style: none; }
+.chapters li { position: relative; display: flex; align-items: baseline; gap: 14px; padding: 12px 0 14px; font-size: 14px; font-weight: 500; letter-spacing: -.01em; color: rgba(255,255,255,.42); transition: color .5s ease; }
+.chapters li span { font-size: 10.5px; letter-spacing: .2em; color: rgba(255,255,255,.4); }
+.chapters li::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(255,255,255,.18); }
+.chapters li i { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: #fff; transform-origin: left; transform: scaleX(0); }
+.chapters li.on { color: #fff; }
+.chapters li.on span { color: rgba(255,255,255,.75); }
+.readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 22px; }
+.readout div { font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.readout b { display: block; margin-top: 6px; font-size: 19px; font-weight: 500; letter-spacing: -.02em; color: #fff; text-transform: none; }
+.readout b small { font-size: 11px; font-weight: 400; letter-spacing: 0; margin-left: 2px; color: rgba(255,255,255,.6); }
+.hero__cue { position: absolute; left: 50%; bottom: 4.5vh; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 11px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.8); opacity: 0; }
+.loaded .hero__cue { animation: fade 1s 1.2s ease forwards; }
+.hero__cue i { width: 1.5px; height: 38px; background: linear-gradient(#fff, transparent); transform-origin: top; animation: drip 1.8s ease-in-out infinite; }
+@keyframes drip { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+/* fade to black that hands the frame over to section 01 */
+.hero__fade { position: absolute; left: 0; right: 0; top: 0; height: 200%; z-index: 3; pointer-events: none; transform: translateY(50%);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.85) 34%, #000 50%, #000 100%); will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .hero__cue i { animation: none; } }
+
+/* ================= MOTION LAYER =================
+   One easing family (expo-out) everywhere so the page moves with one voice. */
+:root { --ease: cubic-bezier(.16, 1, .3, 1); interpolate-size: allow-keywords; }
+
+/* reveals: rise + de-blur instead of a plain fade */
+.reveal { filter: blur(8px); transition: opacity 1s ease, transform 1.2s var(--ease), filter 1.1s ease; }
+.in .reveal { filter: blur(0); }
+
+/* section titles: each line slides up out of its own mask */
+.title.split { opacity: 1; transform: none; filter: none; }
+.title .ln { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+.title .ln > span { display: inline-block; transform: translateY(108%) rotate(3deg); transform-origin: 0 100%; transition: transform 1.3s var(--ease) .1s; }
+.title .ln + .ln > span { transition-delay: .22s; }
+.in .title .ln > span { transform: none; }
+
+/* eyebrow hairlines draw outward from the label */
+section .eyebrow::before { transform: scaleX(0); transform-origin: right; transition: transform 1s var(--ease) .35s; }
+section .eyebrow::after { transform: scaleX(0); transform-origin: left; transition: transform 1s var(--ease) .35s; }
+section.in .eyebrow::before, section.in .eyebrow::after { transform: none; }
+
+/* spec tiles: amber tick draws in, tiles cascade */
+.tile::before { transform: scaleX(0); transform-origin: left; transition: transform .9s var(--ease); }
+.in .tile::before { transform: none; transition-delay: calc(.5s + var(--i, 0) * .08s); }
+.in .tile.reveal { transition-delay: calc(var(--i, 0) * .08s); }
+
+/* FAQ: questions cascade in, answers open smoothly */
+.faq__list details { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform 1s var(--ease); }
+.in .faq__list details { opacity: 1; transform: none; transition-delay: calc(.25s + var(--i, 0) * .07s); }
+.faq__list details::details-content { block-size: 0; overflow: hidden; transition: block-size .6s var(--ease), content-visibility .6s allow-discrete; }
+.faq__list details[open]::details-content { block-size: auto; }
+.faq__list summary { transition: color .3s ease, padding-left .5s var(--ease); }
+.faq__list summary:hover { padding-left: 8px; }
+
+/* footer wordmark wipes up from the floor */
+.wordmark { clip-path: inset(100% 0 0 0); transform: translateY(8%); transition: clip-path 1.6s var(--ease) .2s, transform 1.6s var(--ease) .2s; }
+.foot.in .wordmark { clip-path: inset(-10% 0 0 0); transform: none; }
+
+/* text roll on nav and footer links */
+.roll { display: inline-block; overflow: hidden; vertical-align: top; line-height: 1.3; height: 1.3em; }
+.roll > span { display: block; text-shadow: 0 1.3em currentColor; transition: transform .55s var(--ease); }
+a:hover > .roll > span, a:focus-visible > .roll > span { transform: translateY(-1.3em); }
+
+/* magnetic buttons use the independent translate property, so their own hover transforms still apply */
+.magnetic { transition: translate .7s var(--ease); }
+.magnetic.pull { transition: translate .18s ease-out; }
+
+/* nav tucks away while you scroll down, returns when you scroll up */
+.nav { transition: transform .7s var(--ease), opacity .5s ease; }
+.nav.tuck { transform: translateY(-140%); opacity: 0; }
+
+/* scroll progress hairline in the accent */
+.progress { position: fixed; z-index: 40; left: 0; top: 0; width: 100%; height: 2px; background: var(--accent); transform-origin: left; transform: scaleX(0); pointer-events: none; opacity: .9; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .in .reveal { filter: none; }
+  .title .ln > span, section .eyebrow::before, section .eyebrow::after, .tile::before, .faq__list details, .wordmark { transform: none !important; transition: none !important; opacity: 1; clip-path: none; }
+  .roll > span, .magnetic, .nav { transition: none; }
+}
+
+
+/* SHARED TYPE */
+.num { font-weight: 300; line-height: .8; letter-spacing: -.06em; font-size: clamp(110px,15vw,250px); color: var(--num); }
+.title { font-weight: 500; font-size: clamp(34px,3.9vw,66px); line-height: 1.02; letter-spacing: -.045em; }
+.title em { font-style: normal; color: rgba(255,255,255,.62); }
+.copy { margin-top: 24px; font-size: clamp(14px,1.05vw,16.5px); line-height: 1.62; color: var(--muted); max-width: 440px; }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s ease, transform 1.1s cubic-bezier(.2,.8,.15,1); }
+.in .reveal { opacity: 1; transform: none; }
+.in .reveal.d1 { transition-delay: .1s; }
+.in .reveal.d2 { transition-delay: .22s; }
+.in .reveal.d3 { transition-delay: .34s; }
+.in .reveal.d4 { transition-delay: .46s; }
+.btn { display: inline-flex; align-items: center; gap: 12px; padding: 15px 26px; border-radius: 999px; background: #fff; color: #000; font-weight: 500; font-size: 15px; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+.btn svg { width: 10px; height: 10px; transition: transform .35s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--accent), 0 12px 40px rgba(255,255,255,.2); }
+.btn:hover svg { transform: translateX(3px); }
+
+/* ANATOMY: exploded view, pinned */
+.anatomy { height: 270vh; min-height: 0; overflow: visible; background: #000; z-index: 2; }
+.anatomy__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #000; }
+/* the glow is pure black at its edges and fades in as the drone arrives, so there is no seam with the hero */
+.anatomy__glow { position: absolute; inset: 0; pointer-events: none; opacity: 0; will-change: opacity;
+  background: radial-gradient(60% 55% at 50% 52%, rgba(255,255,255,.085) 0%, rgba(255,255,255,.03) 45%, rgba(255,255,255,0) 72%); }
+/* sonar map: contour lines of a terrain lifted to their height and seen in perspective; very faint, faded to black at every edge */
+.topo { position: absolute; left: 0; top: 30%; width: 100%; height: 100%; opacity: .1; transform-origin: 50% 40%; animation: topoDrift 28s ease-in-out infinite alternate;
+  -webkit-mask-image: radial-gradient(ellipse 66% 52% at 50% 42%, #000 35%, transparent 100%), linear-gradient(180deg, #000 48%, transparent 68%); -webkit-mask-composite: source-in; mask-image: radial-gradient(ellipse 66% 52% at 50% 42%, #000 35%, transparent 100%), linear-gradient(180deg, #000 48%, transparent 68%); mask-composite: intersect; }  /* the stage ends at 70% of this box: black by then */
+.topo path { fill: none; stroke: #fff; stroke-width: 1; vector-effect: non-scaling-stroke; }
+@keyframes topoDrift { from { transform: scale(1) translateY(0); } to { transform: scale(1.05) translateY(-1.5%); } }
+@media (prefers-reduced-motion: reduce) { .topo { animation: none; } }
+.anatomy__head { position: absolute; left: 0; right: 0; top: 10vh; z-index: 1; text-align: center; padding: 0 20px; }
+.anatomy__head .eyebrow { justify-content: center; }
+.anatomy__head .eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--accent); }
+.anatomy__head .copy { margin: 18px auto 0; max-width: 460px; }
+.anatomy__hint { position: absolute; left: 50%; bottom: 5vh; transform: translateX(-50%); font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.45); white-space: nowrap; }
+.anatomy__list { display: none; }
+/* part labels live in a fixed layer above the 3D canvas; JS pins each one under its part */
+.plabels { position: fixed; inset: 0; z-index: 24; pointer-events: none; }
+.plines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.plines path { fill: none; stroke: rgba(255,255,255,.5); stroke-width: 1; }
+.plines .halo { fill: rgba(255,255,255,.14); }
+.plines .pt { fill: var(--accent); }
+.plines text { fill: #fff; font: 500 10px Poppins, sans-serif; letter-spacing: .1em; }
+.plabel { position: absolute; left: 0; top: 0; width: 196px; text-align: left; opacity: 0; will-change: transform, opacity; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.28); }
+.plabel small { display: block; font-size: 10px; font-weight: 500; letter-spacing: .24em; color: rgba(255,255,255,.5); margin-bottom: 6px; }
+.plabel b { display: block; font-size: 15px; font-weight: 500; letter-spacing: -.01em; color: #fff; }
+.plabel p { margin-top: 6px; font-size: 12px; line-height: 1.55; color: rgba(255,255,255,.62); }
+.plabel.l { text-align: right; }
+.plabel b, .plabel p, .plabel small { text-shadow: 0 1px 12px rgba(0,0,0,.9); }
+
+/* 01 CAMERA: pinned stage, a concave arc of stills rotating around the drone */
+.s1 { height: 100vh; min-height: 0; overflow: visible; background: #000; z-index: 2; }
+.cam__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  background: radial-gradient(55% 45% at 50% 40%, rgba(255,255,255,.05) 0%, rgba(255,255,255,0) 72%), #000; }  /* glow sits inside the frame: every edge is pure black, so no seam with the sections around it */
+.cam__stage { --arc-top: calc(9vh + 396px); }
+.cam__head { position: absolute; left: 0; right: 0; top: 9vh; z-index: 3; text-align: center; padding: 0 20px; }
+.cam__head .eyebrow { justify-content: center; }
+.cam__head .eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--accent); }
+.cam__title { text-wrap: balance; }
+.cam__sub { margin: 20px auto 0; max-width: 560px; font-size: clamp(14px, 1.1vw, 17px); line-height: 1.5; color: var(--muted); }
+.cam__sub b { color: #fff; font-weight: 600; }
+.glow { position: relative; display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; padding: 15px 30px; border-radius: 16px;
+  font-weight: 600; font-size: 16px; color: #fff; background: linear-gradient(180deg, #1d1d1f, #0b0b0c);
+  border: 1px solid rgba(255,255,255,.16); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 10px 30px rgba(0,0,0,.6); transition: transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s ease; }
+.glow::after { content: ""; position: absolute; left: 14%; right: 14%; bottom: -1px; height: 2px; border-radius: 2px; background: var(--accent);
+  box-shadow: 0 0 14px 2px rgba(240,160,30,.55), 0 0 40px 8px rgba(240,160,30,.16); }
+.glow:hover { transform: translateY(-2px); border-color: var(--accent); }
+.glow svg { width: 10px; height: 10px; }
+/* the arc: cards sit on the inside of a cylinder, so the outer ones lean in and look closer */
+.arc { position: absolute; left: 0; right: 0; top: var(--arc-top); height: 31vh; perspective: 820px; perspective-origin: 50% 10%; z-index: 1; cursor: grab; touch-action: pan-y; user-select: none; }
+.arc.drag { cursor: grabbing; }
+.arc__ring { position: absolute; left: 50%; top: 0; width: 0; height: 100%; transform-style: preserve-3d; }
+.card { position: absolute; left: calc(var(--cw) / -2); top: 0; width: var(--cw); height: 100%; margin: 0; border-radius: 18px; overflow: hidden; background: #111;
+  backface-visibility: hidden; box-shadow: 0 30px 60px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.08); will-change: transform, opacity; }
+.arc { --cw: clamp(200px, 16.5vw, 290px); }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.65) 100%); }
+.card figcaption { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 1; }
+.card figcaption b { display: block; font-size: 13.5px; font-weight: 500; color: #fff; }
+.card figcaption span { display: block; margin-top: 3px; font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.cam__foot { margin-top: 18px; display: flex; justify-content: center; gap: 14px; font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.5); }
+.cam__foot b { color: #fff; font-weight: 500; }
+/* prev / next under the centre card */
+.arc__nav { position: absolute; left: 50%; top: calc(var(--arc-top) + 31vh + 3.5vh); transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 14px; }
+.arc__btn { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: #fff;
+  background: linear-gradient(180deg, rgba(40,40,42,.85), rgba(10,10,11,.85)); border: 1px solid rgba(255,255,255,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 10px 26px rgba(0,0,0,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s ease, background .3s ease, opacity .3s ease; }
+.arc__btn svg { width: 14px; height: 14px; }
+.arc__btn:hover { transform: scale(1.08); border-color: var(--accent); background: linear-gradient(180deg, rgba(60,60,62,.9), rgba(16,16,17,.9)); }
+.arc__btn:active { transform: scale(.96); }
+.arc__btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.arc__btn:disabled { opacity: .3; cursor: default; transform: none; border-color: rgba(255,255,255,.18); }
+.arc__dots { display: flex; gap: 6px; padding: 0 6px; }
+.arc__dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.28); transition: width .35s cubic-bezier(.2,.8,.2,1), background .35s ease; }
+.arc__dots i.on { width: 20px; background: var(--accent); }
+/* video wall: 3×2 TV panels behind the header, showing the hovered (or centred) still */
+.wall { position: absolute; left: 2vw; right: 2vw; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 6px;
+  opacity: var(--wo, .28); transition: opacity .7s ease;
+  /* fades in at the top and out at the bottom (and softly at the sides) so the wall melts into the sections around it */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 72%, rgba(0,0,0,.88) 80%, rgba(0,0,0,.66) 87%, rgba(0,0,0,.4) 93%, rgba(0,0,0,.16) 97.5%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 72%, rgba(0,0,0,.88) 80%, rgba(0,0,0,.66) 87%, rgba(0,0,0,.4) 93%, rgba(0,0,0,.16) 97.5%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect; }
+.wall i { position: relative; overflow: hidden; border-radius: 5px; background: #070707; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.wall b { position: absolute; inset: 0; background-repeat: no-repeat; }
+.wall b.flick { animation: flick .42s steps(5, end); }
+@keyframes flick { 0% { opacity: .15; filter: brightness(2.4) contrast(1.4); } 40% { opacity: .9; filter: brightness(1.5); } 60% { opacity: .4; } 100% { opacity: 1; filter: none; } }
+.wall i::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,.28) 0 1px, rgba(0,0,0,0) 1px 3px),
+              linear-gradient(125deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,0) 32%),
+              radial-gradient(120% 120% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+.cam__head { text-shadow: 0 2px 30px rgba(0,0,0,.85); }
+.cam__head::before { content: ""; position: absolute; left: 50%; top: -4vh; width: min(900px, 90vw); height: calc(100% + 8vh); transform: translateX(-50%); z-index: -1;
+  background: radial-gradient(closest-side, rgba(0,0,0,.72), rgba(0,0,0,0)); pointer-events: none; }
+/* card hover: lift, grow, outline glow, slow zoom; the rest of the arc dims */
+.card { transition: translate .55s cubic-bezier(.2,.8,.2,1), scale .55s cubic-bezier(.2,.8,.2,1), filter .4s ease, box-shadow .45s ease; }
+.card img { transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+.card figcaption { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.card:hover { translate: 0 -18px; scale: 1.05; box-shadow: 0 46px 90px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.55), 0 0 46px rgba(255,255,255,.14); }
+.card:hover img { transform: scale(1.09); }
+.card:hover figcaption { transform: translateY(-6px); }
+.arc:has(.card:hover) .card:not(:hover) { filter: brightness(.48) saturate(.75); }
+.arc.drag .card { transition: none; }
+@media (prefers-reduced-motion: reduce) { .card, .card img, .card figcaption { transition: none; } .wall b.flick { animation: none; } }
+
+/* 02 FLIGHT: pinned, four feature steps; the drone acts each one out in white line-work */
+.s2 { height: 460vh; min-height: 0; overflow: visible; background: #000; z-index: 3; }
+.fl__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  background: radial-gradient(70% 70% at 72% 52%, #141414 0%, #000 58%); }
+.fl__head { position: absolute; left: var(--pad); top: 13vh; width: min(460px, 36vw); }
+.fl__head .title { font-size: clamp(30px, 3vw, 50px); }
+.fl__steps { position: absolute; left: var(--pad); top: 41vh; width: min(440px, 34vw); height: 40vh; }
+.fstep { position: absolute; inset: 0; opacity: 0; transform: translateY(26px); will-change: opacity, transform; }
+.fstep .n { display: block; font-size: 13px; font-weight: 500; letter-spacing: .18em; color: var(--muted); }
+.fstep h3 { margin-top: 14px; font-weight: 500; font-size: clamp(26px, 2.4vw, 40px); line-height: 1.05; letter-spacing: -.035em; }
+.fstep p { margin-top: 14px; font-size: clamp(14px, 1.05vw, 16.5px); line-height: 1.6; color: var(--muted); max-width: 420px; }
+.fstep .stat { display: inline-flex; gap: 10px; align-items: baseline; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.fstep .stat b { font-size: 20px; letter-spacing: -.02em; text-transform: none; color: #fff; font-weight: 500; }
+.fl__nav { position: absolute; left: var(--pad); bottom: 7vh; display: flex; gap: 10px; list-style: none; }
+.fl__nav li { width: clamp(46px, 5vw, 76px); }
+.fl__nav i { display: block; height: 2px; background: rgba(255,255,255,.18); overflow: hidden; border-radius: 2px; }
+.fl__nav i b { display: block; height: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+.fl__nav span { display: block; margin-top: 10px; font-size: 10px; font-weight: 500; letter-spacing: .18em; color: rgba(255,255,255,.4); transition: color .4s ease; }
+.fl__nav li.on span { color: #fff; }
+.fxtag { position: fixed; left: 0; top: 0; z-index: 24; pointer-events: none; opacity: 0; display: flex; align-items: center; gap: 10px;
+  font-size: 10.5px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: #fff; white-space: nowrap; text-shadow: 0 1px 10px rgba(0,0,0,.9); will-change: transform, opacity; }
+.fxtag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255,255,255,.16); }
+.fxtag b { font-weight: 600; letter-spacing: .06em; }
+
+/* 03 SPECS */
+.s3 { background: #000; z-index: 1; }
+.s3 .text { position: absolute; left: 0; right: 0; top: 14vh; padding: 0 20px; text-align: center; }
+.s3 .text .eyebrow { justify-content: center; }
+.s3 .text .eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--accent); }
+.s3 .text .copy { margin: 18px auto 0; max-width: 560px; }
+.tiles { position: absolute; left: var(--pad); right: var(--pad); bottom: 13vh; display: grid; grid-template-columns: repeat(6, 1fr); }
+.tile { position: relative; padding: 24px 18px 6px 0; border-top: 1px solid var(--line); }
+.tile::before { content: ""; position: absolute; top: -1px; left: 0; width: 18px; height: 1px; background: var(--accent); }
+.tile:not(:first-child)::before { left: 22px; }
+.tile:not(:first-child) { padding-left: 22px; border-left: 1px solid var(--line); }
+.tile strong { display: block; font-weight: 500; font-size: clamp(30px, 3.3vw, 58px); line-height: 1; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.tile strong small { font-size: .38em; letter-spacing: -.01em; margin-left: 4px; color: var(--muted); font-weight: 400; }
+.tile span { display: block; margin-top: 12px; font-size: 10.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+
+/* 04 FAQ */
+.faq { min-height: 100vh; height: auto; overflow: visible; background: #000; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 6vw; padding: 18vh var(--pad) 14vh; align-items: start; border-top: 1px solid var(--line); }
+.faq__list details { border-top: 1px solid var(--line); }
+.faq__list details:last-child { border-bottom: 1px solid var(--line); }
+.faq__list summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 0; font-size: clamp(17px, 1.4vw, 21px); font-weight: 500; letter-spacing: -.02em; }
+.faq__list summary::-webkit-details-marker { display: none; }
+.faq__list summary::after { content: ""; flex: 0 0 auto; width: 13px; height: 13px; background:
+  linear-gradient(#fff,#fff) center/100% 1.5px no-repeat, linear-gradient(#fff,#fff) center/1.5px 100% no-repeat; transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.faq__list details[open] summary::after { transform: rotate(45deg); background: linear-gradient(var(--accent),var(--accent)) center/100% 1.5px no-repeat, linear-gradient(var(--accent),var(--accent)) center/1.5px 100% no-repeat; }
+.faq__list summary:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 4px; }
+.faq__list p { padding: 0 48px 26px 0; font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 620px; }
+
+/* RESERVE (footer) */
+.foot { background: #000; height: 100vh; z-index: 1; border-top: 1px solid var(--line); }
+.foot .cta { position: absolute; left: 50%; top: 13vh; transform: translateX(-50%); width: min(720px, 90vw); text-align: center; display: flex; flex-direction: column; align-items: center; }
+.foot .cta .eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--accent); }
+.foot .cta .copy { margin: 20px auto 30px; text-align: center; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.reserve { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: min(560px, 100%); }
+.reserve input { flex: 1 1 240px; min-width: 0; padding: 15px 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.04); color: #fff; font: inherit; font-size: 15px; outline: none; transition: border-color .3s ease, background .3s ease; }
+.reserve input::placeholder { color: rgba(255,255,255,.4); }
+.reserve input:focus { border-color: var(--accent); background: rgba(255,255,255,.08); }
+.reserve input[aria-invalid="true"] { border-color: #ff6b5e; }
+.reserve .btn { border: 0; cursor: pointer; font-family: inherit; }
+.reserve__note { flex-basis: 100%; margin-top: 8px; font-size: 12.5px; color: rgba(255,255,255,.45); }
+.reserve.done input, .reserve.done .btn { display: none; }
+.reserve.done .reserve__note { font-size: 16px; color: #fff; }
+.foot .cols { position: absolute; right: var(--pad); bottom: calc(15vw + 40px); display: flex; gap: clamp(28px,5vw,72px); font-size: 14px; }
+.foot .cols p { font-size: 11px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 12px; }
+.foot .cols a { display: block; line-height: 2; color: var(--muted); transition: color .3s ease; }
+.foot .cols a:hover { color: #fff; }
+.foot .legal { position: absolute; left: var(--pad); bottom: calc(15vw + 40px); max-width: 340px; font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.8; }
+.foot .legal a:hover { color: #fff; }
+.wordmark { position: absolute; left: 0; right: 0; bottom: -2.2vw; text-align: center; font-weight: 600; font-size: 21vw; line-height: .8; letter-spacing: -.02em; color: #fff; pointer-events: none; user-select: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, rgba(0,0,0,.15) 100%); mask-image: linear-gradient(180deg, #000 30%, rgba(0,0,0,.15) 100%); }
+
+/* LOADER */
+.loader { position: fixed; inset: 0; z-index: 50; background: #000; color: #fff; display: grid; place-items: center; align-content: center; gap: 18px; transition: opacity .8s ease, visibility .8s; }
+.loader p { font-size: 11px; font-weight: 500; letter-spacing: .5em; margin-right: -.5em; opacity: .7; }
+.loader.done { opacity: 0; visibility: hidden; }
+.loader svg { width: 44px; height: 44px; animation: spin 2.4s cubic-bezier(.6,0,.4,1) infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* MOBILE */
+@media (max-width: 760px) {
+  .nav__links { display: none; }
+  .hero { height: 280vh; }
+  .hero__card { right: 20px; left: 20px; bottom: 36vh; }
+  .hero h1 { font-size: clamp(38px, 11vw, 58px); }
+  .hero__meta { display: none; }
+  .hero__beats { left: 20px; bottom: 13vh; }
+  .hero__cue { display: none; }
+  .hero__side { left: 20px; right: 20px; width: auto; bottom: 11vh; }
+  .logo .word { font-size: 13px; }
+  .anatomy { height: 250vh; }
+  .anatomy__head { left: 18px; right: 18px; top: 11vh; padding: 0; }
+  .anatomy__head .copy { display: none; }
+  .plabel { display: none; }
+  .anatomy__hint { display: none; }
+  .anatomy__list { display: grid; position: absolute; left: 18px; right: 18px; bottom: 6vh; list-style: none; gap: 0; }
+  .anatomy__list li { display: grid; grid-template-columns: 26px 1fr; gap: 2px 8px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); opacity: 0; transition: opacity .5s ease; }
+  .anatomy__list li.on { opacity: 1; }
+  .anatomy__list li span { grid-row: span 2; font-size: 10px; letter-spacing: .1em; padding-top: 2px; }
+  .anatomy__list li b { color: #fff; font-weight: 500; font-size: 13px; }
+  .badge { display: none; }
+  .nav__cta { padding: 9px 16px; font-size: 13px; }
+  .s1 { height: 100vh; }
+  .cam__stage { --arc-top: 51vh; }
+  .cam__head { top: 10vh; }
+  .arc { height: 27vh; --cw: 150px; perspective: 560px; }
+  .arc__nav { top: calc(var(--arc-top) + 27vh + 3vh); }
+  .cam__foot { flex-direction: column; gap: 4px; }
+  .wall { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); }
+  .wall i:nth-child(n+9) { display: none; }
+  .s1 .text { left: 18px; right: 18px; width: auto; top: auto; bottom: 7vh; }
+  .s1 .copy { display: none; }
+  .shot figcaption span { display: none; }
+  .shot figcaption b { font-size: 19px; }
+  .specs-list { margin-top: 20px; }
+  .specs-list div { padding: 10px 0; font-size: 13px; }
+  .s2 { height: 420vh; }
+  .fl__head { left: 18px; right: 18px; width: auto; top: 10vh; }
+  .fl__head .title { font-size: 26px; }
+  .fl__steps { left: 18px; right: 18px; width: auto; top: auto; bottom: 12vh; height: 28vh; }
+  .fstep h3 { font-size: 24px; margin-top: 8px; }
+  .fstep p { font-size: 13.5px; margin-top: 8px; }
+  .fstep .stat { margin-top: 12px; padding-top: 10px; }
+  .fl__nav { left: 18px; bottom: 5vh; }
+  .s3 .text { left: 18px; right: 18px; top: 11vh; padding: 0; }
+  .tiles { left: 18px; right: 18px; bottom: 8vh; grid-template-columns: repeat(2, 1fr); }
+  .tile, .tile:not(:first-child) { padding: 16px 12px 16px 0; border-left: 0; }
+  .tile:nth-child(2n) { padding-left: 14px; border-left: 1px solid var(--line); }
+  .tile:not(:first-child)::before { left: 0; }
+  .tile:nth-child(2n)::before { left: 14px; }
+  .tile strong { font-size: 32px; }
+  .tile span { font-size: 10px; margin-top: 8px; }
+  .foot .cta { top: 11vh; }
+  .foot .cols { left: 18px; right: 18px; bottom: calc(26vw + 96px); justify-content: space-between; gap: 12px; font-size: 13px; }
+  .foot .cols a { line-height: 1.8; }
+  .foot .legal { left: 18px; right: 18px; max-width: none; bottom: calc(26vw + 18px); font-size: 11px; line-height: 1.6; }
+  .wordmark { font-size: 27vw; bottom: -3vw; }
+  .faq { grid-template-columns: 1fr; gap: 28px; padding: 13vh 18px 10vh; }
+  .faq__list summary { padding: 20px 0; font-size: 16px; }
+  .faq__list p { padding-right: 0; font-size: 14px; }
+  .reserve .btn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <svg class="mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M10.8 10.8l10.4 10.4M21.2 10.8L10.8 21.2"/><circle cx="7.4" cy="7.4" r="4.4"/><circle cx="24.6" cy="7.4" r="4.4"/><circle cx="7.4" cy="24.6" r="4.4"/><circle cx="24.6" cy="24.6" r="4.4"/><rect x="13" y="13" width="6" height="6" rx="1.6" fill="var(--accent)" stroke="none" transform="rotate(45 16 16)"/></svg>
+  <p>AERIS</p>
+</div>
+
+<nav class="nav">
+  <a class="logo" href="#top" aria-label="AERIS home"><svg class="mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M10.8 10.8l10.4 10.4M21.2 10.8L10.8 21.2"/><circle cx="7.4" cy="7.4" r="4.4"/><circle cx="24.6" cy="7.4" r="4.4"/><circle cx="7.4" cy="24.6" r="4.4"/><circle cx="24.6" cy="24.6" r="4.4"/><rect x="13" y="13" width="6" height="6" rx="1.6" fill="var(--accent)" stroke="none" transform="rotate(45 16 16)"/></svg><span class="word">AERIS</span></a>
+  <div class="nav__links"><a href="#camera">Camera</a><a href="#flight">Flight</a><a href="#specs">Specs</a><a href="#faq">FAQ</a></div>
+  <a class="nav__cta" href="#reserve">Reserve</a>
+</nav>
+
+<canvas id="drone"></canvas>
+
+<main>
+  <section class="hero" id="top" data-theme="dark">
+    <div class="hero__stage">
+      <div class="hero__media" id="heroMedia">
+        <canvas id="heroCanvas" role="img" aria-label="Aerial footage diving into a river canyon, played frame by frame as you scroll"></canvas>
+      </div>
+      <div class="hero__grade" aria-hidden="true"></div>
+      <div class="hero__card" id="heroTitle">
+        <p class="hero__kicker">Introducing AERIS ONE</p>
+        <h1><span class="line"><span>The whole sky,</span></span><span class="line"><span>in full resolution.</span></span></h1>
+      </div>
+      <div class="hero__sidewrap" id="heroSide">
+      <div class="hero__side">
+        <p>A 249 g camera drone with a 48 MP sensor, 4K/120 video and a 3-axis gimbal that holds the horizon through every turn. From $999.</p>
+        <a class="join" href="#reserve"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 1l4 4-4 4"/></svg></i>Reserve yours</a>
+      </div>
+      </div>
+      <div class="hero__beats" aria-live="off">
+        <div class="beat" data-in=".26" data-out=".5">
+          <small>4K/120 · 48 MP</small>
+          <h2>Every frame,<br><em>razor sharp.</em></h2>
+          <p>4K at up to 120 fps in 10-bit colour, from a 48 MP sensor. Scroll to play the flight back, frame by frame.</p>
+        </div>
+        <div class="beat" data-in=".54" data-out=".8">
+          <small>Terrain follow</small>
+          <h2>Low, fast,<br><em>perfectly level.</em></h2>
+          <p>Terrain follow holds a set height over moving water at 60 km/h while the gimbal keeps the horizon level.</p>
+        </div>
+      </div>
+      <div class="hero__meta" id="heroMeta" aria-hidden="true">
+        <ol class="chapters" id="chapters">
+          <li data-a="0" data-b=".24"><span>01</span>Descent<i></i></li>
+          <li data-a=".24" data-b=".6"><span>02</span>Canyon<i></i></li>
+          <li data-a=".6" data-b="1"><span>03</span>River run<i></i></li>
+        </ol>
+        <div class="readout">
+          <div>Alt<b><span id="hudAlt">64</span><small>m</small></b></div>
+          <div>Speed<b><span id="hudSpd">0</span><small>km/h</small></b></div>
+          <div>Dist<b><span id="hudDist">0</span><small>m</small></b></div>
+        </div>
+      </div>
+      <div class="hero__cue" id="heroCue" aria-hidden="true">Scroll to fly<i></i></div>
+      <div class="hero__fade" id="heroFade" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="anatomy" id="anatomy" data-theme="dark" aria-label="Exploded view of AERIS ONE">
+    <div class="anatomy__stage">
+      <div class="anatomy__glow" id="anatomyGlow" aria-hidden="true"><svg class="topo" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><path d="M131 856L169 848L180 845L181 841L181 820L177 810L169 800L162 793L151 786L137 779L122 774L112 772L101 771L89 773L81 777L74 781L66 790L63 796L60 807L60 817L64 834L69 842L76 848L82 852L92 857L103 858L131 856M815 869L797 871L773 870L749 867L713 862L695 860L611 861L570 859L529 853L458 840L414 833L374 829L322 827L300 823L247 806L227 797L188 765L148 727L131 715L104 699L98 693L95 688L92 679L92 664L95 642L99 620L111 584L129 542L172 455L198 405L215 377L244 336L247 329L253 309L260 296L280 265L282 264L285 262L318 260L349 258L368 258L383 259L394 259L405 260L416 263L424 267L427 270L432 281L436 283L443 285L450 285L474 285L553 281L639 275L663 274L686 275L697 277L709 279L716 283L738 295L751 299L758 301L770 303L782 304L790 304L802 304L814 302L826 300L836 298L854 292L876 281L883 279L895 275L910 272L940 267L963 264L978 263L989 262L1001 262L1012 263L1024 265L1032 267L1055 279L1072 286L1089 291L1114 296L1124 299L1130 303L1147 316L1159 322L1174 329L1185 333L1194 335L1208 338L1221 340L1238 342L1250 343L1263 342L1271 342L1297 337L1309 337L1318 337L1327 339L1333 341L1341 344L1347 350L1350 355L1351 360L1351 373L1352 377L1355 382L1363 391L1389 414L1402 428L1417 447L1433 472L1454 509L1476 556L1491 591L1497 615L1498 626L1496 637L1493 642L1490 645L1486 647L1481 648L1470 647L1438 639L1424 637L1408 636L1398 636L1383 639L1374 642L1370 645L1367 649L1365 656L1368 662L1372 664L1376 667L1386 671L1398 674L1409 675L1465 682L1476 685L1482 688L1486 690L1491 696L1495 705L1496 718L1491 730L1483 739L1472 747L1458 753L1443 757L1416 761L1328 766L1310 764L1298 761L1285 756L1242 736L1216 728L1198 724L1187 723L1171 724L1160 726L1145 730L1135 735L1125 741L1116 749L1108 758L1102 768L1098 781L1092 806L1088 815L1078 825L1065 833L1051 838L1034 843L1005 849L982 853L940 857L869 861L815 869M1305 896L1287 898L1268 898L1249 895L1230 890L1215 884L1203 876L1191 865L1186 858L1183 851L1183 840L1187 833L1195 826L1206 819L1222 812L1238 808L1254 805L1266 804L1277 805L1289 806L1302 810L1316 816L1326 822L1335 829L1344 840L1349 851L1350 858L1348 869L1344 876L1336 884L1327 889L1316 893L1305 896M224 926L186 926L155 922L145 918L140 915L139 911L142 907L147 903L158 899L173 897L256 887L268 887L273 888L280 891L284 899L282 907L276 915L270 918L258 922L243 925L224 926M936 797L913 798L896 796L878 791L850 779L831 773L814 770L797 768L780 769L763 772L753 776L739 786L728 792L709 796L687 799L663 798L624 791L606 789L537 788L497 786L463 782L436 777L414 771L372 758L351 754L329 752L283 755L266 753L251 748L243 743L238 739L234 734L232 728L232 718L237 706L253 685L256 679L258 670L256 665L249 656L240 648L224 637L182 611L171 601L164 594L157 581L154 568L154 553L158 536L171 499L182 464L188 449L198 431L214 411L226 399L237 390L253 378L267 370L281 362L294 356L308 351L323 347L351 340L378 335L412 329L425 328L442 326L500 322L574 319L648 317L737 316L770 315L790 313L806 312L866 303L882 301L906 299L961 297L977 295L1000 291L1008 291L1012 291L1020 292L1024 294L1044 305L1056 310L1066 314L1100 323L1116 329L1127 334L1140 341L1173 361L1209 379L1239 391L1305 415L1321 421L1338 429L1350 435L1364 443L1377 451L1387 460L1399 471L1407 479L1422 499L1428 511L1434 525L1438 539L1441 553L1442 568L1442 581L1440 589L1435 596L1429 602L1420 607L1408 611L1375 619L1365 623L1354 628L1339 639L1322 658L1318 661L1309 665L1294 668L1237 673L1206 678L1175 685L1150 693L1135 699L1116 710L1096 723L1057 751L1041 761L1025 770L1004 779L982 787L959 793L936 797M936 774L913 776L895 775L878 772L839 761L820 756L797 753L769 750L746 750L729 752L717 755L694 764L688 765L676 766L625 761L608 761L545 763L505 762L471 758L444 753L423 746L403 736L377 722L358 710L352 704L346 695L338 671L332 659L320 646L299 630L282 619L268 612L225 595L207 587L199 582L190 575L183 568L178 558L176 548L177 538L180 526L192 491L197 452L201 442L207 431L215 421L225 412L236 403L248 396L302 367L318 360L337 354L356 349L383 343L414 338L449 335L499 332L550 330L603 329L686 329L720 328L740 327L765 323L843 311L867 308L887 306L911 304L931 304L952 305L972 306L989 308L1005 310L1039 316L1077 322L1089 325L1100 329L1111 335L1136 355L1147 363L1168 375L1189 386L1202 392L1218 398L1279 417L1308 427L1336 440L1348 446L1361 454L1373 463L1385 474L1395 485L1403 496L1410 507L1415 521L1417 536L1417 548L1415 563L1410 575L1400 586L1387 593L1350 609L1315 626L1297 633L1277 638L1224 645L1201 649L1181 654L1161 660L1147 666L1128 677L1060 723L1029 742L1008 752L981 763L958 769L936 774M918 759L901 759L884 758L797 740L757 733L729 731L701 731L603 741L574 743L546 744L517 744L489 742L467 738L451 734L435 729L415 719L398 708L383 695L373 683L356 653L345 638L325 618L305 601L293 593L281 588L238 574L225 569L213 563L206 557L202 552L198 545L196 537L196 530L198 520L205 497L208 486L208 475L206 453L207 444L210 436L216 428L223 420L230 414L239 408L249 402L291 382L327 364L340 359L353 354L378 348L405 344L440 340L474 337L517 335L563 334L613 335L689 337L705 336L718 336L735 334L752 331L831 315L851 312L872 309L896 307L916 306L937 306L957 307L987 310L1033 318L1068 322L1076 324L1085 326L1095 331L1122 353L1149 372L1164 382L1176 388L1188 394L1205 400L1261 416L1287 424L1306 432L1325 440L1348 453L1360 461L1368 468L1383 484L1393 499L1397 509L1399 518L1400 528L1400 537L1394 555L1389 562L1382 570L1369 579L1352 588L1321 602L1298 610L1269 617L1189 630L1169 635L1154 640L1141 645L1130 652L1064 701L1044 715L1023 726L996 738L969 748L941 756L918 759M924 744L901 745L889 745L872 743L752 717L735 715L718 713L701 712L684 714L598 725L575 727L546 728L518 728L495 726L473 723L457 719L441 713L426 705L412 696L397 684L385 669L356 625L329 594L313 580L305 574L292 569L255 558L242 553L232 549L225 544L220 539L217 534L214 524L215 515L221 494L222 482L221 469L216 449L216 441L218 432L223 424L229 418L236 412L244 407L253 402L300 382L338 363L351 358L363 354L387 349L418 344L453 340L475 339L492 338L535 337L582 337L628 338L691 342L704 342L717 342L730 340L743 338L828 317L848 313L868 310L893 307L913 306L934 306L955 307L971 308L993 311L1031 318L1062 323L1073 326L1080 329L1087 333L1114 353L1144 376L1155 383L1166 389L1178 394L1195 400L1256 417L1277 424L1299 432L1315 439L1327 445L1338 451L1356 465L1364 471L1372 480L1382 496L1386 512L1385 529L1382 539L1378 546L1366 559L1354 568L1337 577L1315 587L1297 593L1277 598L1258 602L1178 615L1158 620L1143 624L1129 631L1119 638L1069 681L1053 693L1032 705L1007 718L980 729L952 738L924 744M913 732L889 732L860 729L820 720L746 702L729 699L713 698L696 698L679 699L615 709L575 712L529 714L495 712L468 707L447 699L427 688L409 675L393 657L369 622L340 581L332 572L325 564L316 559L303 553L266 541L254 536L245 531L239 525L236 520L235 514L236 490L235 479L231 463L225 444L223 435L225 427L231 418L238 412L249 405L266 397L308 381L347 362L358 357L368 354L382 351L396 348L428 343L468 340L489 338L507 338L554 338L605 339L643 342L694 347L707 348L716 347L725 346L738 343L787 329L818 320L844 314L865 310L885 307L910 305L931 305L956 306L977 308L1003 312L1047 321L1056 323L1065 325L1079 332L1097 343L1109 352L1137 377L1146 383L1157 388L1171 394L1186 399L1246 416L1272 423L1293 431L1311 439L1332 450L1349 463L1362 477L1370 490L1374 500L1375 507L1373 521L1366 536L1354 548L1340 558L1325 566L1305 574L1286 580L1247 589L1162 603L1147 607L1132 612L1123 616L1113 623L1064 669L1048 681L1028 694L1002 707L969 719L941 727L913 732M907 720L884 720L855 716L820 709L746 689L729 686L713 684L696 684L679 686L615 695L581 699L535 700L501 699L473 694L452 687L432 676L415 663L403 652L394 640L358 587L343 560L335 551L327 545L319 540L282 525L272 520L265 515L260 510L257 503L251 482L233 438L231 429L232 421L237 415L244 409L254 403L271 394L312 379L353 360L373 353L388 349L402 347L420 344L438 342L460 340L482 338L500 338L526 338L577 338L620 341L650 344L697 352L710 353L719 353L728 352L737 349L776 334L808 323L836 315L861 310L886 306L911 303L936 303L957 304L983 307L1009 311L1038 318L1058 324L1073 330L1091 341L1102 350L1128 374L1137 381L1149 387L1162 392L1180 398L1240 414L1266 422L1288 429L1303 436L1323 446L1338 457L1352 471L1360 485L1364 499L1362 513L1359 520L1354 527L1342 539L1330 548L1313 556L1295 563L1276 569L1237 577L1157 590L1142 593L1127 598L1112 605L1103 612L1060 657L1043 671L1023 683L996 696L963 708L935 716L907 720M907 708L895 708L878 708L849 704L814 696L746 677L729 674L712 672L701 672L684 673L615 683L580 687L535 688L501 686L479 682L458 675L437 665L422 655L407 640L392 620L367 581L350 547L343 537L338 532L329 526L300 512L292 507L285 502L279 495L253 458L242 434L238 424L239 417L243 411L249 405L260 399L274 393L320 375L358 358L375 352L388 349L403 346L421 343L439 341L462 339L484 338L506 337L528 337L584 339L623 342L640 344L653 346L700 356L714 357L722 357L731 356L736 355L745 351L777 335L800 326L832 316L857 309L883 304L908 302L933 301L958 302L984 305L1010 310L1033 315L1052 321L1069 328L1083 337L1095 346L1113 365L1121 373L1130 379L1141 385L1155 391L1174 397L1240 414L1260 419L1282 427L1299 434L1319 445L1334 456L1344 467L1352 481L1354 495L1352 507L1344 519L1333 530L1321 538L1308 544L1290 552L1271 557L1252 562L1227 567L1147 579L1131 583L1117 587L1107 592L1096 600L1057 646L1043 658L1023 671L996 684L964 696L936 704L907 708M913 696L901 697L884 697L867 695L849 693L814 685L746 665L729 662L712 660L701 660L684 661L621 671L586 675L546 676L523 675L506 674L484 671L463 664L442 655L425 643L413 631L403 620L377 581L367 562L358 535L353 526L348 520L340 514L312 499L302 492L270 463L261 452L256 444L248 426L246 418L247 411L251 405L256 401L266 395L280 389L327 371L359 357L380 350L394 346L409 343L423 341L441 339L459 338L481 336L503 336L525 336L595 339L621 342L647 346L686 355L699 357L717 359L731 359L740 357L750 354L758 350L779 337L794 330L811 322L838 313L858 308L879 303L900 300L921 299L938 299L955 299L972 301L994 304L1012 308L1030 312L1046 317L1058 322L1072 330L1082 337L1092 346L1112 369L1121 375L1131 381L1147 388L1168 395L1191 401L1239 413L1264 420L1287 428L1305 437L1322 448L1329 455L1335 461L1340 468L1343 475L1345 482L1345 489L1344 496L1341 504L1331 516L1321 523L1313 528L1290 539L1266 546L1242 552L1213 558L1136 569L1121 572L1106 578L1097 583L1088 590L1054 634L1041 646L1023 659L997 673L969 683L941 691L913 696M925 684L907 685L890 686L873 685L855 683L820 675L746 653L729 650L712 649L701 649L684 650L620 660L591 663L551 665L511 663L489 660L467 654L448 646L432 636L420 625L410 614L382 572L373 553L367 527L361 514L349 503L316 483L285 462L274 453L269 446L263 438L257 422L254 412L255 405L258 401L262 397L272 391L291 383L328 369L365 354L377 350L391 346L405 343L419 340L438 338L456 336L479 335L501 334L519 334L536 335L571 338L602 340L620 341L641 345L685 355L703 358L721 360L730 360L739 359L753 356L762 353L771 347L788 335L797 329L813 322L836 313L858 306L880 301L901 298L922 296L935 296L952 296L969 298L987 300L1005 303L1023 308L1036 312L1049 317L1063 324L1074 331L1083 340L1104 365L1114 373L1124 379L1140 385L1164 393L1188 399L1237 411L1259 417L1280 425L1299 433L1315 444L1327 455L1334 467L1336 474L1337 481L1336 488L1333 495L1322 507L1315 513L1304 520L1281 530L1257 537L1228 544L1203 548L1147 556L1127 559L1111 563L1097 568L1087 574L1081 580L1051 622L1040 634L1025 646L1004 658L981 668L953 677L925 684M913 674L902 675L884 675L867 674L849 671L814 663L746 642L729 639L718 638L701 638L684 639L620 649L585 653L545 654L511 652L488 649L467 643L452 636L434 625L421 614L411 602L386 563L381 553L378 542L373 512L367 501L363 497L353 489L293 454L280 445L273 438L268 429L263 416L262 408L263 402L265 397L269 393L279 387L301 377L366 352L382 347L393 344L407 341L421 338L440 336L458 334L476 333L494 333L512 333L530 334L565 338L600 339L618 341L640 344L684 355L702 358L720 360L738 360L747 359L757 358L764 355L770 353L780 347L794 334L805 327L815 321L831 314L846 309L863 303L880 299L897 296L914 294L931 293L949 293L970 295L993 298L1011 302L1029 306L1045 312L1059 320L1069 327L1077 336L1096 361L1105 369L1115 375L1133 382L1159 390L1185 397L1236 409L1258 415L1279 423L1296 432L1309 441L1321 452L1327 463L1329 475L1327 482L1323 489L1312 501L1294 512L1272 521L1253 527L1228 533L1198 538L1122 548L1103 553L1092 557L1082 562L1075 569L1069 577L1055 602L1046 614L1036 625L1021 637L997 651L970 662L942 670L913 674M925 662L908 664L890 665L873 664L849 661L814 652L746 631L729 628L718 627L701 627L683 628L625 638L590 643L556 644L516 642L493 639L472 634L452 625L437 616L424 605L414 593L401 574L390 555L383 536L381 503L379 497L375 490L367 483L356 476L326 460L297 445L285 438L279 432L274 426L271 417L269 408L269 400L272 393L278 388L285 383L293 379L308 373L383 345L394 342L408 338L423 336L437 334L455 332L474 331L492 331L505 331L523 332L562 338L598 338L616 340L638 343L679 353L701 358L724 360L738 361L747 361L756 360L765 358L775 355L779 353L789 347L803 332L812 325L821 319L836 312L849 307L864 301L881 297L894 294L911 292L928 290L945 290L967 292L989 294L1007 298L1026 303L1040 308L1052 314L1064 323L1072 332L1088 357L1094 363L1102 369L1110 373L1120 377L1145 385L1183 395L1245 410L1262 415L1278 421L1294 430L1301 434L1309 441L1317 453L1320 460L1321 467L1318 478L1308 490L1298 497L1290 502L1267 512L1244 519L1219 524L1189 529L1117 538L1100 541L1085 547L1076 552L1068 559L1044 602L1035 613L1021 625L1003 637L982 647L954 656L925 662M920 653L902 655L885 655L867 653L850 651L814 642L751 622L734 618L723 616L706 616L689 617L625 628L596 632L572 634L543 634L509 631L482 626L461 619L441 608L430 599L417 584L404 565L393 546L388 527L389 494L386 487L381 480L373 472L357 463L329 449L300 437L290 431L284 426L279 420L276 406L276 398L278 392L282 385L291 379L299 375L313 369L385 343L395 339L410 336L424 333L439 331L453 330L471 329L489 329L503 329L521 331L556 336L569 337L597 337L615 339L633 342L682 353L709 358L723 360L737 361L751 362L760 361L770 360L779 358L788 355L793 352L801 345L813 330L821 322L831 315L841 310L852 304L867 299L881 294L893 292L911 289L929 287L946 287L964 288L986 290L1004 294L1018 297L1034 302L1048 310L1059 319L1066 328L1075 345L1079 353L1085 359L1093 365L1101 369L1111 373L1137 381L1176 392L1239 406L1255 411L1272 417L1289 426L1295 431L1303 437L1311 449L1313 460L1309 472L1303 480L1298 484L1281 495L1259 504L1235 510L1205 516L1174 521L1122 526L1102 529L1088 532L1077 537L1067 543L1062 548L1057 557L1046 582L1040 593L1031 605L1018 616L1000 628L976 639L948 648L920 653M914 644L897 645L879 644L861 642L844 639L809 630L751 611L734 607L723 605L706 605L689 607L630 617L601 622L577 624L548 624L514 622L486 617L465 611L445 600L432 590L420 575L405 553L397 537L394 529L393 518L396 486L394 478L390 471L378 461L361 452L336 440L308 430L296 424L290 420L285 416L283 411L281 405L281 396L284 388L288 381L296 375L304 371L318 365L386 340L396 337L412 333L426 331L441 329L455 327L473 326L487 326L501 327L514 328L554 334L568 335L595 336L613 338L631 341L685 354L718 360L736 362L750 364L765 364L774 364L783 363L793 361L802 357L807 354L815 345L823 330L828 322L835 314L843 309L853 303L865 298L878 293L891 290L908 287L925 285L943 284L961 284L983 287L1001 289L1020 294L1031 298L1039 302L1045 305L1053 313L1059 322L1067 341L1071 349L1076 355L1084 361L1097 367L1121 375L1174 389L1237 404L1254 409L1266 413L1283 422L1295 431L1299 436L1303 443L1305 454L1304 460L1301 466L1290 477L1273 487L1250 496L1225 502L1195 508L1165 511L1117 516L1097 519L1082 522L1070 526L1061 532L1054 540L1049 550L1042 573L1036 584L1027 595L1014 608L993 621L971 631L943 639L914 644M903 635L891 635L873 634L856 632L838 628L809 620L751 600L734 596L723 595L706 594L688 596L630 608L600 612L577 614L548 614L513 612L486 607L464 600L445 589L431 578L420 564L408 544L400 528L398 520L397 510L403 477L400 467L395 460L383 450L365 441L343 432L312 422L299 416L291 409L286 401L287 392L289 383L296 375L304 369L313 365L328 359L388 338L403 333L413 331L438 327L452 325L471 324L485 324L498 325L512 326L552 332L593 334L611 336L634 341L694 355L736 364L755 368L769 369L783 370L793 370L802 369L812 367L817 365L823 361L827 357L830 351L835 325L839 318L843 312L852 305L861 299L873 294L887 289L904 285L922 282L939 281L957 281L980 283L998 285L1016 290L1028 294L1036 297L1041 301L1049 308L1054 318L1059 337L1062 345L1066 351L1074 357L1087 363L1105 369L1169 386L1232 401L1248 405L1260 409L1270 414L1278 418L1289 427L1296 436L1298 443L1298 448L1296 454L1292 460L1282 470L1264 479L1241 488L1216 494L1191 498L1165 501L1108 506L1087 509L1072 512L1062 516L1052 523L1047 531L1037 564L1030 578L1022 589L1009 601L988 613L976 619L961 625L932 631L903 635M927 623L909 624L891 625L874 624L850 621L832 617L815 612L751 589L734 585L723 584L711 583L694 585L617 600L594 603L564 605L530 604L501 601L479 596L458 587L443 577L428 563L415 543L405 524L402 514L402 503L409 476L410 466L408 458L403 451L395 444L378 435L350 423L307 410L299 405L293 399L291 394L292 388L294 381L297 375L304 369L310 365L327 357L384 336L400 332L415 328L435 324L454 322L473 322L491 322L510 324L550 329L592 333L614 336L642 342L688 354L778 381L788 383L798 384L812 384L827 381L837 377L846 371L851 367L853 363L854 357L848 329L848 321L849 315L854 308L859 302L866 297L877 291L891 286L905 282L923 279L940 278L963 278L985 280L1004 283L1018 286L1026 289L1033 293L1038 297L1043 302L1048 313L1050 333L1052 340L1055 346L1063 352L1076 359L1091 363L1171 384L1226 397L1241 401L1254 405L1269 412L1281 421L1288 430L1290 439L1288 446L1286 451L1276 461L1259 471L1237 479L1212 485L1182 490L1156 492L1103 496L1082 498L1067 501L1053 506L1046 511L1040 519L1030 560L1023 574L1013 586L998 598L978 608L955 616L927 623M927 613L909 615L892 615L874 614L850 611L832 607L812 601L751 578L734 574L723 572L711 573L694 574L629 588L605 592L587 594L564 596L535 595L506 592L484 588L462 580L448 571L433 557L419 537L410 518L407 508L406 497L415 467L416 457L414 447L409 440L400 433L383 424L351 413L311 401L303 397L299 392L297 388L297 384L299 377L303 371L309 365L315 360L332 352L380 335L407 327L419 324L432 322L456 320L480 319L498 320L544 326L585 331L603 334L640 342L676 352L705 363L727 373L747 386L761 399L768 410L775 428L782 437L787 441L792 443L800 445L808 445L813 443L818 441L822 435L825 417L827 412L832 406L843 397L875 375L881 369L884 365L885 360L884 354L866 328L861 317L861 311L863 305L867 300L873 294L885 287L899 281L915 278L932 275L955 274L977 275L998 278L1006 280L1015 282L1023 285L1029 289L1034 292L1038 298L1041 309L1040 336L1043 342L1049 348L1062 354L1076 358L1135 372L1216 391L1244 399L1259 406L1267 410L1273 415L1280 424L1282 433L1280 440L1277 445L1266 455L1258 459L1247 464L1224 472L1198 477L1172 481L1146 483L1093 486L1072 488L1056 491L1046 495L1038 500L1032 508L1026 551L1019 565L1010 577L995 589L978 598L956 606L939 611L927 613M922 604L904 605L886 605L868 604L844 600L827 595L809 589L751 566L740 563L728 562L717 561L699 563L682 566L640 576L616 581L592 584L569 586L534 586L505 583L483 578L462 569L446 559L432 545L420 525L413 509L410 498L411 488L421 460L423 448L422 438L417 431L412 427L405 422L391 415L359 404L317 393L308 388L304 384L303 379L304 373L308 367L312 362L324 354L342 346L382 332L409 324L419 322L434 319L458 317L482 317L505 319L574 328L606 334L629 340L656 348L678 356L695 365L708 373L719 384L724 393L730 413L734 420L741 429L755 442L771 453L781 457L787 458L797 460L813 459L831 455L845 451L856 446L861 441L865 436L866 431L867 411L873 399L883 388L910 367L916 358L916 354L913 348L886 326L880 320L876 314L874 307L875 301L877 295L882 290L894 283L907 278L920 274L938 272L956 271L979 272L997 274L1011 277L1019 281L1026 284L1030 288L1033 293L1033 305L1026 334L1027 340L1032 344L1035 346L1045 350L1055 353L1138 370L1208 387L1236 395L1253 402L1264 408L1269 413L1272 417L1274 427L1272 434L1269 438L1257 448L1238 457L1214 464L1188 469L1163 472L1136 474L1083 476L1062 478L1047 480L1036 484L1029 488L1024 496L1022 504L1023 531L1021 542L1016 556L1007 567L993 579L973 590L951 598L939 601L922 604M922 594L904 596L886 596L868 594L844 590L827 585L808 579L751 554L739 551L728 550L716 550L699 552L634 568L610 573L592 575L568 577L539 577L510 574L487 570L476 566L465 561L451 552L436 538L423 519L416 500L414 489L415 482L427 451L430 439L429 430L423 420L415 413L397 405L365 394L323 383L316 380L312 375L311 371L312 367L319 358L330 350L347 342L384 329L410 321L421 319L436 317L460 315L484 315L510 318L562 325L600 333L627 341L648 348L666 356L680 364L688 371L695 380L699 388L705 404L712 416L729 431L749 448L760 455L770 460L781 463L792 464L808 463L833 459L856 454L877 447L888 442L892 437L894 432L894 406L897 397L901 391L913 379L949 356L954 352L958 348L957 344L954 342L946 337L923 329L913 324L902 318L894 312L889 304L887 298L888 291L893 285L901 280L912 275L926 271L939 269L957 268L980 269L994 270L1008 273L1018 278L1023 282L1025 285L1026 291L1025 298L1020 309L1014 318L999 335L1000 340L1002 342L1007 344L1024 348L1099 359L1130 365L1173 375L1217 386L1231 391L1241 394L1255 402L1260 406L1264 411L1266 416L1266 420L1264 427L1260 432L1247 441L1229 449L1204 456L1179 460L1153 463L1073 466L1051 467L1030 470L1020 474L1014 479L1012 487L1017 516L1017 533L1014 544L1007 555L999 564L991 570L974 580L951 588L940 591L922 594M980 317L971 319L957 319L942 317L932 314L922 310L912 305L905 300L901 294L901 288L903 283L907 279L913 275L921 272L931 269L945 266L958 265L972 265L981 266L991 266L999 268L1005 270L1010 272L1015 275L1017 279L1018 283L1017 288L1012 296L1007 303L1001 307L994 312L990 314L980 317M922 584L905 586L887 586L863 583L845 580L827 575L809 568L751 542L734 538L722 538L705 540L621 561L597 565L573 567L555 568L538 568L509 565L486 560L465 552L450 542L438 529L427 512L420 493L418 483L420 472L434 442L437 430L437 421L432 411L424 404L411 397L383 388L332 373L327 371L322 367L321 362L323 358L331 350L340 343L359 335L391 324L417 317L430 315L443 314L467 313L481 313L495 314L529 319L568 327L607 337L621 341L637 347L650 354L659 360L667 367L673 373L689 402L703 416L754 458L765 463L771 465L781 466L792 466L803 465L834 460L897 447L910 444L918 440L922 435L923 430L917 409L917 400L920 391L924 384L938 373L953 364L972 357L981 354L991 352L1011 350L1035 351L1066 353L1102 357L1128 362L1160 369L1204 380L1226 386L1239 392L1248 398L1255 404L1258 411L1256 418L1251 425L1241 433L1224 440L1200 447L1169 451L1132 454L1052 455L1030 456L1014 458L1006 460L1001 462L998 467L998 472L1009 501L1012 518L1011 532L1006 543L999 552L993 557L985 563L974 569L952 578L940 581L922 584M970 301L961 302L951 301L941 300L931 297L924 293L920 289L916 284L917 280L919 276L923 272L928 270L937 267L946 265L960 263L973 263L983 263L995 265L1000 267L1004 269L1007 272L1008 278L1001 287L993 294L984 298L979 299L970 301M917 575L899 576L881 576L857 572L839 568L821 563L806 557L762 534L751 529L739 526L734 525L722 525L705 528L645 545L614 553L596 556L572 558L543 558L513 556L496 553L485 550L466 542L453 534L439 519L428 500L423 484L423 474L425 463L440 433L445 421L445 409L442 402L433 394L420 387L402 381L348 364L339 360L335 356L336 349L342 343L352 337L370 329L396 320L419 315L433 312L444 311L454 311L469 311L493 312L520 317L553 325L596 337L613 343L624 347L635 354L645 360L655 370L672 393L683 405L719 433L748 459L755 463L764 467L775 468L792 467L863 454L884 451L906 449L922 448L939 448L950 449L961 451L969 456L979 463L989 474L997 484L1002 495L1006 506L1007 517L1005 525L1002 534L996 542L987 551L978 557L967 563L952 568L935 573L917 575M1138 443L1111 444L1074 444L1008 442L992 441L981 439L970 436L964 433L952 424L942 412L937 400L937 391L941 382L951 373L965 365L979 359L998 354L1008 352L1023 351L1038 350L1053 351L1089 353L1104 355L1125 358L1163 366L1207 378L1220 382L1231 386L1239 391L1244 396L1247 400L1249 405L1248 409L1246 414L1241 419L1235 424L1218 431L1196 437L1170 441L1138 443M969 283L960 284L955 284L950 283L945 281L941 279L939 277L938 275L939 272L943 269L952 265L958 264L966 263L975 263L980 263L985 264L989 266L991 268L991 271L988 275L983 279L978 281L969 283M917 565L899 566L875 565L855 562L833 556L816 550L798 541L757 516L745 512L739 511L728 511L710 514L654 533L622 541L602 545L577 548L559 549L542 549L512 547L490 542L479 538L468 534L453 523L441 510L430 491L426 475L426 467L429 457L447 424L452 412L454 403L453 393L447 387L441 382L434 379L416 372L370 358L359 353L353 349L352 347L351 343L356 336L366 330L380 324L405 316L426 312L441 310L451 309L461 309L475 310L499 313L522 318L557 328L589 339L611 348L621 353L630 360L640 369L667 396L702 422L714 432L742 461L750 467L758 470L769 471L780 470L847 456L869 452L891 450L913 449L929 450L946 453L958 456L969 462L977 467L986 475L994 485L999 496L1001 504L1001 513L1000 521L995 530L991 535L981 544L971 550L958 556L947 560L935 563L917 565M1160 432L1139 433L1112 434L1080 433L1052 432L1030 431L1014 428L997 425L985 421L973 415L964 407L958 400L954 391L956 382L960 375L968 369L977 363L986 359L996 356L1007 353L1020 351L1045 349L1076 350L1107 352L1139 358L1178 366L1208 375L1224 382L1232 387L1237 391L1240 398L1239 403L1236 407L1228 415L1211 422L1202 425L1186 428L1160 432M918 555L894 557L869 555L845 550L826 543L807 535L788 523L770 509L751 489L746 488L734 492L676 514L652 523L621 532L595 537L577 539L559 540L541 540L523 539L506 536L494 534L483 530L473 526L463 520L455 514L443 500L433 481L430 465L431 455L436 445L457 410L463 398L465 389L464 382L458 374L453 371L445 367L431 362L389 349L378 345L372 340L370 336L370 334L373 330L383 324L393 319L411 314L422 312L432 310L453 309L467 309L477 310L496 313L518 319L560 334L589 345L608 354L622 363L655 389L698 420L716 437L741 472L746 479L752 482L757 481L802 465L825 459L853 453L875 450L903 448L925 449L942 452L959 458L969 463L978 469L985 476L991 484L994 492L996 500L994 514L990 523L985 529L978 535L969 540L959 545L947 550L935 553L918 555M1145 422L1124 423L1096 423L1075 423L1053 421L1036 419L1019 417L1008 414L996 409L984 403L976 396L972 389L970 382L972 375L977 369L984 364L993 359L1003 355L1013 353L1032 349L1058 347L1073 347L1088 348L1115 350L1147 356L1181 364L1196 369L1208 373L1221 380L1228 387L1230 391L1229 396L1224 403L1211 410L1192 416L1172 420L1145 422M552 531L528 530L510 528L493 524L477 518L467 512L456 505L446 494L440 483L434 464L434 456L436 446L444 430L474 387L478 378L479 371L478 366L475 362L465 356L451 350L409 338L403 336L396 331L394 327L395 325L399 321L406 317L412 315L428 312L443 310L458 310L473 312L486 315L505 321L541 336L580 350L595 355L619 367L679 406L698 420L711 435L721 453L724 467L723 472L720 477L715 483L707 488L691 496L672 505L650 513L631 519L612 524L591 528L570 530L552 531M1157 411L1119 413L1075 412L1059 411L1042 409L1031 407L1018 403L1005 399L997 394L991 389L986 382L985 375L986 371L991 364L997 360L1012 353L1030 348L1050 346L1075 345L1101 346L1128 349L1155 355L1183 362L1201 369L1213 375L1219 382L1219 389L1212 396L1207 399L1198 403L1178 408L1157 411M912 546L888 546L863 543L839 537L822 531L806 522L790 510L780 499L777 494L776 488L779 480L785 475L794 469L813 461L831 456L853 451L876 447L898 446L915 447L932 449L949 453L961 458L970 464L980 473L987 483L990 491L991 502L988 510L982 519L972 528L959 535L946 540L930 544L912 546M1136 402L1098 402L1065 401L1050 399L1037 397L1019 391L1011 387L1004 382L1000 378L998 371L998 366L1001 362L1006 357L1014 353L1027 348L1047 344L1067 343L1093 343L1120 345L1142 349L1168 355L1188 362L1198 366L1206 373L1208 380L1203 387L1193 392L1178 397L1157 400L1136 402M563 521L533 521L509 518L492 514L473 506L461 498L450 487L442 473L437 457L438 446L442 434L450 421L461 406L506 357L515 351L521 350L526 349L537 348L547 349L562 351L577 354L597 360L622 371L662 394L683 409L694 419L700 426L710 444L712 457L709 468L702 476L685 487L668 495L655 501L624 511L593 518L563 521M912 536L888 536L870 534L851 530L833 524L815 515L803 506L792 495L789 487L790 478L794 473L805 465L815 460L831 454L854 448L876 445L893 444L910 444L922 445L939 449L951 452L963 459L972 465L979 473L985 484L985 492L984 501L978 509L969 518L959 524L945 530L930 533L912 536M1142 390L1109 391L1082 391L1060 389L1048 387L1037 385L1031 383L1021 378L1015 373L1011 369L1010 364L1011 359L1015 355L1019 352L1029 347L1044 343L1059 341L1080 340L1101 341L1123 343L1145 347L1167 353L1180 358L1191 364L1194 369L1195 371L1193 375L1187 380L1174 385L1163 387L1142 390M568 511L538 512L514 509L491 504L475 497L462 488L451 476L443 461L441 447L443 434L451 419L464 402L482 385L499 371L514 362L526 358L532 356L543 355L553 354L564 355L574 356L585 358L600 363L610 366L635 378L661 392L681 407L694 422L701 437L702 450L698 461L688 471L675 480L652 491L624 501L599 507L586 509L568 511M907 526L888 526L870 524L852 520L836 514L819 505L808 497L802 488L800 480L802 471L806 466L813 461L826 454L843 448L860 445L877 442L894 441L911 442L929 444L940 447L952 452L963 458L970 463L976 471L979 480L980 488L977 497L971 504L962 511L951 517L937 521L925 524L907 526M1110 380L1082 380L1060 378L1043 374L1031 369L1027 366L1023 362L1023 355L1027 350L1030 348L1041 343L1052 340L1067 338L1083 338L1104 339L1124 341L1143 345L1160 350L1171 355L1177 359L1179 364L1177 367L1172 371L1163 374L1147 377L1131 379L1110 380M567 501L543 502L519 500L496 496L479 489L467 481L455 469L447 454L444 440L446 427L455 412L467 397L484 382L500 371L516 363L534 358L550 355L561 355L572 356L593 360L613 367L639 378L660 390L676 402L687 415L693 430L694 443L689 454L679 464L666 473L643 484L618 492L592 498L567 501M901 516L889 515L870 513L856 510L839 504L827 497L817 490L811 481L810 473L813 464L818 459L826 454L838 448L849 445L866 441L883 439L901 438L918 440L930 442L942 445L949 448L958 454L967 461L971 467L974 475L973 484L970 490L963 498L954 504L943 509L931 512L919 514L901 516M1110 368L1088 369L1072 368L1059 366L1051 364L1045 361L1038 357L1037 354L1036 350L1039 345L1047 341L1059 338L1069 336L1080 336L1096 336L1113 338L1124 340L1138 343L1147 347L1154 350L1156 352L1157 357L1154 359L1150 361L1142 364L1131 366L1110 368M572 491L548 493L524 491L501 487L484 481L471 474L460 463L452 449L448 436L449 423L455 410L466 396L481 382L494 373L513 363L531 358L548 355L559 354L569 355L580 356L591 358L611 364L632 373L653 384L668 395L679 407L685 420L686 433L682 444L676 452L662 463L646 471L622 481L597 487L572 491M919 504L907 505L889 505L872 503L860 500L851 497L838 491L830 485L822 477L819 468L820 463L823 457L830 452L839 446L850 442L865 438L878 436L896 435L907 436L919 437L931 440L943 444L949 447L957 452L964 460L967 466L967 474L965 480L960 486L955 491L943 497L931 501L919 504M1094 357L1083 357L1072 355L1060 352L1055 350L1051 345L1052 342L1058 338L1067 336L1083 334L1099 335L1114 338L1121 340L1126 343L1128 345L1128 347L1127 350L1122 352L1110 355L1094 357M572 481L547 483L523 481L504 478L487 472L473 464L463 455L456 442L452 429L453 416L459 403L469 390L484 377L498 368L516 360L534 355L551 353L567 353L578 354L589 355L610 361L631 369L651 380L663 390L672 400L678 413L679 423L676 434L668 445L658 453L643 461L622 470L597 477L572 481M914 493L901 494L889 494L877 492L864 489L850 484L840 478L834 472L830 467L829 461L830 456L834 450L842 445L850 441L862 437L873 434L885 433L897 432L908 433L920 435L932 438L947 445L954 450L958 456L960 461L960 467L958 472L954 478L946 484L938 488L926 491L914 493M571 471L546 473L522 471L504 468L488 462L477 456L466 446L459 435L456 421L457 408L461 398L471 385L485 373L501 364L513 358L531 353L549 350L565 350L576 350L587 352L608 357L624 363L643 373L656 383L665 393L671 406L672 416L668 427L660 437L650 446L635 454L615 462L592 468L571 471M908 482L896 483L883 481L872 479L863 476L856 474L847 468L842 462L840 457L841 448L845 444L851 440L856 437L868 433L880 431L892 430L909 430L921 433L929 435L936 437L945 443L951 451L953 457L951 462L948 468L944 471L934 476L926 479L908 482M570 461L545 463L527 462L515 460L504 458L489 452L476 444L468 435L462 425L459 411L461 398L467 388L475 378L487 368L499 361L517 353L535 349L552 346L569 347L585 348L607 354L622 360L639 368L651 378L660 388L664 398L665 409L662 417L655 427L645 435L632 444L611 452L591 458L570 461M914 469L896 470L883 469L877 468L865 463L858 459L853 455L851 446L852 444L857 438L867 433L881 429L898 428L917 430L929 434L935 437L940 441L943 449L940 458L932 464L926 466L914 469M569 451L550 452L532 452L514 450L497 445L482 436L473 428L466 417L464 407L464 394L469 383L477 373L488 364L501 356L514 350L532 345L550 343L567 343L578 344L589 345L605 350L621 356L634 363L644 371L653 381L657 391L658 401L655 409L647 420L637 428L623 436L607 442L588 448L569 451M908 457L896 457L883 455L877 453L871 450L866 445L865 439L870 433L876 430L888 427L900 426L912 428L921 431L929 436L931 439L931 445L927 450L920 454L908 457M568 441L550 442L531 442L513 439L498 434L488 429L478 420L471 410L468 399L468 389L472 378L479 368L491 358L503 351L518 345L530 342L548 339L565 339L582 340L598 344L614 350L630 358L640 366L646 373L650 383L651 394L648 402L642 410L633 418L620 426L606 431L588 437L568 441M568 430L549 432L530 431L512 428L500 424L490 418L480 409L474 399L472 389L472 378L477 368L486 358L496 351L509 344L522 339L534 336L551 334L569 335L585 337L601 341L612 345L623 351L632 358L639 366L643 376L644 386L641 394L635 402L626 409L616 416L600 422L585 427L568 430M567 419L548 421L529 420L517 418L503 413L493 408L484 400L479 392L476 381L477 371L480 363L485 355L494 348L506 341L519 336L532 332L549 330L561 330L578 331L595 335L605 339L618 346L627 352L633 361L636 368L637 376L635 384L629 392L620 400L612 405L599 411L582 416L567 419M560 409L541 410L529 409L517 406L505 403L494 396L487 389L483 381L480 371L481 363L484 355L490 348L499 340L510 334L523 330L535 327L547 325L559 325L576 327L587 329L600 333L610 338L620 345L626 353L629 360L630 368L627 376L621 384L612 391L602 397L588 403L573 407L560 409M553 398L540 398L528 397L516 394L505 390L496 384L490 376L486 368L485 360L486 353L491 345L498 337L505 332L515 328L527 324L539 321L551 320L563 320L579 323L591 326L601 330L609 335L617 342L620 347L622 355L622 363L619 368L613 376L605 382L597 387L583 392L565 396L553 398M565 385L552 386L539 386L527 385L515 382L504 376L499 372L494 365L491 357L490 350L492 342L496 336L504 329L512 325L524 320L535 317L543 316L555 315L567 316L578 318L589 322L600 327L605 331L611 337L613 342L615 349L614 355L609 363L604 368L597 373L586 379L578 381L565 385M551 374L539 374L533 373L521 371L514 368L506 363L501 357L498 352L496 344L497 337L499 331L504 326L510 321L520 317L528 314L535 312L547 311L559 311L570 312L578 314L587 318L594 321L600 326L604 331L606 339L605 347L602 352L597 357L591 362L584 366L571 371L558 373L551 374M557 360L545 361L538 361L531 360L520 357L509 349L505 344L502 336L504 326L508 321L514 316L526 310L532 308L545 306L551 306L563 307L570 308L580 311L591 318L595 323L597 328L596 339L592 344L587 349L577 354L571 357L557 360M551 347L538 347L532 346L521 341L512 333L509 325L511 318L519 310L529 305L540 303L548 302L560 303L570 305L576 308L583 312L585 315L588 323L585 330L577 338L571 342L564 344L551 347M557 330L551 331L544 332L538 331L532 330L524 325L520 320L519 312L523 307L531 302L539 299L552 299L564 301L569 304L574 309L575 317L572 322L565 327L557 330"/></svg></div>
+      <div class="anatomy__head">
+        <span class="eyebrow reveal">Anatomy</span>
+        <h2 class="title reveal d1">Every part,<br><em>built to fly.</em></h2>
+        <p class="copy reveal d2">Ten components, one 249 g airframe. Keep scrolling to take AERIS ONE apart and put it back together.</p>
+      </div>
+      <ol class="anatomy__list" aria-label="Parts">
+          <li data-part="gimbal"><span>01</span><b>Gimbal camera</b>48 MP 1/1.3″ sensor · ƒ/1.7 · 3-axis mechanical gimbal</li>
+          <li data-part="core"><span>02</span><b>Flight core</b>Omnidirectional vision + LiDAR · Dual-band GNSS · 20 km link</li>
+          <li data-part="battery"><span>03</span><b>Intelligent battery</b>2,450 mAh · up to 34 min · USB-C fast charging</li>
+          <li data-part="arm_FR"><span>04</span><b>Arms &amp; motors</b>4 brushless motors · folding arms · Folds to 146 × 92 × 63 mm</li>
+          <li data-part="prop_RL"><span>05</span><b>Low-noise propellers</b>Quick-release, tool-free · Tuned for a quieter hover</li>
+      </ol>
+      <div class="anatomy__hint" id="anatomyHint">Scroll to explode</div>
+    </div>
+  </section>
+
+  <section class="s1" id="camera" data-theme="dark" aria-label="Camera">
+    <div class="cam__stage">
+      <div class="wall" id="camWall" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="cam__head">
+        <span class="eyebrow reveal">01 — Camera</span>
+        <h2 class="title cam__title reveal d1">A cinema camera<br><em>that flies.</em></h2>
+        <p class="cam__sub reveal d2"><b>48 MP 1/1.3″ sensor / 4K at 120 fps</b> in 10-bit log, so aerial footage grades like the rest of your edit.</p>
+        <a class="glow reveal d3" href="#specs">See full specs<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 1l4 4-4 4"/></svg></a>
+        <div class="cam__foot reveal d3"><span>Shot on AERIS ONE · <b id="arcCount">01</b> / 10</span><span>Drag to browse</span></div>
+      </div>
+      <div class="arc__nav">
+        <button class="arc__btn" id="arcPrev" type="button" aria-label="Previous photo"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/></svg></button>
+        <div class="arc__dots" id="arcDots" aria-hidden="true"></div>
+        <button class="arc__btn" id="arcNext" type="button" aria-label="Next photo"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/></svg></button>
+      </div>
+      <div class="arc" id="arc" aria-label="Aerial stills from around the world. Drag to browse.">
+        <div class="arc__ring" id="arcRing">
+          <figure class="card"><img src="assets/images/p_01.avif" alt="Aerial view of Fitz Roy, Patagonia, Patagonia, Argentina" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Fitz Roy, Patagonia</b><span>Patagonia, Argentina · 48 MP RAW</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_02.avif" alt="Aerial view of Mount Fuji coast, Shizuoka, Japan" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Mount Fuji coast</b><span>Shizuoka, Japan · 4K/60 · HLG</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_03.avif" alt="Aerial view of Highland falls, Iceland" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Highland falls</b><span>Iceland · 4K/120 · 1/1000 s</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_04.avif" alt="Aerial view of Desert oasis, Sahara" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Desert oasis</b><span>Sahara · 48 MP RAW</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_05.avif" alt="Aerial view of Positano, Amalfi Coast, Italy" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Positano</b><span>Amalfi Coast, Italy · 4K/60 · 10-bit log</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_06.avif" alt="Aerial view of Rice terraces, Banaue, Philippines" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Rice terraces</b><span>Banaue, Philippines · 48 MP RAW</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_07.avif" alt="Aerial view of Geirangerfjord, Norway" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Geirangerfjord</b><span>Norway · 4K/60 · HLG</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_08.avif" alt="Aerial view of Alpine lake, Swiss Alps" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Alpine lake</b><span>Swiss Alps · 48 MP RAW</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_09.avif" alt="Aerial view of Oia, Santorini, Greece" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Oia</b><span>Santorini, Greece · 4K/60 · 10-bit log</span></figcaption></figure>
+          <figure class="card"><img src="assets/images/p_10.avif" alt="Aerial view of Atoll lagoon, Maldives" fetchpriority="high" decoding="async" draggable="false"><figcaption><b>Atoll lagoon</b><span>Maldives · 4K/120 · 1/2000 s</span></figcaption></figure>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="s2" id="flight" data-theme="dark" aria-label="Flight features">
+    <div class="fl__stage">
+      <div class="fl__head">
+        <span class="eyebrow reveal">02 — Flight</span>
+        <h2 class="title reveal d1">Built to fly<br><em>where others won't.</em></h2>
+      </div>
+      <div class="fl__steps" id="flSteps">
+        <div class="fstep"><span class="n">01 / 04</span><h3>Omnidirectional sensing</h3><p>Fisheye vision sensors on every side and a forward LiDAR build a live 3D map of everything around it, 30 times a second, even at dusk.</p><span class="stat"><b>360°</b>0.5–38 m range</span></div>
+        <div class="fstep"><span class="n">02 / 04</span><h3>Terrain follow</h3><p>Set a height and AERIS holds it, rising and dipping with the ground below while you concentrate on the shot.</p><span class="stat"><b>±0.1 m</b>Height hold, 0.5–30 m</span></div>
+        <div class="fstep"><span class="n">03 / 04</span><h3>SubjectLock</h3><p>Tap a runner, a car or a boat. AERIS keeps it framed and steers itself around trees while it follows.</p><span class="stat"><b>60 km/h</b>Max tracking speed</span></div>
+        <div class="fstep"><span class="n">04 / 04</span><h3>Smart return to home</h3><p>On low battery or lost signal it plans the safest route back, avoiding what it saw on the way out, and lands where it took off.</p><span class="stat"><b>10 cm</b>Landing accuracy</span></div>
+      </div>
+      <ol class="fl__nav" id="flNav" aria-hidden="true"><li><i><b></b></i><span>01</span></li><li><i><b></b></i><span>02</span></li><li><i><b></b></i><span>03</span></li><li><i><b></b></i><span>04</span></li></ol>
+    </div>
+  </section>
+
+  <section class="s3" id="specs" data-theme="dark">
+    <div class="text">
+      <span class="eyebrow reveal">03 — Specs</span>
+      <h2 class="title reveal d1">The numbers<br><em>that matter.</em></h2>
+      <p class="copy reveal d2">Folds to the size of a smartphone and weighs under 250 g, the lightest drone class in most countries, with the range and wind rating of drones twice its size.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile reveal"><strong>249<small>g</small></strong><span>Take-off weight</span></div>
+      <div class="tile reveal d1"><strong>34<small>min</small></strong><span>Max flight time</span></div>
+      <div class="tile reveal d2"><strong>4K<small>/120</small></strong><span>10-bit slow motion</span></div>
+      <div class="tile reveal d1"><strong>48<small>MP</small></strong><span>RAW stills</span></div>
+      <div class="tile reveal d2"><strong>20<small>km</small></strong><span>1080p/60 live view</span></div>
+      <div class="tile reveal d3"><strong>10.7<small>m/s</small></strong><span>Level 5 wind resistance</span></div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq" data-theme="dark">
+    <div class="faq__head">
+      <span class="eyebrow reveal">04 — Support</span>
+      <h2 class="title reveal d1">Before you<br><em>take off.</em></h2>
+      <p class="copy reveal d2">Still deciding? These are the questions we hear most. Anything else, ask us when you reserve and a real person will reply within a working day.</p>
+    </div>
+    <div class="faq__list reveal d2">
+      <details id="shipping" open><summary>When does AERIS ONE ship?</summary><p>First units ship in March 2027, in the order reservations were made. We'll email you a delivery window two weeks before your unit leaves the warehouse, and you can cancel at any point before then.</p></details>
+      <details id="registration"><summary>Do I need to register it?</summary><p>At 249 g, AERIS ONE sits in the lightest drone category in most countries, which often means no registration for recreational flying. Rules still vary by country and by how you fly, so check with your aviation authority, such as the FAA in the US or CAAS in Singapore, before your first flight.</p></details>
+      <details id="box"><summary>What's in the box?</summary><p>The aircraft, one Intelligent Flight Battery, the RC-1 screen controller, three pairs of spare propellers, a gimbal protector and a USB-C cable. The Fly More kit adds two batteries, a three-way charging hub and a shoulder bag.</p></details>
+      <details id="warranty"><summary>What does the warranty cover?</summary><p>Twelve months on the aircraft, controller and battery against manufacturing defects. Add AERIS Care for $79 and you also get one crash replacement in the first year, flyaway cover included.</p></details>
+      <details id="privacy"><summary>What do you do with my email?</summary><p>We use it to hold your place in line and send launch updates, nothing else. Every email has a one-click unsubscribe, and you can ask us to delete your details at any time.</p></details>
+    </div>
+  </section>
+
+  <section class="foot" id="reserve" data-theme="dark">
+    <div class="cta">
+      <span class="eyebrow reveal">Reservations open</span>
+      <h2 class="title reveal d1">Own the sky,<br><em>frame by frame.</em></h2>
+      <p class="copy reveal d2">From $999. No deposit, no card. Reserve with your email to hold launch pricing and your place in line for the first shipments in March 2027.</p>
+      <form class="reserve reveal d3" id="reserveForm" name="reserve" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="reserve">
+        <p class="sr" aria-hidden="true"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <label class="sr" for="reserveEmail">Email address</label>
+        <input id="reserveEmail" name="email" type="email" autocomplete="email" placeholder="you@email.com" required>
+        <button class="btn" type="submit">Reserve AERIS ONE<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 1l4 4-4 4"/></svg></button>
+        <p class="reserve__note" id="reserveNote" role="status" aria-live="polite">We'll only use your email for your reservation and launch updates.</p>
+      </form>
+    </div>
+    <div class="cols reveal d2">
+      <div><p>Product</p><a href="#camera">Camera</a><a href="#flight">Flight</a><a href="#specs">Specs</a></div>
+      <div><p>Support</p><a href="#shipping">Shipping</a><a href="#box">In the box</a><a href="#warranty">Warranty</a></div>
+      <div><p>Reserve</p><a href="#reserveForm">Reserve now</a><a href="#registration">Flying rules</a><a href="#privacy">Your data</a></div>
+    </div>
+    <div class="legal reveal d2">© 2026 AERIS Robotics. All rights reserved.<br>Specifications are pre-production targets and may change before shipping.</div>
+    <div class="wordmark" aria-hidden="true">AERIS</div>
+  </section>
+</main>
+
+<div class="fxtag" id="fxTag" aria-hidden="true"></div>
+<div class="plabels" id="plabels" aria-hidden="true">
+  <svg class="plines" id="plines"></svg>
+  <div class="plabel" data-part="gimbal"><small>01</small><b>Gimbal camera</b><p>48 MP 1/1.3″ sensor · ƒ/1.7<br>3-axis mechanical gimbal</p></div>
+  <div class="plabel" data-part="core"><small>02</small><b>Flight core</b><p>Omnidirectional vision + LiDAR<br>Dual-band GNSS · 20 km link</p></div>
+  <div class="plabel" data-part="battery"><small>03</small><b>Intelligent battery</b><p>2,450 mAh · up to 34 min<br>USB-C fast charging</p></div>
+  <div class="plabel" data-part="arm_FR"><small>04</small><b>Arms &amp; motors</b><p>4 brushless motors · folding arms<br>Folds to 146 × 92 × 63 mm</p></div>
+  <div class="plabel" data-part="prop_RL"><small>05</small><b>Low-noise propellers</b><p>Quick-release, tool-free<br>Tuned for a quieter hover</p></div>
+</div>
+
+<div class="badge" aria-hidden="true"><i></i><b>Rec</b> 4K/60 · <span id="rec">00:00:00</span></div>
+
+<script type="application/json" id="hero-seq-meta">{"fps":24,"type":"image/webp","offsets":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324]}</script>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const D2R = Math.PI / 180;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/* ---------- 5a. DOM scroll effects ---------- */
+const sections = [...document.querySelectorAll('main > section')];
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) if (e.isIntersecting) e.target.classList.add('in');
+}, { threshold: .3 });
+sections.forEach(s => io.observe(s));
+
+const parallax = [...document.querySelectorAll('[data-speed]')].map(el => ({
+  el, sec: el.closest('section'), speed: parseFloat(el.dataset.speed), rot: parseFloat(el.dataset.rot || 0)
+}));
+function onScroll() {
+  const H = innerHeight;
+  for (const { el, sec, speed, rot } of parallax) {
+    const p = -sec.getBoundingClientRect().top / H;
+    el.style.transform = `translate3d(0,${p * speed * H}px,0) rotate(${p * rot}deg)`;
+  }
+  const probe = H * 0.06;
+  let dark = false;
+  for (const s of sections) {
+    const r = s.getBoundingClientRect();
+    if (r.top <= probe && r.bottom > probe) { dark = s.dataset.theme === 'dark'; break; }
+  }
+  document.body.classList.toggle('on-dark', dark);
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onScroll);
+onScroll();
+
+/* ---------- Hero: pinned, scroll-scrubbed canyon flight ---------- */
+const heroEl = document.getElementById('top'), heroCanvas = document.getElementById('heroCanvas');
+const heroMedia = document.getElementById('heroMedia'), heroTitle = document.getElementById('heroTitle');
+const heroSide = document.getElementById('heroSide');
+const heroMeta = document.getElementById('heroMeta');
+const chapters = [...document.querySelectorAll('#chapters li')].map(el => ({ el, a: +el.dataset.a, b: +el.dataset.b, bar: el.querySelector('i') }));
+const hudAlt = document.getElementById('hudAlt'), hudSpd = document.getElementById('hudSpd'), hudDist = document.getElementById('hudDist');
+const heroCue = document.getElementById('heroCue'), heroFade = document.getElementById('heroFade');
+const beats = [...heroEl.querySelectorAll('.beat')].map(el => ({ el, a: +el.dataset.in, b: +el.dataset.out }));
+const sm = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* The flight is shipped as a full-HD AVIF frame sequence (1920×1080, 24 fps) packed into this file and painted on a canvas
+   (the technique Apple uses for scroll-scrubbed product films). No <video>, no network, no blob or
+   data URLs for media: it scrubs the same in every browser and in sandboxed viewers. */
+const seqMeta = JSON.parse(document.getElementById('hero-seq-meta').textContent);
+const SEQ_N = seqMeta.offsets.length - 1;
+// Frames are the .webp files in assets/frames. Download them all in order in the background
+// (6 at a time), keeping the compressed bytes; decoding happens on demand around the playhead.
+const seqBlobs = new Array(SEQ_N);
+const frameUrl = i => `assets/frames/f_${String(i + 1).padStart(4, '0')}.webp`;
+// Preview copy of the whole flight (384×216 per frame, 18 per row) in ONE small image: it is ready within moments,
+// so the canvas always shows the right frame while the full-HD one downloads and decodes.
+const LQ_W = 384, LQ_H = 216, LQ_COLS = 18;
+const lq = new Image(); let lqReady = false;
+lq.decoding = 'async'; lq.src = 'assets/frames/lq.webp';
+lq.decode().then(() => { lqReady = true; lastDrawKey = ''; }).catch(() => { lq.onload = () => { lqReady = true; lastDrawKey = ''; }; });
+let nextFetch = 0;
+const fetchWorker = () => {
+  if (nextFetch >= SEQ_N) return Promise.resolve();
+  const i = nextFetch++;
+  return fetch(frameUrl(i)).then(r => r.ok ? r.blob() : null).then(b => {
+    if (b) { seqBlobs[i] = b; if (i < 12) requestFrame(i); lastDrawKey = ''; }
+  }).catch(() => {}).then(fetchWorker);
+};
+for (let k = 0; k < 6; k++) fetchWorker();
+
+// Telemetry that matches the footage: a 64 m dive into the canyon, then ~60 km/h a couple of metres over the river.
+const CLIP_SEC = SEQ_N / seqMeta.fps;
+const altAt = s => s < 3.2 ? lerp(64, 2.4, sm(0, 3.2, s)) : 2.1 + Math.sin(s * 3.1) * .4 + Math.sin(s * 7.3) * .2;
+const spdAt = s => s < 3.2 ? lerp(28, 58, s / 3.2) : 61 + Math.sin(s * 1.3) * 5;
+const distAt = (() => {           // distance flown, integrated once per frame
+  const d = [0];
+  for (let i = 1; i < SEQ_N; i++) d.push(d[i - 1] + spdAt(i / seqMeta.fps) / 3.6 / seqMeta.fps);
+  return f => d[clamp(Math.round(f), 0, SEQ_N - 1)];
+})();
+
+const frameCache = new Map(), framePending = new Set();
+// Full-HD frames are ~8 MB each once decoded, so keep a rolling window around the playhead.
+const SMALL = matchMedia('(max-width: 760px)').matches || (navigator.deviceMemory || 8) <= 4;
+const CACHE_MAX = SMALL ? 18 : 36, DECODE_MAX = SMALL ? 3 : 5;
+let hCur = 0, hTick = 0, lastDrawKey = '', wantIdx = 0;
+const ctx = heroCanvas.getContext('2d', { alpha: false });
+
+function decodeBlob(blob) {
+  if (window.createImageBitmap) return createImageBitmap(blob);
+  return new Promise((res, rej) => {           // very old browsers only
+    const url = URL.createObjectURL(blob), im = new Image();
+    im.onload = () => { URL.revokeObjectURL(url); res(im); }; im.onerror = rej; im.src = url;
+  });
+}
+function requestFrame(i) {
+  if (i < 0 || i >= SEQ_N || !seqBlobs[i] || frameCache.has(i) || framePending.has(i) || framePending.size >= DECODE_MAX) return;
+  framePending.add(i);
+  decodeBlob(seqBlobs[i]).then(bmp => {
+    framePending.delete(i); frameCache.set(i, bmp); lastDrawKey = '';
+    if (frameCache.size > CACHE_MAX) {             // evict the frames farthest from where we are
+      const far = [...frameCache.keys()].sort((a, b) => Math.abs(b - wantIdx) - Math.abs(a - wantIdx));
+      for (const k of far.slice(0, frameCache.size - CACHE_MAX)) { frameCache.get(k).close?.(); frameCache.delete(k); }
+    }
+  }).catch(() => framePending.delete(i));
+}
+function sizeCanvas() {
+  const dpr = Math.min(devicePixelRatio || 1, 2);   // full sharpness on retina screens
+  heroCanvas.width = Math.round(heroCanvas.clientWidth * dpr);
+  heroCanvas.height = Math.round(heroCanvas.clientHeight * dpr);
+  lastDrawKey = '';
+}
+addEventListener('resize', sizeCanvas);
+sizeCanvas();
+function paint(img, alpha) {
+  const cw = heroCanvas.width, ch = heroCanvas.height, iw = img.width, ih = img.height;
+  const s = Math.max(cw / iw, ch / ih), dw = iw * s, dh = ih * s;
+  ctx.globalAlpha = alpha;
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+}
+function paintLQ(i, alpha) {
+  const cw = heroCanvas.width, ch = heroCanvas.height, s = Math.max(cw / LQ_W, ch / LQ_H), dw = LQ_W * s, dh = LQ_H * s;
+  ctx.globalAlpha = alpha;
+  ctx.drawImage(lq, (i % LQ_COLS) * LQ_W, ((i / LQ_COLS) | 0) * LQ_H, LQ_W, LQ_H, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+}
+function nearestCached(i) {
+  for (let d = 0; d < SEQ_N; d++) { if (frameCache.has(i - d)) return i - d; if (frameCache.has(i + d)) return i + d; }
+  return -1;
+}
+function drawSequence(f, dir) {
+  const base = Math.floor(f), frac = f - base;
+  wantIdx = base;
+  // decode what we need now, then read ahead in the scroll direction
+  requestFrame(base); requestFrame(base + 1);
+  for (let k = 2; k <= (SMALL ? 5 : 9); k++) requestFrame(base + (dir >= 0 ? k : -k));
+  requestFrame(base + (dir >= 0 ? -1 : 2));
+  const hd = frameCache.has(base), hdNext = frameCache.has(base + 1);
+  const key = base + ':' + Math.round(frac * 20) + ':' + heroCanvas.width + ':' + hd + hdNext + lqReady;
+  if (key === lastDrawKey) return;
+  // always the RIGHT frame: full-HD when it is decoded, otherwise the preview copy of the same frame
+  if (hd) paint(frameCache.get(base), 1);
+  else if (lqReady) paintLQ(base, 1);
+  else { const a = nearestCached(base); if (a < 0) return; paint(frameCache.get(a), 1); }
+  // cross-fade into the next frame so the 24 fps sequence reads as continuous motion
+  if (frac > .02 && base + 1 < SEQ_N) { if (hd && hdNext) paint(frameCache.get(base + 1), frac); else if (!hd && lqReady) paintLQ(base + 1, frac); }
+  ctx.globalAlpha = 1;
+  lastDrawKey = (hd || lqReady) ? key : '';
+}
+for (let i = 0; i < 12; i++) requestFrame(i);   // first frames ready before anyone scrolls
+let lastP = 0;
+
+function heroProgress() {
+  const r = heroEl.getBoundingClientRect();
+  return clamp(-r.top / Math.max(1, r.height - innerHeight), 0, 1);
+}
+function updateHero() {
+  const r = heroEl.getBoundingClientRect();
+  if (r.bottom < 0) return;   // off screen: no painting, no decoding
+  const p = heroProgress();
+  // 1) scrub: the whole flight across the first 88% of the pin, then the lavender wipe takes over
+  const target = sm(0, .95, p) * (SEQ_N - 1);   // footage keeps moving while it fades
+  hCur += (target - hCur) * .22;
+  if (Math.abs(target - hCur) < .002) hCur = target;
+  drawSequence(hCur, p - lastP); lastP = p;
+  // 2) camera feel: settle from a slight push-in, drift up a touch
+  if (!reduceMotion) heroMedia.style.transform = `translate3d(0,${-p * 3}vh,0) scale(${1.14 - sm(0, .6, p) * .14})`;
+  // 3) opening content lifts away
+  const out = sm(.03, .22, p);
+  heroTitle.style.opacity = (1 - out).toFixed(3);
+  heroTitle.style.transform = `translate3d(0,${-out * 10}vh,0) scale(${1 - out * .04})`;
+  heroTitle.style.filter = out > .01 ? `blur(${out * 6}px)` : 'none';
+  heroSide.style.opacity = (1 - sm(.02, .16, p)).toFixed(3);
+  heroSide.style.transform = `translate3d(0,${-sm(.02, .16, p) * 40}px,0)`;
+  heroSide.style.visibility = p > .17 ? 'hidden' : 'visible';
+  heroCue.style.visibility = p > .06 ? 'hidden' : 'visible';
+  // 4) beats in, beats out
+  for (const b of beats) {
+    const v = sm(b.a, b.a + .06, p) * (1 - sm(b.b - .06, b.b, p));
+    b.el.style.opacity = v.toFixed(3);
+    b.el.style.transform = `translate3d(0,${(1 - v) * (p < b.a + .06 ? 50 : -50)}px,0)`;
+  }
+  // 5) frame counter + rail
+  heroMeta.style.opacity = (sm(.08, .16, p) * (1 - sm(.84, .9, p))).toFixed(3);
+  const fp = hCur / (SEQ_N - 1);
+  for (const c of chapters) {
+    const k = clamp((fp - c.a) / (c.b - c.a), 0, 1);
+    c.bar.style.transform = `scaleX(${k})`;
+    c.el.classList.toggle('on', fp >= c.a && (fp < c.b || c.b === 1));
+  }
+  if (++hTick % 3 === 0) {
+    const s = fp * CLIP_SEC, alt = altAt(s);
+    hudAlt.textContent = alt < 10 ? alt.toFixed(1) : Math.round(alt);
+    hudSpd.textContent = Math.round(spdAt(s));
+    hudDist.textContent = Math.round(distAt(hCur));
+  }
+  // 6) fade to black hands over to section 01
+  // gradual fade to black: the whole frame dims evenly over the last ~30% of the pin
+  const fadeK = sm(.6, 1, p);
+  heroMedia.style.opacity = (1 - fadeK * .985).toFixed(3);
+  heroEl.querySelector('.hero__grade').style.opacity = (1 - fadeK).toFixed(3);
+
+}
+
+/* Reserve form: validates, then confirms in place (connect it to your mailing list or CRM to store entries). */
+const reserveForm = document.getElementById('reserveForm'), reserveEmail = document.getElementById('reserveEmail'), reserveNote = document.getElementById('reserveNote');
+reserveForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const v = reserveEmail.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+    reserveEmail.setAttribute('aria-invalid', 'true');
+    reserveNote.textContent = 'Please enter a valid email address.';
+    reserveEmail.focus();
+    return;
+  }
+  reserveEmail.removeAttribute('aria-invalid');
+  // On Netlify the POST is captured by Netlify Forms. GitHub Pages (or a file opened directly) can't receive it, so say so politely.
+  const fallback = "Thanks for your interest. This copy of the site is hosted on GitHub Pages, which can't receive forms, so your reservation wasn't sent.";
+  if (/\.github\.io$/i.test(location.hostname) || location.protocol === 'file:') { reserveNote.textContent = fallback; return; }
+  const btn = reserveForm.querySelector('button[type="submit"]'); btn.disabled = true; reserveNote.textContent = 'Sending…';
+  fetch(location.pathname, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(reserveForm)).toString() })
+    .then(r => { if (!r.ok) throw new Error(r.status);
+      reserveForm.classList.add('done');
+      reserveNote.textContent = `You're on the list. We'll email ${v} before AERIS ONE ships.`; })
+    .catch(() => { reserveNote.textContent = fallback; })
+    .finally(() => { btn.disabled = false; });
+});
+reserveEmail.addEventListener('input', () => { if (reserveEmail.hasAttribute('aria-invalid')) { reserveEmail.removeAttribute('aria-invalid'); reserveNote.textContent = "We'll only use your email for your reservation and launch updates."; } });
+// FAQ links open their answer
+const openFromHash = id => { const d = id && document.getElementById(id); if (d && d.tagName === 'DETAILS') d.open = true; };
+addEventListener('hashchange', () => openFromHash(location.hash.slice(1)));
+document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', () => openFromHash(a.getAttribute('href').slice(1))));
+
+/* REC timer in the corner badge */
+const recEl = document.getElementById('rec'), recStart = performance.now();
+setInterval(() => {
+  const s = Math.floor((performance.now() - recStart) / 1000);
+  recEl.textContent = [s / 3600, s / 60 % 60, s % 60].map(v => String(Math.floor(v)).padStart(2, '0')).join(':');
+}, 1000);
+
+/* ---------- 5b. Loader ---------- */
+const loaderEl = document.getElementById('loader');
+const canvas = document.getElementById('drone');
+const reveal = () => { loaderEl.classList.add('done'); document.body.classList.add('loaded'); };
+setTimeout(reveal, 2500);
+
+/* ---------- 5c. three.js scene ---------- */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+
+const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, .1, 100);
+camera.position.set(0, 0, 10);
+camera.updateMatrixWorld();
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+resize();
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8c8c8c, 1.3));   // neutral, so the white drone reads true over the footage
+const key = new THREE.DirectionalLight(0xfff1d6, 2.6); key.position.set(3, 5, 6); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 2.0); rim.position.set(-5, 2, -4); scene.add(rim);
+
+// scene > flight (position, scale, yaw) > droneRoot (roll/pitch) > holder (model + rotors)
+// droneRoot frame: +X = nose (gimbal camera), +Y = up, +Z = drone's right side.
+const flight = new THREE.Group(); scene.add(flight);
+const droneRoot = new THREE.Group(); flight.add(droneRoot);
+const holder = new THREE.Group(); droneRoot.add(holder);
+
+/* ---------- Materials (the GLB is untextured; colours come from vertex colours) ---------- */
+// realistic finish: light grey satin airframe, charcoal gimbal with a black glass lens,
+// dark composite propellers with amber tips (colours are painted per vertex on load)
+const bodyMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, color: 0xffffff, metalness: 0, roughness: .46, clearcoat: .35, clearcoatRoughness: .3, envMapIntensity: .6 });
+const gimbalMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, color: 0xffffff, metalness: .1, roughness: .34, clearcoat: .9, clearcoatRoughness: .08, envMapIntensity: .8 });
+const bladeMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, color: 0xffffff, metalness: 0, roughness: .5, clearcoat: .25, clearcoatRoughness: .3, envMapIntensity: .5, transparent: true, opacity: .96 });
+const C_SHELL = new THREE.Color(0xb4b7bc), C_BELLY = new THREE.Color(0x7d8086), C_GIMBAL = new THREE.Color(0x2b2d31), C_LENS = new THREE.Color(0x07080a),
+      C_BLADE = new THREE.Color(0x3d4046), C_TIP = new THREE.Color(0xf0a01e);
+// paint a mesh: pick(x, y, z) -> colour; keeps the GLB's baked shading (its vertex colour brightness) as soft occlusion
+function paintMesh(geo, pick) {
+  const pos = geo.attributes.position, old = geo.attributes.color, out = new Float32Array(pos.count * 3), c = new THREE.Color();
+  for (let i = 0; i < pos.count; i++) {
+    c.copy(pick(pos.getX(i), pos.getY(i), pos.getZ(i)));
+    const ao = old ? Math.min(1, ((old.getX(i) + old.getY(i) + old.getZ(i)) / 3) * 1.08) : 1;
+    out[i * 3] = c.r * ao; out[i * 3 + 1] = c.g * ao; out[i * 3 + 2] = c.b * ao;
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(out, 3));
+}
+const ghostMat = bladeMat.clone(); ghostMat.opacity = .22; ghostMat.depthWrite = false;
+
+// Soft radial disc that fakes the blur of a spinning rotor.
+function blurTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 128, 6, 128, 128, 128);
+  grad.addColorStop(0, 'rgba(255,255,255,0)');
+  grad.addColorStop(.18, 'rgba(255,255,255,.35)');
+  grad.addColorStop(.7, 'rgba(255,255,255,.55)');
+  grad.addColorStop(.93, 'rgba(255,255,255,.7)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 256);
+  g.globalCompositeOperation = 'destination-out';
+  for (let i = 0; i < 9; i++) {           // faint concentric streaks
+    g.strokeStyle = `rgba(0,0,0,${.15 + (i % 3) * .08})`; g.lineWidth = 2 + (i % 2) * 3;
+    g.beginPath(); g.arc(128, 128, 30 + i * 11, 0, Math.PI * 2); g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const discMat = new THREE.MeshBasicMaterial({ map: blurTexture(), color: 0xb8bbc0, transparent: true, opacity: .16, side: THREE.DoubleSide, depthWrite: false });
+
+// Rotor hub centres in the GLB's own coordinates (x, z); spin direction alternates diagonally.
+const HUBS = {
+  prop_FL: { x: -0.6517, z: 0.5074, dir: -1 },
+  prop_FR: { x: 0.6495, z: 0.4968, dir: 1 },
+  prop_RL: { x: -0.5517, z: -0.4072, dir: 1 },
+  prop_RR: { x: 0.5652, z: -0.4147, dir: -1 },
+};
+const rotors = [];
+// Exploded-view offsets per part (model space units; the airframe is ~1.9 wide before normalising)
+const EXPLODE_DIR = {
+  body:   [0, .02, 0],
+  gimbal: [0, -.20, .34],
+  arm_FL: [-.26, 0, .17], arm_FR: [.26, 0, .17],
+  arm_RL: [-.26, 0, -.17], arm_RR: [.26, 0, -.17],
+};
+const explodeParts = [];
+let partAnchors = {}, explode = 0;
+let loaded = false;
+
+/* ---------- 5d. Model load & normalisation ---------- */
+function onModel(gltf) {
+  const model = gltf.scene;
+  const props = [];
+  model.traverse(o => {
+    if (!o.isMesh) return;
+    o.frustumCulled = false;
+    if (HUBS[o.name]) props.push(o);
+    else if (o.name === 'gimbal') {
+      // camera housing in charcoal; the front-centre of it is the lens, in black glass
+      o.material = gimbalMat; o.geometry.computeBoundingBox();
+      const b = o.geometry.boundingBox, cx = (b.min.x + b.max.x) / 2, cy = (b.min.y + b.max.y) / 2;
+      const depth = b.max.z - b.min.z, rad = Math.min(b.max.x - b.min.x, b.max.y - b.min.y) * .3;
+      paintMesh(o.geometry, (x, y, z) => (z > b.max.z - depth * .22 && Math.hypot(x - cx, y - cy) < rad) ? C_LENS : C_GIMBAL);
+    } else if (o.name === 'body') {
+      // grey shell, darker underside like the real airframe
+      o.material = bodyMat; o.geometry.computeBoundingBox();
+      const b = o.geometry.boundingBox, cut = b.min.y + (b.max.y - b.min.y) * .3;
+      paintMesh(o.geometry, (x, y) => y < cut ? C_BELLY : C_SHELL);
+    } else { o.material = bodyMat; paintMesh(o.geometry, () => C_SHELL); }
+  });
+  // exploded view: airframe parts slide out along these directions (model space: +Z nose, +Y up)
+  for (const [name, dir] of Object.entries(EXPLODE_DIR)) {
+    const o = model.getObjectByName(name);
+    if (o && o.isMesh) explodeParts.push({ o, base: o.position.clone(), dir: new THREE.Vector3(...dir) });
+  }
+
+  // Re-pivot every propeller on its motor hub so it spins about the motor axis.
+  const v = new THREE.Vector3();
+  for (const prop of props) {
+    const h = HUBS[prop.name];
+    const pivot = new THREE.Group();
+    pivot.position.set(h.x, 0, h.z);
+    model.add(pivot);
+    pivot.attach(prop);
+    prop.material = bladeMat;
+    prop.updateMatrix();
+
+    // radius + blade height (in pivot space) for the blur disc
+    const pos = prop.geometry.attributes.position;
+    let r = 0, ySum = 0;
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i).applyMatrix4(prop.matrix);
+      r = Math.max(r, Math.hypot(v.x, v.z)); ySum += v.y;
+    }
+    const yMid = ySum / pos.count;
+    // dark blades, amber tips over the outer 14%
+    const m = prop.matrix.clone();
+    paintMesh(prop.geometry, (x, y, z) => { v.set(x, y, z).applyMatrix4(m); return Math.hypot(v.x, v.z) > r * .86 ? C_TIP : C_BLADE; });
+
+    // two faint trailing copies = motion blur (same trick as the spec's wing ghosts)
+    for (const off of [.38, .76]) {
+      const g = new THREE.Group(); g.rotation.y = -h.dir * off;
+      const ghost = prop.clone(); ghost.material = ghostMat; ghost.renderOrder = 2;
+      g.add(ghost); pivot.add(g);
+    }
+    const disc = new THREE.Mesh(new THREE.CircleGeometry(r, 64), discMat);
+    disc.rotation.x = -Math.PI / 2; disc.position.y = yMid; disc.renderOrder = 3; disc.frustumCulled = false;
+    pivot.add(disc);
+
+    pivot.rotation.y = Math.random() * Math.PI;
+    rotors.push({ pivot, dir: h.dir });
+    const pd = EXPLODE_DIR['arm_' + prop.name.slice(5)];
+    explodeParts.push({ o: pivot, base: pivot.position.clone(), dir: new THREE.Vector3(pd[0] * 1.9, .30, pd[2] * 1.9) });
+  }
+
+  holder.add(model);
+  model.rotation.set(0, Math.PI / 2, 0);          // nose from +Z to +X
+
+  const box = new THREE.Box3().setFromObject(holder);
+  const size = box.getSize(new THREE.Vector3());
+  model.scale.setScalar(1 / Math.max(size.x, size.y, size.z));
+  box.setFromObject(holder);
+  model.position.sub(box.getCenter(new THREE.Vector3()));
+
+  // label anchors, in each part's own space (bounding-box points)
+  const anchorOf = (name, pick) => {
+    const o = model.getObjectByName(name); if (!o) return null;
+    o.geometry.computeBoundingBox(); const b = o.geometry.boundingBox;
+    return { o, p: pick(b) };
+  };
+  partAnchors = {
+    gimbal: anchorOf('gimbal', b => new THREE.Vector3((b.min.x + b.max.x) / 2, b.min.y, b.max.z)),
+    core: anchorOf('body', b => new THREE.Vector3((b.min.x + b.max.x) / 2, b.max.y, b.min.z + (b.max.z - b.min.z) * .72)),
+    battery: anchorOf('body', b => new THREE.Vector3((b.min.x + b.max.x) / 2, b.max.y, b.min.z + (b.max.z - b.min.z) * .2)),
+    arm_FR: anchorOf('arm_FR', b => new THREE.Vector3(b.max.x, (b.min.y + b.max.y) / 2, b.max.z)),
+    prop_RL: anchorOf('prop_RL', b => new THREE.Vector3((b.min.x + b.max.x) / 2, b.max.y, (b.min.z + b.max.z) / 2)),
+  };
+
+  loaded = true;
+  canvas.classList.add('ready');
+  reveal();
+}
+
+const glbLoader = new GLTFLoader();
+glbLoader.setMeshoptDecoder(MeshoptDecoder);
+// drone model: meshopt-compressed GLB (body, gimbal, 4 arms, 4 propellers)
+glbLoader.load('assets/models/drone.glb', onModel, undefined, err => { console.error(err); reveal(); });
+
+/* ---------- 5f. Scroll-driven flight path ---------- */
+// Keyframes are pinned to scroll anchors (see ANCHORS); the hero is a 320vh pin.
+const ANCHORS = ['top', 'heroMid', 'heroEnd', 'anatomyIn', 'anatomyEnd', 'camera', 'cameraEnd', 'flight', 'flightEnd', 'specs', 'faq', 'reserve'];
+const K_DESKTOP = [
+  { x:  .04, y:  .10, s: 0.92, yaw: 150, pitch: 6,  roll: -4 },  // hero: upper middle, clear of the title card
+  { x:  .16, y: -.24, s: 0.62, yaw: 270, pitch: -10, roll: 0, aim: .3, away: 1 },  // chase cam: flies into the canyon with the footage
+  { x:  .12, y: -.30, s: 0.52, yaw: 270, pitch: -6,  roll: 0, aim: .3, away: 1 },  // end of the pin, still leading the shot
+  { x:  .00, y: -.06, s: 1.06, yaw: 112, pitch: 0, roll: 0, aim: 0, tilt: .62 },  // anatomy: centred under the heading, labels either side
+  { x:  .00, y: -.06, s: 1.06, yaw: 140, pitch: 0, roll: 0, aim: 0, tilt: .62 },  // ...turning slowly while it comes apart
+  { x:  .00, y: -.40, s: 0.80, yaw: 270, pitch: 4,  roll: 0, aim: .9, away: 1, tilt: .32 },   // 01 camera: dead centre, back to you, camera pointed into the arc of stills
+  { x:  .00, y: -.40, s: 0.80, yaw: 270, pitch: 4,  roll: 0, aim: .9, away: 1, tilt: .32 },   // ...held for the whole pin
+  { x:  .30, y: -.02, s: 0.58, yaw: 40,  pitch: 0, roll: 0, aim: 0 },  // 02 flight: anchor of the line-work scenes (drone pose is driven by the steps)
+  { x:  .30, y: -.02, s: 0.58, yaw: 40,  pitch: 0, roll: 0, aim: 0 },
+  { x:  .00, y: -.11, s: 2.50, yaw: 90,  pitch: 2,  roll: 0, aim: 0, tilt: .16, faceHold: .7 },   // 03 specs: centred, facing you, nearly full width between the heading and the tiles
+  { x: -.62, y: -.42, s: 0.52, yaw: 60,  pitch: 6,  roll: -6 },  // faq: low left, under the heading, clear of the answers
+  { x:  .00, y: -.25, s: 0.70, yaw: 105, pitch: 4,  roll: 0 },   // reserve: in the gap between the button and the wordmark
+];
+const K_MOBILE = [
+  { x: .05, y: .42, s: .72, yaw: 150, pitch: 6,  roll: -4 },
+  { x: .00, y: -.10, s: .62, yaw: 270, pitch: -10, roll: 0, aim: .3, away: 1 },
+  { x: .00, y: -.16, s: .55, yaw: 270, pitch: -6,  roll: 0, aim: .3, away: 1 },
+  { x: .00, y:  .26, s: .62, yaw: 112, pitch: 0, roll: 0, aim: 0, tilt: .6 },
+  { x: .00, y:  .26, s: .62, yaw: 140, pitch: 0, roll: 0, aim: 0, tilt: .6 },
+  { x: .00, y: -.46, s: .55, yaw: 270, pitch: 4,  roll: 0, aim: .9, away: 1, tilt: .32 },
+  { x: .00, y: -.46, s: .55, yaw: 270, pitch: 4,  roll: 0, aim: .9, away: 1, tilt: .32 },
+  { x: .00, y:  .20, s: .44, yaw: 40,  pitch: 0, roll: 0, aim: 0 },
+  { x: .00, y:  .20, s: .44, yaw: 40,  pitch: 0, roll: 0, aim: 0 },
+  { x: .00, y:  .08, s: 1.30, yaw: 90,  pitch: 2,  roll: 0, aim: 0, tilt: .16, faceHold: .7 },
+  { x: .32, y:  .74, s: .38, yaw: 60,  pitch: 6,  roll: -6 },
+  { x: 0,   y: -.47, s: .30, yaw: 105, pitch: 4,  roll: 0 },   // reserve on phones: small, in the gap between the form and the links
+];
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const lerpAngle = (a, b, t) => { const d = ((b - a + 540) % 360) - 180; return a + d * t; };
+
+const anatomyEl = document.getElementById('anatomy');
+let anchorY = [];
+function measureAnchors() {
+  const pin = heroEl.offsetHeight - innerHeight;
+  anchorY = ANCHORS.map(a => a === 'heroMid' ? heroEl.offsetTop + pin * .5
+                          : a === 'heroEnd' ? heroEl.offsetTop + pin
+                          : a === 'anatomyIn' ? anatomyEl.offsetTop - innerHeight * .7
+                          : a === 'flightEnd' ? (c => c.offsetTop + c.offsetHeight - innerHeight)(document.getElementById('flight'))
+                          : a === 'cameraEnd' ? (c => c.offsetTop + c.offsetHeight - innerHeight)(document.getElementById('camera'))
+                          : a === 'anatomyEnd' ? anatomyEl.offsetTop + anatomyEl.offsetHeight - innerHeight
+                          : document.getElementById(a).offsetTop);
+  // camera pin: keep the drone centred on the card row wherever the CSS puts it
+  const arcBox = document.getElementById('arc');
+  if (arcBox && arcBox.offsetParent) {
+    const top = arcBox.offsetTop / arcBox.offsetParent.clientHeight;
+    const yd = 1 - 2 * (top + .19), ym = 1 - 2 * (top + .22);
+    K_DESKTOP[5].y = K_DESKTOP[6].y = yd; K_MOBILE[5].y = K_MOBILE[6].y = ym;
+  }
+}
+measureAnchors();
+addEventListener('resize', measureAnchors);
+addEventListener('load', measureAnchors);
+document.querySelectorAll('.faq details').forEach(d => d.addEventListener('toggle', measureAnchors));
+
+function targetAt() {
+  const K = innerWidth < 760 ? K_MOBILE : K_DESKTOP;
+  const y = isFinite(scrollY) ? scrollY : 0;
+  let i = 0;
+  while (i < K.length - 2 && y >= anchorY[i + 1]) i++;
+  const f = clamp((y - anchorY[i]) / Math.max(1, anchorY[i + 1] - anchorY[i]), 0, 1);
+  const t = ease(clamp((f - .12) / .76, 0, 1));
+  const a = K[i], b = K[i + 1];
+  const arc = Math.sin(t * Math.PI);
+  // faceHold: keep this keyframe's heading (and no cursor turn) for most of the way out, then turn late
+  const fh = a.faceHold, tf = fh ? ease(clamp((f - fh) / Math.max(.05, .9 - fh), 0, 1)) : t;
+  return {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t) + arc * -.22,
+    s: lerp(a.s, b.s, t) * (1 + arc * .12),
+    yaw: lerpAngle(a.yaw, b.yaw, tf),
+    pitch: lerp(a.pitch, b.pitch, t),
+    roll: lerp(a.roll, b.roll, t),
+    aim: lerp(a.aim ?? 1, b.aim ?? 1, tf),
+    away: lerp(a.away ?? 0, b.away ?? 0, t),
+    tilt: lerp(a.tilt ?? .2, b.tilt ?? .2, t),
+    moving: arc,
+  };
+}
+
+/* ---------- Anatomy: scroll explodes the drone, labels pin under each part ---------- */
+const plabels = [...document.querySelectorAll('.plabel')].map((el, i) => ({ el, key: el.dataset.part, i }));
+const alist = [...document.querySelectorAll('.anatomy__list li')];
+const anatomyHint = document.getElementById('anatomyHint'), plines = document.getElementById('plines'), anatomyGlow = document.getElementById('anatomyGlow');
+const _v = new THREE.Vector3();
+let explodeCur = 0;
+function updateAnatomy(dt) {
+  const r = anatomyEl.getBoundingClientRect();
+  const p = clamp(-r.top / Math.max(1, r.height - innerHeight), 0, 1);
+  const near = r.top < innerHeight && r.bottom > 0;
+  // starts coming apart once the section is a quarter of the way in, fully apart just after it pins
+  const arrive = (innerHeight * .85 - r.top) / (innerHeight * .85);   // 0 as the footage finishes fading, 1 as the section pins
+  if (near && arrive > .2) anatomyEl.classList.add('in');
+  const target = near ? sm(0, 1, arrive) * (1 - sm(.84, .97, p)) : 0;
+  explodeCur += (target - explodeCur) * (1 - Math.exp(-dt * 6));
+  explode = explodeCur;
+  const e = ease(clamp(explode, 0, 1));
+  for (const ep of explodeParts) ep.o.position.copy(ep.base).addScaledVector(ep.dir, e);
+  anatomyHint.style.opacity = near ? (1 - sm(0, .5, arrive)).toFixed(3) : 0;
+  anatomyGlow.style.opacity = near ? (sm(.15, 1, arrive) * (1 - sm(.9, 1, p) * .5)).toFixed(3) : 0;
+  // labels: a dot on each part, a callout line out to a label in a column either side of the drone,
+  // staggered top to bottom so they spread evenly around it
+  const show = near && loaded, mobile = innerWidth < 760;
+  const W = innerWidth < 1100 ? 168 : 196, H = innerHeight, cx = innerWidth / 2;
+  const all = [];
+  for (const L of plabels) {
+    const a = partAnchors[L.key];
+    const vis = show ? sm(.62 + L.i * .07, .92 + L.i * .07, arrive) * (1 - sm(.78, .84, p)) : 0;
+    L.el.style.opacity = mobile ? 0 : vis.toFixed(3);
+    if (alist[L.i]) alist[L.i].classList.toggle('on', vis > .5);
+    if (!a || !show) continue;
+    a.o.updateWorldMatrix(true, false);
+    _v.copy(a.p).applyMatrix4(a.o.matrixWorld).project(camera);
+    all.push({ L, vis, x: (_v.x * .5 + .5) * innerWidth, y: (-_v.y * .5 + .5) * H });
+  }
+  // split by where each part sits (leftmost half to the left column), then order each column by height
+  const byX = [...all].sort((m, n) => m.x - n.x), nl = Math.ceil(byX.length / 2);
+  const cols = [byX.slice(0, nl), byX.slice(nl)];
+  const top = H * .32, span = H * .46, pad = Math.max(32, innerWidth * .08);
+  let num = 0;
+  cols.forEach((col, side) => {
+    col.sort((m, n) => m.y - n.y);
+    col.forEach((it, k) => {
+      it.side = side;
+      it.lx = side ? innerWidth - pad - W : pad;
+      it.ly = top + span * (k + (side ? .62 : .38)) / col.length - 20;
+      const s = it.L.el.querySelector('small'), n = String(++num).padStart(2, '0');
+      if (!mobile && s.textContent !== n) s.textContent = n;
+      if (it.L.el.classList.contains('l') !== !side) it.L.el.classList.toggle('l', !side);
+    });
+  });
+  let svg = '';
+  for (const it of all) {
+    if (it.vis <= .001) continue;
+    const ly = it.ly + (1 - it.vis) * 12, o = it.vis.toFixed(3);
+    const ax = it.side ? it.lx : it.lx + W, ex = ax + (it.side ? -34 : 34);   // label's inner end, and the elbow just inside it
+    if (!mobile) {
+      it.L.el.style.transform = `translate3d(${it.lx.toFixed(1)}px,${ly.toFixed(1)}px,0)`;
+      svg += `<path style="opacity:${o}" d="M${it.x.toFixed(1)} ${it.y.toFixed(1)}L${ex.toFixed(1)} ${ly.toFixed(1)}H${ax.toFixed(1)}"/>`;
+    }
+    svg += `<circle class="halo" style="opacity:${o}" cx="${it.x.toFixed(1)}" cy="${it.y.toFixed(1)}" r="9"/><circle class="pt" style="opacity:${o}" cx="${it.x.toFixed(1)}" cy="${it.y.toFixed(1)}" r="3.5"/>`;
+    if (mobile) svg += `<text style="opacity:${o}" x="${(it.x + 12).toFixed(1)}" y="${(it.y + 4).toFixed(1)}">${it.L.el.querySelector('small').textContent}</text>`;
+  }
+  plines.innerHTML = svg;
+}
+
+/* ---------- Camera: arc of stills. Scroll turns it; drag adds a nudge that eases out. ---------- */
+const camEl = document.getElementById('camera'), arcEl = document.getElementById('arc'), arcRing = document.getElementById('arcRing');
+const arcCards = [...arcRing.children], arcCount = document.getElementById('arcCount');
+let ARC_STEP = 17;                             // degrees between cards (wider on phones)
+let arcNav = null, arcDrag = 0.5, arcDragV = 0, arcDragging = false, arcLastX = 0, arcAngle = 0, arcIdx = -1;
+arcEl.addEventListener('pointerdown', e => { arcNav = null; arcDragging = true; arcLastX = e.clientX; arcDragV = 0; arcEl.classList.add('drag'); arcEl.setPointerCapture(e.pointerId); });
+arcEl.addEventListener('pointermove', e => {
+  if (!arcDragging) return;
+  const dx = e.clientX - arcLastX; arcLastX = e.clientX;
+  const half = (arcCards.length - 1) / 2, over = Math.max(0, Math.abs(arcDrag) - half);
+  const d = dx / (arcCards[0].offsetWidth * 1.15) / (1 + over * 3); arcDrag += d; arcDragV = d;
+});
+const endDrag = () => { arcDragging = false; arcEl.classList.remove('drag'); };
+arcEl.addEventListener('pointerup', endDrag); arcEl.addEventListener('pointercancel', endDrag);
+/* video wall: one still spread across the 3×2 panels; switches panel by panel with a channel flick */
+const camWall = document.getElementById('camWall'), wallPanels = [...camWall.querySelectorAll('b')];
+let wallSrc = '', wallHover = null, wallTimers = [];
+function layoutWall() {
+  const w = camWall.clientWidth, h = camWall.clientHeight, gap = 6, mob = innerWidth < 760, cols = mob ? 2 : 4, rows = mob ? 4 : 3;
+  const pw = (w - gap * (cols - 1)) / cols, ph = (h - gap * (rows - 1)) / rows;
+  // stills are 3:4: scale to cover the whole wall, centred, then give each panel its slice
+  const iw = Math.max(w, h * 3 / 4), ih = iw * 4 / 3, ox = (iw - w) / 2, oy = (ih - h) / 2;
+  wallPanels.forEach((b, k) => { const c = k % cols, r = (k / cols) | 0;
+    b.style.backgroundSize = `${iw}px ${ih}px`; b.style.backgroundPosition = `${-(c * (pw + gap) + ox)}px ${-(r * (ph + gap) + oy)}px`; });
+}
+addEventListener('resize', layoutWall);
+function showOnWall(src) {
+  if (!src || src === wallSrc) return; wallSrc = src;
+  wallTimers.forEach(clearTimeout);
+  const order = [5, 1, 9, 3, 11, 0, 7, 2, 10, 4, 8, 6];
+  wallTimers = wallPanels.map((b, k) => setTimeout(() => {
+    b.style.backgroundImage = `url("${src}")`; b.classList.remove('flick'); void b.offsetWidth; b.classList.add('flick');
+  }, order[k] * 32));
+}
+arcCards.forEach(c => {
+  const src = c.querySelector('img').getAttribute('src');
+  c.addEventListener('pointerenter', () => { if (arcDragging) return; wallHover = c; camWall.style.setProperty('--wo', '.62'); showOnWall(src); });
+  c.addEventListener('pointerleave', () => { if (wallHover === c) { wallHover = null; camWall.style.setProperty('--wo', '.28'); } });
+});
+requestAnimationFrame(layoutWall);
+
+/* prev / next buttons + position dots */
+const arcPrev = document.getElementById('arcPrev'), arcNext = document.getElementById('arcNext'), arcDots = document.getElementById('arcDots');
+arcDots.innerHTML = arcCards.map(() => '<i></i>').join('');
+const arcDotEls = [...arcDots.children];
+function arcStep(dir) {                              // dir +1 = next card (the arc moves left)
+  const half = (arcCards.length - 1) / 2, base = arcNav !== null ? arcNav : Math.round(arcDrag - half % 1) + half % 1;
+  arcNav = clamp(base - dir, -half, half); arcDragV = 0;
+}
+arcPrev.addEventListener('click', () => arcStep(-1));
+arcNext.addEventListener('click', () => arcStep(1));
+arcEl.setAttribute('tabindex', '0');
+arcEl.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { arcStep(1); e.preventDefault(); } if (e.key === 'ArrowLeft') { arcStep(-1); e.preventDefault(); } });
+
+function updateArc(dt) {
+  const r = camEl.getBoundingClientRect();
+  if (r.bottom < 0 || r.top > innerHeight) return;
+  ARC_STEP = innerWidth < 760 ? 32 : 22;
+  // drag only: the arc ignores page scroll. arcDrag is in "cards"; it glides after release, then settles on a card
+  const half = (arcCards.length - 1) / 2;
+  if (arcNav !== null && !arcDragging) {           // arrow buttons: ease to the chosen card
+    arcDrag += (arcNav - arcDrag) * (1 - Math.exp(-dt * 8)); arcDragV = 0;
+    if (Math.abs(arcNav - arcDrag) < .002) { arcDrag = arcNav; arcNav = null; }
+  } else if (!arcDragging) {
+    arcDrag += arcDragV; arcDragV *= Math.pow(.92, dt * 60);
+    if (Math.abs(arcDragV) < .004) {                     // settle so a card sits dead centre
+      const snap = clamp(Math.round(arcDrag - half % 1) + half % 1, -half, half);
+      arcDrag += (snap - arcDrag) * (1 - Math.exp(-dt * 7));
+    }
+    // soft stop at either end
+    if (arcDrag > half) { arcDrag += (half - arcDrag) * (1 - Math.exp(-dt * 10)); arcDragV *= .6; }
+    if (arcDrag < -half) { arcDrag += (-half - arcDrag) * (1 - Math.exp(-dt * 10)); arcDragV *= .6; }
+  }
+  const target = arcDrag * ARC_STEP;
+  arcAngle += (target - arcAngle) * (1 - Math.exp(-dt * 7));
+  const R = arcEl.clientWidth * (innerWidth < 760 ? .8 : .5);
+  let best = 0, bestA = 1e9;
+  arcCards.forEach((c, i) => {
+    const a = (i - (arcCards.length - 1) / 2) * ARC_STEP + arcAngle;
+    const vis = 1 - sm(56, 74, Math.abs(a));
+    c.style.transform = `rotateY(${a.toFixed(2)}deg) translateZ(${(-R).toFixed(1)}px)`;   // on the inside of the cylinder, facing its centre
+    c.style.opacity = vis.toFixed(3);
+    c.style.visibility = vis < .01 ? 'hidden' : 'visible';
+    if (Math.abs(a) < bestA) { bestA = Math.abs(a); best = i; }
+  });
+  arcRing.style.transform = `translateZ(${R}px)`;
+  if (best !== arcIdx) {
+    arcIdx = best; arcCount.textContent = String(best + 1).padStart(2, '0');
+    arcDotEls.forEach((d, k) => d.classList.toggle('on', k === best));
+    arcPrev.disabled = best === 0; arcNext.disabled = best === arcCards.length - 1;
+  }
+  if (!wallHover) showOnWall(arcCards[arcIdx].querySelector('img').getAttribute('src'));   // idle: the wall shows the centred still, dimly
+}
+
+/* ---------- Flight: four steps, each staged in white line-work around the drone ---------- */
+const flEl = document.getElementById('flight');
+const fsteps = [...document.querySelectorAll('#flSteps .fstep')];
+const fnav = [...document.querySelectorAll('#flNav li')].map(li => ({ li, bar: li.querySelector('b') }));
+const fxTag = document.getElementById('fxTag');
+const FX_TILT = .36, FX_YAW = -.55;                         // shared 3/4 view from above for the scenes and the drone
+const FX_SIZE = .72, FX_DIM = .5;                          // line-work footprint (vs the drone) and overall brightness
+const fxScene = new THREE.Scene();
+const fx = new THREE.Group(); fx.rotation.set(FX_TILT, FX_YAW, 0); fxScene.add(fx);
+const lineMat = o => new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: o, depthWrite: false, toneMapped: false });
+const dashMat = o => new THREE.LineDashedMaterial({ color: 0xffffff, transparent: true, opacity: o, depthWrite: false, toneMapped: false, dashSize: .05, gapSize: .04 });
+const segs = (pts, mat) => { const g = new THREE.BufferGeometry().setFromPoints(pts); const l = new THREE.LineSegments(g, mat); l.userData.base = mat.opacity; l.frustumCulled = false; return l; };
+const loop = (pts, mat) => { const g = new THREE.BufferGeometry().setFromPoints(pts); const l = new THREE.LineLoop(g, mat); l.userData.base = mat.opacity; l.frustumCulled = false; return l; };
+const circle = (r, n = 64, y = 0) => Array.from({ length: n }, (_, i) => new THREE.Vector3(Math.cos(i / n * 6.283) * r, y, Math.sin(i / n * 6.283) * r));
+const boxEdges = (w, h, d) => { const e = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)); const l = new THREE.LineSegments(e, lineMat(.55)); l.userData.base = .55; l.frustumCulled = false; return l; };
+const GROUND = -.78;
+const scenes = [new THREE.Group(), new THREE.Group(), new THREE.Group(), new THREE.Group()];
+scenes.forEach(s => { s.visible = false; fx.add(s); });
+
+// 1 · sensing sphere, pulse rings, obstacles
+const S1 = scenes[0];
+{
+  const pts = [];
+  for (let k = 1; k < 5; k++) { const a = -Math.PI / 2 + k / 5 * Math.PI, r = Math.cos(a) * 1.05, y = Math.sin(a) * 1.05;
+    const c = circle(r, 72, y); c.forEach((p, i) => pts.push(p, c[(i + 1) % c.length])); }
+  for (let k = 0; k < 6; k++) { const b = k / 6 * Math.PI * 2;
+    for (let j = 0; j < 24; j++) { const a0 = -Math.PI / 2 + j / 24 * Math.PI, a1 = -Math.PI / 2 + (j + 1) / 24 * Math.PI;
+      pts.push(new THREE.Vector3(Math.cos(a0) * Math.cos(b), Math.sin(a0), Math.cos(a0) * Math.sin(b)).multiplyScalar(1.05),
+               new THREE.Vector3(Math.cos(a1) * Math.cos(b), Math.sin(a1), Math.cos(a1) * Math.sin(b)).multiplyScalar(1.05)); } }
+  S1.add(segs(pts, lineMat(.14)));
+  S1.userData.rings = [0, 1, 2].map(() => { const l = loop(circle(1, 96), lineMat(.6)); S1.add(l); return l; });
+  S1.userData.obs = [[1.3, .0, -.15, .26, .62, .26], [-1.15, -.08, .5, .32, .5, .24], [-.4, .05, -1.2, .28, .7, .28]].map(([x, y, z, w, h, d]) => {
+    const b = boxEdges(w, h, d); b.position.set(x, y, z); S1.add(b);
+    const ray = segs([new THREE.Vector3(), new THREE.Vector3(x, y, z).multiplyScalar(.86)], lineMat(.0)); S1.add(ray);
+    return { b, ray, dist: Math.hypot(x, z) };
+  });
+}
+// 2 · scrolling wireframe terrain
+const S2 = scenes[1];
+const TX = 30, TZ = 10, TW = 3.2, TD = 1.6;
+const terrH = (x, z) => .26 * Math.sin(x * 1.1) + .14 * Math.sin(x * 2.3 + z * 1.4) + .08 * Math.sin(x * 4.1 - z * 2.2) + .12 * Math.cos(z * 1.7 + x * .5);
+const terrGeo = new THREE.BufferGeometry();
+terrGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array((TX * (TZ + 1) + TZ * (TX + 1)) * 6), 3));
+const terr = new THREE.LineSegments(terrGeo, lineMat(.4)); terr.userData.base = .4; terr.frustumCulled = false; S2.add(terr);
+const hold = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, -1, 0)]), dashMat(.9));
+hold.userData.base = .9; hold.frustumCulled = false; S2.add(hold);
+const holdRing = loop(circle(.16, 40), lineMat(.9)); S2.add(holdRing);
+function updateTerrain(off) {
+  const a = terrGeo.attributes.position.array; let k = 0;
+  const P = (i, j) => { const x = -TW / 2 + i / TX * TW, z = -TD / 2 + j / TZ * TD; return [x, GROUND + .15 + terrH(x + off, z), z]; };
+  for (let j = 0; j <= TZ; j++) for (let i = 0; i < TX; i++) { a.set(P(i, j), k); a.set(P(i + 1, j), k + 3); k += 6; }
+  for (let i = 0; i <= TX; i++) for (let j = 0; j < TZ; j++) { a.set(P(i, j), k); a.set(P(i, j + 1), k + 3); k += 6; }
+  terrGeo.attributes.position.needsUpdate = true;
+}
+// 3 · runner, trees, lock-on brackets
+const S3 = scenes[2];
+const runGeo = new THREE.BufferGeometry(); runGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(16 * 3 * 2), 3));
+const runner = new THREE.LineSegments(runGeo, lineMat(1)); runner.userData.base = 1; runner.frustumCulled = false; S3.add(runner);
+const head = loop(circle(.045, 24), lineMat(1)); head.rotation.x = Math.PI / 2; S3.add(head);
+const brackets = new THREE.Group(); S3.add(brackets);
+{
+  const c = .07, s = .2, h = .42, p = [];
+  for (const sx of [-1, 1]) for (const sy of [0, 1]) {
+    const x = sx * s, y = sy * h, dy = sy ? -c : c, dx = -sx * c;
+    p.push(new THREE.Vector3(x, y, 0), new THREE.Vector3(x + dx, y, 0), new THREE.Vector3(x, y, 0), new THREE.Vector3(x, y + dy, 0));
+  }
+  brackets.add(segs(p, lineMat(1)));
+}
+const lockLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)]), dashMat(.75));
+lockLine.userData.base = .75; lockLine.frustumCulled = false; S3.add(lockLine);
+const trackPath = new THREE.CatmullRomCurve3([[-.9, .9], [.1, 1.25], [1.25, .55], [1.1, -.55], [.1, -.95], [-1.0, -.4]].map(([x, z]) => new THREE.Vector3(x, GROUND, z)), true);
+S3.add(loop(trackPath.getPoints(160), lineMat(.1)));
+[[-1.35, -.85], [-.5, .3], [.75, .2], [1.5, -.35], [.3, -1.35]].forEach(([x, z], i) => {
+  const e = new THREE.EdgesGeometry(new THREE.ConeGeometry(.16 + (i % 3) * .03, .55 + (i % 4) * .1, 6, 1));
+  const tr = new THREE.LineSegments(e, lineMat(.45)); tr.userData.base = .45; tr.frustumCulled = false;
+  tr.position.set(x, GROUND + (.55 + (i % 4) * .1) / 2, z); S3.add(tr);
+});
+// 4 · route home and landing pad
+const S4 = scenes[3];
+const HOME = new THREE.Vector3(-1.25, GROUND, .55);
+// two cubic Béziers joined with a shared tangent: climb out, one clean arc, then a soft glide into a vertical descent
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const RTH_S = V(.9, .05, -.55), RTH_M = V(-.15, .62, 0), RTH_E = V(HOME.x, GROUND + .16, HOME.z);
+const RTH_D = V(RTH_E.x - RTH_S.x, 0, RTH_E.z - RTH_S.z).normalize().multiplyScalar(.5);
+const rthCurve = new THREE.CurvePath();
+rthCurve.add(new THREE.CubicBezierCurve3(RTH_S, V(.9, .5, -.55), RTH_M.clone().sub(RTH_D), RTH_M));
+rthCurve.add(new THREE.CubicBezierCurve3(RTH_M, RTH_M.clone().add(RTH_D), V(RTH_E.x, .45, RTH_E.z), RTH_E));
+const RTH_HEAD = Math.atan2(RTH_D.z, RTH_D.x);
+const rthLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(rthCurve.getSpacedPoints(200)), dashMat(.75));
+rthLine.computeLineDistances(); rthLine.userData.base = .75; rthLine.frustumCulled = false; S4.add(rthLine);
+{
+  const pad = new THREE.Group(); pad.position.copy(HOME); S4.add(pad);
+  pad.add(loop(circle(.34, 72), lineMat(.9)));
+  pad.add(segs([[-.08, -.1], [-.08, .1], [.08, -.1], [.08, .1], [-.08, 0], [.08, 0]].map(([x, z]) => new THREE.Vector3(x, 0, z)), lineMat(.95)));
+  S4.userData.pulse = [0, 1].map(() => { const l = loop(circle(1, 72), lineMat(.5)); pad.add(l); return l; });
+  // obstacles it saw on the way out
+  [[-.1, .0, -.45, .26, .7, .26]].forEach(([x, y, z, w, h, d]) => { const b = boxEdges(w, h, d); b.position.set(x, y, z); S4.add(b); });
+}
+
+const fxPose = { p: new THREE.Vector3(), h: 0, pitch: 0, roll: 0 };
+const _p = new THREE.Vector3(), _q = new THREE.Vector3(), _w = new THREE.Vector3();
+let fxW = 0, fxSlow = 0, fxStep = -1;
+const TAGS = [s => `Obstacle <b>${s}</b> m`, s => `Holding <b>${s}</b> m`, s => `SubjectLock <b>${s}</b>%`, s => `Home <b>${s}</b> m`];
+function setOpacity(g, k) { g.traverse(o => { if (o.material && o.userData.base !== undefined) o.material.opacity = o.userData.base * k * FX_DIM; }); }
+
+// pose + scene for one step (t = time, q = step-local scroll progress 0..1)
+function stepPose(i, t, q, out) {
+  if (i === 0) { out.p.set(0, Math.sin(t * 1.4) * .03, 0); out.h = t * .45; out.pitch = 0; out.roll = 0; }
+  else if (i === 1) { const off = t * .55 + q * 2.2; const y = GROUND + .15 + terrH(off, 0) + .58; out.p.set(0, y, 0); out.h = 0;
+    out.pitch = -8 - (terrH(off + .25, 0) - terrH(off, 0)) * 60; out.roll = Math.sin(t * 1.2) * 3; }
+  else if (i === 2) { const s = trackPath.getPointAt((t * .07) % 1, _q); out.p.set(0, .25, 0); out.h = Math.atan2(s.z, s.x); out.pitch = -14; out.roll = 0; }
+  else { const k = sm(0, 1, q); out.p.copy(rthCurve.getPointAt(k));
+    const tg = rthCurve.getTangentAt(clamp(k, .001, .999)), hz = Math.hypot(tg.x, tg.z);
+    // heading follows the arc; as the path turns vertical it settles on the line home instead of snapping
+    const hs = sm(.05, .45, hz), hd = Math.atan2(tg.z, tg.x);
+    out.h = RTH_HEAD + (((hd - RTH_HEAD + Math.PI * 3) % (Math.PI * 2)) - Math.PI) * hs;
+    out.pitch = -12 * hs * (1 - sm(.85, 1, k)); out.roll = 0; }
+  return out;
+}
+const poseA = { p: new THREE.Vector3(), h: 0, pitch: 0, roll: 0 }, poseB = { p: new THREE.Vector3(), h: 0, pitch: 0, roll: 0 };
+
+function updateFlightFx(t, dt, baseScale, halfW, halfH) {
+  const r = flEl.getBoundingClientRect();
+  const pin = Math.max(1, r.height - innerHeight);
+  const p = clamp(-r.top / pin, 0, 1);
+  // presence: fades in as the section arrives, out as it leaves
+  const W = sm(-.75, -.05, -r.top / innerHeight) * (1 - sm(pin / innerHeight + .05, pin / innerHeight + .6, -r.top / innerHeight));
+  fxW = W;
+  if (W > .3) flEl.classList.add('in');   // section is taller than the reveal observer's threshold allows
+  fx.visible = W > .002;
+  fxTag.style.opacity = 0;
+  if (!fx.visible) { fxSlow = 0; return null; }
+  fx.position.set(cur.x * halfW, cur.y * halfH, 0);
+  fx.scale.setScalar(baseScale * FX_SIZE);
+  // which step, and how far into it; last 18% of each step blends into the next
+  const s = clamp(p * 4, 0, 3.9999), i = Math.floor(s), f = s - i;
+  const blend = i < 3 ? sm(.78, 1, f) : 0, q = clamp(f / .78, 0, 1);
+  stepPose(i, t, q, poseA);
+  let pose = poseA;
+  if (blend > 0) { stepPose(i + 1, t, 0, poseB);
+    fxPose.p.lerpVectors(poseA.p, poseB.p, blend); fxPose.h = poseA.h + (((poseB.h - poseA.h + Math.PI * 3) % (Math.PI * 2)) - Math.PI) * blend;
+    fxPose.pitch = lerp(poseA.pitch, poseB.pitch, blend); fxPose.roll = lerp(poseA.roll, poseB.roll, blend); pose = fxPose; }
+  // scene opacity
+  scenes.forEach((sc, k) => {
+    const v = (k === i ? 1 - blend : k === i + 1 ? blend : 0) * W;
+    sc.visible = v > .004; if (sc.visible) setOpacity(sc, v);
+  });
+  // step 1: pulses + obstacle hits
+  { const R = S1.userData.rings; R.forEach((l, k) => { const ph = (t * .45 + k / 3) % 1, rad = .3 + ph * 1.2;
+      l.scale.setScalar(rad); l.material.opacity = (1 - ph) * .7 * (S1.visible ? scenes[0].children[0].material.opacity / .14 : 0); });
+    S1.userData.obs.forEach(o => { const hit = R.reduce((m, l) => Math.max(m, 1 - Math.min(1, Math.abs(l.scale.x - o.dist) / .18)), 0);
+      const base = S1.visible ? scenes[0].children[0].material.opacity / .14 : 0;
+      o.b.material.opacity = (.3 + hit * .5) * base; o.ray.material.opacity = hit * .6 * base; }); }
+  // step 2: terrain + height-hold line
+  if (S2.visible) { const off = t * .55 + (i === 1 ? q : 0) * 2.2; updateTerrain(off);
+    const gy = GROUND + .15 + terrH(off, 0); hold.position.copy(poseA.p).setY(i === 1 ? poseA.p.y : poseB.p.y);
+    const dy = hold.position.y - gy - .02; hold.scale.set(1, Math.max(.01, dy), 1); hold.computeLineDistances();
+    holdRing.position.set(0, gy + .01, 0); }
+  // step 3: runner along the track, brackets, lock line
+  if (S3.visible) { const u = (t * .07) % 1, s3 = trackPath.getPointAt(u, _p), tg = trackPath.getTangentAt(u, _w), yaw = Math.atan2(tg.x, tg.z);
+    const ph = t * 9, L = Math.sin(ph) * .5, a = runGeo.attributes.position.array, c = Math.cos(yaw), sn = Math.sin(yaw);
+    const W2 = (x, y, z) => [s3.x + x * c + z * sn, GROUND + y, s3.z - x * sn + z * c];
+    const hip = [0, .2, 0], sh = [0, .34, .02], kn = d => [d * .03, .1, Math.sin(L * d) * .07], ft = d => [d * .03, 0, Math.sin(L * d) * .14 - .02], el = d => [d * .06, .27, -Math.sin(L * d) * .06], hd = d => [d * .07, .22, -Math.sin(L * d) * .1];
+    const lines = [[hip, sh], [hip, kn(1)], [kn(1), ft(1)], [hip, kn(-1)], [kn(-1), ft(-1)], [sh, el(1)], [el(1), hd(1)], [sh, el(-1)], [el(-1), hd(-1)]];
+    let k = 0; for (const [m, n] of lines) { a.set(W2(...m), k); a.set(W2(...n), k + 3); k += 6; }
+    runGeo.setDrawRange(0, lines.length * 2); runGeo.attributes.position.needsUpdate = true;
+    head.position.set(...W2(0, .4, .03));
+    brackets.position.set(s3.x, GROUND, s3.z); brackets.rotation.y = -FX_YAW; brackets.rotation.x = -FX_TILT * .5;
+    brackets.scale.setScalar(1 + Math.sin(t * 5) * .03);
+    lockLine.geometry.setFromPoints([pose.p.clone().add(new THREE.Vector3(Math.cos(pose.h) * .3, -.06, Math.sin(pose.h) * .3)), new THREE.Vector3(s3.x, GROUND + .22, s3.z)]); lockLine.computeLineDistances(); }
+  // step 4: landing pad pulses; props slow on touchdown
+  S4.userData.pulse.forEach((l, k) => { const ph = (t * .5 + k / 2) % 1; l.scale.setScalar(.34 + ph * .5); l.material.opacity = (1 - ph) * .5 * FX_DIM * (S4.visible ? (i === 3 ? 1 : blend) * W : 0); });
+  fxSlow = i === 3 ? sm(.86, 1, q) : 0;
+  // steps + nav + tag
+  fsteps.forEach((el, k) => { const v = k === i ? 1 - blend : k === i + 1 ? blend : 0;
+    el.style.opacity = v.toFixed(3); el.style.transform = `translateY(${((1 - v) * (k <= i ? -26 : 26)).toFixed(1)}px)`; el.style.visibility = v < .01 ? 'hidden' : 'visible'; });
+  fnav.forEach((n, k) => { n.bar.style.transform = `scaleX(${clamp(s - k, 0, 1).toFixed(3)})`; n.li.classList.toggle('on', k === i); });
+  if (i !== fxStep) fxStep = i;
+  // floating readout next to the action
+  fx.updateMatrixWorld(true);
+  let tp, val;
+  if (i === 0) { const o = S1.userData.obs[0]; tp = o.b.position.clone().add(new THREE.Vector3(0, .5, 0)); val = (o.dist * 7.6).toFixed(1); }
+  else if (i === 1) { tp = pose.p.clone().add(new THREE.Vector3(.18, -.3, 0)); val = (2 + Math.sin(t * 2) * .04).toFixed(1); }
+  else if (i === 2) { tp = new THREE.Vector3(_p.x, GROUND + .55, _p.z); val = (97 + Math.round(Math.sin(t) * 2)); }
+  else { tp = HOME.clone().add(new THREE.Vector3(.1, .45, 0)); val = Math.max(0, Math.round((1 - sm(0, 1, q)) * 312)); }
+  tp = fx.localToWorld(tp).project(camera);
+  const tv = (1 - blend) * W * (innerWidth < 760 ? 0 : 1);
+  fxTag.innerHTML = TAGS[i](val);
+  fxTag.style.opacity = tv.toFixed(3);
+  const tx = clamp((tp.x * .5 + .5) * innerWidth + 12, 20, innerWidth - fxTag.offsetWidth - 24);
+  fxTag.style.transform = `translate3d(${tx.toFixed(1)}px,${((-tp.y * .5 + .5) * innerHeight - 6).toFixed(1)}px,0)`;
+  // drone pose in world space
+  return { pos: fx.localToWorld(_q.copy(pose.p)), yaw: FX_YAW - pose.h, pitch: pose.pitch, roll: pose.roll, W };
+}
+
+/* ---------- 5g. Animation loop ---------- */
+const clock = new THREE.Clock();
+const cur = { ...targetAt() };
+const mouse = { x: 0, y: 0, sx: 0, sy: 0, on: 0, active: 0 };
+addEventListener('pointermove', e => {
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -((e.clientY / innerHeight) * 2 - 1);
+  if (e.pointerType === 'mouse' || e.pointerType === 'pen') mouse.on = 1;
+}, { passive: true });
+document.documentElement.addEventListener('mouseleave', () => { mouse.on = 0; });
+// cursor-facing angles, smoothed separately so the drone turns gracefully
+const aim = { yaw: 90, pitch: 0 };
+const ndc = new THREE.Vector3();
+
+function frame() {
+  requestAnimationFrame(frame);
+  const dt = Math.min(clock.getDelta(), .05);
+  const t = clock.elapsedTime;
+  const tg = targetAt();
+
+  const k = 1 - Math.exp(-dt * 3.2);
+  const px = cur.x, py = cur.y;
+  cur.x += (tg.x - cur.x) * k;
+  cur.y += (tg.y - cur.y) * k;
+  cur.s += (tg.s - cur.s) * k;
+  cur.pitch += (tg.pitch - cur.pitch) * k;
+  cur.roll += (tg.roll - cur.roll) * k;
+  cur.tilt += (tg.tilt - cur.tilt) * k;
+  cur.yaw = lerpAngle(cur.yaw, tg.yaw, 1 - Math.exp(-dt * 2.6));
+  const vx = dt > 0 ? (cur.x - px) / dt : 0;
+  const vy = dt > 0 ? (cur.y - py) / dt : 0;
+
+  const km = 1 - Math.exp(-dt * 2);
+  mouse.sx += (mouse.x - mouse.sx) * km;
+  mouse.sy += (mouse.y - mouse.sy) * km;
+  mouse.active += (mouse.on - mouse.active) * (1 - Math.exp(-dt * 2.5));
+
+  // Face the cursor: angle from the drone's on-screen position to the pointer.
+  ndc.copy(flight.position).project(camera);
+  const dx = (mouse.x - ndc.x) * camera.aspect, dy = mouse.y - ndc.y;
+  // facing you (yaw 90) the nose turns toward the cursor one way; facing into the scene (yaw 270, Camera section) the other
+  const turn = Math.atan(dx * 1.6) / D2R * .95;
+  const aimYaw = isFinite(dx) ? (tg.away > .5 ? 270 + clamp(turn, -70, 70) : 90 - turn) : aim.yaw;     // right → nose right, left → nose left
+  const aimPitch = isFinite(dy) ? clamp(Math.atan(dy * 1.6) / D2R * .45, -24, 24) : aim.pitch;   // nose up/down toward cursor
+  const ka = 1 - Math.exp(-dt * 4);
+  const prevAim = aim.yaw;
+  aim.yaw = lerpAngle(aim.yaw, aimYaw, ka);
+  aim.pitch += (aimPitch - aim.pitch) * ka;
+  const turnRate = (((aim.yaw - prevAim + 540) % 360) - 180) / Math.max(dt, 1e-3);
+  // cursor wins while hovering; eases off mid-flight between sections and when the cursor leaves
+  const w = mouse.active * (1 - tg.moving * .6) * tg.aim;   // in the canyon the drone mostly holds its chase line
+
+  const halfH = Math.tan(camera.fov * D2R / 2) * camera.position.z;
+  const halfW = halfH * camera.aspect;
+  const hover = Math.sin(t * 2.1) * .045 + Math.sin(t * 3.7) * .015;
+
+  flight.position.set(
+    cur.x * halfW + Math.sin(t * 1.3) * .04 + mouse.sx * .12,
+    cur.y * halfH + hover * halfH * .5 + mouse.sy * .08,
+    Math.sin(t * .9) * .15
+  );
+  flight.scale.setScalar(Math.min(halfH * 2 * .46, halfW * 2 * .7) * cur.s);   // drone is wide & flat: ~46% of viewport height, capped by width on phones
+  // slight forward tilt toward the camera so the drone's top deck reads, then yaw
+  flight.rotation.set(cur.tilt, -lerpAngle(cur.yaw, aim.yaw, w) * D2R, 0);
+
+  const pitch = lerp(cur.pitch, aim.pitch, w) - clamp(vy * 22, -28, 28) + Math.sin(t * 2.1 + 1) * 3;
+  const roll = cur.roll * (1 - w * .5) + clamp(vx * 18, -30, 30) - clamp(turnRate * .08, -18, 18) * w + Math.sin(t * 1.7) * 4;
+  droneRoot.rotation.set(roll * D2R, 0, pitch * D2R, 'YZX');
+
+  // Flight section: the steps drive the drone (blended in/out with the section)
+  const fxo = updateFlightFx(t, dt, Math.min(halfH * 2 * .46, halfW * 2 * .7) * cur.s, halfW, halfH);
+  if (fxo && fxo.W > 0) {
+    const W = fxo.W;
+    flight.position.lerp(fxo.pos, W);
+    flight.rotation.x = lerp(flight.rotation.x, FX_TILT, W);
+    flight.rotation.y = flight.rotation.y + ((((fxo.yaw - flight.rotation.y) + Math.PI * 3) % (Math.PI * 2)) - Math.PI) * W;
+    droneRoot.rotation.set(lerp(roll, fxo.roll, W) * D2R, 0, lerp(pitch, fxo.pitch, W) * D2R, 'YZX');
+  }
+
+  // rotor spin (replaces the bee wing beat): faster while flying between sections
+  const omega = Math.PI * 2 * (4.2 + tg.moving * 1.6) * (1 - explode * .9) * (1 - fxSlow * .92);   // props idle while laid out or landed
+  for (const r of rotors) r.pivot.rotation.y += r.dir * omega * dt;
+
+  updateAnatomy(dt);
+  updateArc(dt);
+
+  updateHero();
+
+  if (loaded) {
+    if (fx.visible) {                     // line-work first, then the drone over it, so lines never cross the drone
+      renderer.render(fxScene, camera);
+      renderer.autoClear = false; renderer.clearDepth(); renderer.render(scene, camera); renderer.autoClear = true;
+    } else renderer.render(scene, camera);
+  }
+}
+frame();
+</script>
+
+<script>
+/* ---------- Motion layer: split titles, count-ups, magnetic buttons, link rolls, nav tuck, progress ---------- */
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 1. titles: one masked line per <br>
+  document.querySelectorAll('main section .title').forEach(h => {
+    const lines = h.innerHTML.split(/<br\s*\/?>/i);
+    h.innerHTML = lines.map(l => `<span class="ln"><span>${l.trim()}</span></span>`).join('');
+    h.classList.remove('reveal'); h.classList.add('split');
+  });
+  // 2. stagger indexes
+  document.querySelectorAll('.tiles .tile').forEach((el, i) => el.style.setProperty('--i', i));
+  document.querySelectorAll('.faq__list details').forEach((el, i) => el.style.setProperty('--i', i));
+  // 3. link text roll
+  document.querySelectorAll('.nav__links a, .foot .cols a').forEach(a => {
+    const txt = a.textContent; a.innerHTML = `<span class="roll"><span>${txt}</span></span>`; a.setAttribute('aria-label', txt);
+  });
+  // 4. spec numbers count up the first time the section shows
+  const specs = document.getElementById('specs');
+  const nums = [...specs.querySelectorAll('.tile strong')].map(s => {
+    const n = s.firstChild, raw = n.nodeValue.trim(), m = raw.match(/^([\d.]+)(.*)$/);
+    return m ? { n, to: parseFloat(m[1]), dec: (m[1].split('.')[1] || '').length, tail: m[2], raw } : null;
+  }).filter(Boolean);
+  if (!reduce) nums.forEach(o => o.n.nodeValue = (0).toFixed(o.dec) + o.tail);
+  const runCount = () => {
+    const t0 = performance.now();
+    const step = now => {
+      let done = true;
+      nums.forEach((o, i) => {
+        const k = Math.min(1, Math.max(0, (now - t0 - i * 90) / 1600)); if (k < 1) done = false;
+        const e = 1 - Math.pow(2, -10 * k);
+        o.n.nodeValue = (k >= 1 ? o.raw.replace(o.tail, '') : (o.to * e).toFixed(o.dec)) + o.tail;
+      });
+      if (!done) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  if (!reduce) new MutationObserver((_, mo) => { if (specs.classList.contains('in')) { mo.disconnect(); runCount(); } })
+    .observe(specs, { attributes: true, attributeFilter: ['class'] });
+  // 5. magnetic buttons
+  if (!reduce && matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.nav__cta, .btn, .glow, .arc__btn').forEach(el => {
+      el.classList.add('magnetic');
+      const k = el.classList.contains('arc__btn') ? .4 : .28;
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.classList.add('pull');
+        el.style.translate = `${((e.clientX - r.left - r.width / 2) * k).toFixed(1)}px ${((e.clientY - r.top - r.height / 2) * k).toFixed(1)}px`;
+      });
+      el.addEventListener('pointerleave', () => { el.classList.remove('pull'); el.style.translate = '0 0'; });
+    });
+  }
+  // 6. nav tuck + scroll progress
+  const nav = document.querySelector('.nav'), bar = document.createElement('div');
+  bar.className = 'progress'; bar.setAttribute('aria-hidden', 'true'); document.body.appendChild(bar);
+  let lastY = scrollY, ticking = false;
+  const onScroll = () => {
+    const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? (y / max).toFixed(4) : 0})`;
+    if (Math.abs(y - lastY) > 6) { nav.classList.toggle('tuck', y > lastY && y > innerHeight * .6); lastY = y; }
+    ticking = false;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  nav.addEventListener('focusin', () => nav.classList.remove('tuck'));
+  onScroll();
+})();
+</script>
+</body>
+</html>
