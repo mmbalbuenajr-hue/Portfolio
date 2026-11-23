@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ottoline Booksellers — Modern Classics</title>
+<style>
+@font-face{font-family:"Newsreader";font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/Newsreader-Regular.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-style:italic;font-weight:400;font-display:swap;src:url(assets/fonts/Newsreader-Italic.woff2) format("woff2")}
+@font-face{font-family:"Inter Tight";font-style:normal;font-weight:500 600;font-display:swap;src:url(assets/fonts/InterTight-Medium-SemiBold.woff2) format("woff2")}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/BodoniModa-Regular.woff2) format("woff2")}
+
+:root{
+  --paper:#EDEBE6;--sheet:#F4F2ED;--ink:#141414;--muted:#6D6A63;--cobalt:#1F3FB0;
+  --rule:rgba(20,20,20,.9);--ease:cubic-bezier(.2,.8,.2,1);
+  --H:min(46vh,31vw);
+  --sans:"Inter Tight",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
+}
+@media (max-width:767px){:root{--H:min(60vw,40svh)}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);user-select:none;-webkit-user-select:none;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+@media (pointer:fine){html,body,button,a{cursor:none}}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;-webkit-tap-highlight-color:transparent}
+a{color:var(--ink);text-decoration:none;-webkit-tap-highlight-color:transparent}
+:focus{outline:none}
+:focus-visible{outline:1px solid var(--cobalt);outline-offset:3px}
+
+.lbl{font-family:var(--sans);font-weight:600;font-size:10.5px;line-height:1;letter-spacing:.09em;text-transform:uppercase}
+.box{display:inline-flex;align-items:center;height:21px;padding:0 8px;border:1px solid var(--rule);white-space:nowrap}
+
+/* paper grain */
+.grain{position:fixed;inset:0;z-index:40;pointer-events:none;mix-blend-mode:multiply;opacity:.55;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .38 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:220px 220px}
+
+/* top bar */
+.top{position:fixed;left:0;right:0;top:0;height:84px;padding:0 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;z-index:30}
+.back{justify-self:start}
+.career{justify-self:end}
+.logo{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--cobalt)}
+.logo b{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1;letter-spacing:-.01em}
+.logo i{font-family:var(--sans);font-style:normal;font-weight:600;font-size:9px;line-height:1;letter-spacing:.34em;padding-left:.34em}
+
+/* decade tabs */
+.tabs{position:fixed;left:50%;top:calc(50% - var(--H) / 2 - 86px);transform:translateX(-50%);display:flex;padding-left:1px;z-index:20}
+.tab{position:relative;z-index:1;display:inline-flex;align-items:center;height:23px;padding:0 11px;border:1px solid var(--rule);margin-left:-1px;white-space:nowrap;transition:color .45s var(--ease)}
+.tab.on{color:#fff}
+.ind{position:absolute;left:0;top:0;height:23px;width:0;background:var(--cobalt);transition:transform .6s var(--ease),width .6s var(--ease)}
+
+/* shelf */
+.shelf{position:fixed;left:0;right:0;top:calc(50% - var(--H) / 2 - 40px);height:calc(var(--H) + 80px);perspective:2200px;perspective-origin:50% 50%;touch-action:pan-y;z-index:10}
+.stage{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.tape{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.f{position:absolute;top:calc(var(--H) / -2);height:var(--H);backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:2px;background-repeat:no-repeat}
+.f::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:var(--shade,0);pointer-events:none}
+.sp{width:var(--ws);left:calc(var(--ws) / -2);transform:translateZ(calc(var(--d) / 2))}
+.cv{width:var(--d);left:calc(var(--d) / -2);transform:rotateY(90deg) translateZ(calc(var(--ws) / 2));box-shadow:0 30px 60px -28px rgba(20,16,10,.55)}
+.probe{position:absolute;left:-9999px;top:0;width:1px;height:var(--H);visibility:hidden}
+
+/* play ring */
+.play{position:fixed;left:0;top:0;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;border:1px solid var(--cobalt);color:var(--cobalt);background:rgba(237,235,230,.75);display:grid;place-items:center;z-index:25;transform:scale(0)}
+.play svg{width:12px;height:12px;margin-left:2px}
+
+/* caption */
+.cap{position:fixed;left:50%;top:calc(50% + var(--H) / 2 + 30px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;pointer-events:none;z-index:20}
+.m{position:relative;overflow:hidden}
+.m>span{display:block;padding:1px 0}
+.cap .m{width:min(92vw,760px);text-align:center}
+.cap .m>span:not(:first-child){position:absolute;left:0;top:0;width:100%}
+.ct{font-family:var(--serif);font-weight:400;font-size:31px;line-height:1.12;letter-spacing:-.01em}
+.cs{color:var(--cobalt);font-weight:500}
+.cy{font-family:var(--sans);font-weight:500;font-size:11px;line-height:1;letter-spacing:.08em}
+
+/* arrows */
+.arr{position:fixed;top:calc(50% + var(--H) / 2 + 25px);width:44px;height:44px;display:grid;place-items:center;z-index:20}
+.arr svg{width:18px;height:10px;overflow:visible}
+.arr.l{left:20px}.arr.r{right:20px}
+
+/* footer */
+.foot{position:fixed;left:32px;right:32px;bottom:26px;display:flex;justify-content:space-between;align-items:center;z-index:30}
+
+/* cursor */
+.cur{position:fixed;left:0;top:0;width:58px;height:58px;margin:-29px 0 0 -29px;z-index:100;pointer-events:none;display:none;transform:translate3d(-200px,-200px,0)}
+@media (pointer:fine){.cur{display:block}}
+.cur .ring{position:absolute;inset:0;border:1.5px solid var(--ink);border-radius:50%;background-color:transparent;transition:transform .5s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease)}
+.cur .dot{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--ink);transition:transform .4s var(--ease)}
+.cur .tx{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-family:var(--sans);font-weight:600;font-size:10px;line-height:1.25;letter-spacing:.1em;color:#fff;transform:scale(0);transition:transform .45s var(--ease)}
+.cur.spine .ring{transform:scale(.72)}
+.cur.btn .ring{transform:scale(.55)}
+.cur.btn .dot{transform:scale(0)}
+.cur.open .ring{transform:scale(1.75);background-color:var(--cobalt);border-color:var(--cobalt)}
+.cur.open .dot{transform:scale(0)}
+.cur.open .tx{transform:scale(1)}
+
+/* detail sheet */
+.detail{position:fixed;inset:0;z-index:60;background:var(--sheet);visibility:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:4vw;padding:110px 6vw 56px 7vw;overflow:hidden}
+.detail .close{position:absolute;left:32px;top:31px;z-index:2}
+.detail .logo{position:absolute;left:0;right:0;top:0;height:84px;justify-content:center;pointer-events:none}
+.dl{align-self:center;max-width:520px;display:flex;flex-direction:column;gap:18px}
+.dl .m>span{transform:translateY(110%)}
+.ds{color:var(--cobalt)}
+.dt{font-family:var(--serif);font-weight:400;font-size:clamp(44px,5.4vw,84px);line-height:1;letter-spacing:-.025em;padding-bottom:.1em!important}
+.dm{color:var(--muted)}
+.dsyn{font-family:var(--serif);font-weight:400;font-size:17px;line-height:1.5;max-width:42ch}
+.dcr{font-family:var(--serif);font-style:italic;font-weight:400;font-size:15px;line-height:1.4;color:var(--muted)}
+.wm{margin-top:10px;align-self:flex-start}
+.watch{display:inline-flex;align-items:center;height:44px;padding:0 20px;border:1px solid var(--cobalt);color:var(--cobalt);white-space:nowrap}
+.dr{display:grid;place-items:center;min-height:0;height:100%}
+.poster{display:block;height:min(100%,78vh);width:auto;max-width:100%;aspect-ratio:600/900}
+
+@media (max-width:767px){
+  .top{height:64px;padding:0 16px}
+  .logo b{font-size:20px}
+  .logo i{font-size:7.5px}
+  .top .lbl,.foot .lbl{font-size:9px}
+  .career{display:none}
+  .tabs{top:calc(50% - var(--H) / 2 - 70px)}
+  .tab{padding:0 7px;font-size:9px}
+  .ct{font-size:24px}
+  .arr.l{left:6px}.arr.r{right:6px}
+  .foot{left:16px;right:16px;bottom:18px}
+  .detail{grid-template-columns:minmax(0,1fr);grid-template-rows:none;align-content:start;padding:84px 22px 40px;gap:24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .detail .close{left:16px;top:21px}
+  .detail .logo{height:64px}
+  .dr{order:-1;height:auto}
+  .poster{height:46svh}
+  .dl{align-self:start}
+  .dt{font-size:42px}
+  .dsyn{font-size:16px}
+}
+
+/* ---------- poster as a button ---------- */
+.pbtn{display:block;height:min(100%,78vh);aspect-ratio:600/900;max-width:100%;transition:transform .6s var(--ease)}
+.pbtn:hover{transform:translateY(-6px) rotate(-.6deg)}
+.pbtn .poster{width:100%;height:100%}
+.cur .tx .r{display:none}
+.cur.read .tx .o{display:none}.cur.read .tx .r{display:block}
+.cur.read .ring{transform:scale(1.75);background-color:var(--cobalt);border-color:var(--cobalt)}
+.cur.read .dot{transform:scale(0)}
+.cur.read .tx{transform:scale(1)}
+
+/* ---------- reader ---------- */
+.reader{position:fixed;inset:0;z-index:70;background:var(--sheet);visibility:hidden;overflow:hidden}
+.reader .rclose{position:absolute;left:32px;top:31px;z-index:5}
+.rtop{position:absolute;left:0;right:0;top:0;height:84px;display:flex;align-items:center;justify-content:center;color:var(--cobalt);pointer-events:none;padding:0 170px;text-align:center}
+.rstage{position:absolute;left:50%;top:50%;width:0;height:0;transform-origin:0 0}
+.book{position:absolute;left:-440px;top:-330px;width:880px;height:660px;transition:transform .9s cubic-bezier(.65,0,.25,1)}
+.blk{position:absolute;top:0;width:440px;height:660px;background:#F7F4EC}
+.blk.br{left:440px;border-radius:0 3px 3px 0;box-shadow:1px 1px 0 #e2dccd,2px 2px 0 #f5f1e7,3px 3px 0 #dbd4c3,4px 4px 0 #f2ede2,5px 5px 0 #d3cbb9,22px 30px 46px -20px rgba(20,16,10,.5)}
+.blk.bl{left:0;visibility:hidden;border-radius:3px 0 0 3px;box-shadow:-1px 1px 0 #e2dccd,-2px 2px 0 #f5f1e7,-3px 3px 0 #dbd4c3,-4px 4px 0 #f2ede2,-5px 5px 0 #d3cbb9,-22px 30px 46px -20px rgba(20,16,10,.5)}
+.book.open .bl{visibility:visible}
+.leaf{position:absolute;left:440px;top:0;width:440px;height:660px;transform-origin:0 50%;transform-style:preserve-3d;transform:perspective(2600px) rotateY(0deg);transition:transform .9s cubic-bezier(.65,0,.25,1)}
+.leaf.f{transform:perspective(2600px) rotateY(-180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#F7F4EC}
+.face.fr{border-radius:0 3px 3px 0}
+.face.bk{transform:rotateY(180deg);border-radius:3px 0 0 3px}
+.face::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3}
+.face.fr::after{background:linear-gradient(90deg,rgba(70,50,20,.2),rgba(70,50,20,.05) 4%,rgba(70,50,20,0) 10%)}
+.face.bk::after{background:linear-gradient(270deg,rgba(70,50,20,.2),rgba(70,50,20,.05) 4%,rgba(70,50,20,0) 10%)}
+.cvr{position:absolute;inset:0;background-repeat:no-repeat}
+.endp{position:absolute;inset:0;background-color:var(--ep);background-image:radial-gradient(var(--dot) 1.3px,transparent 1.7px);background-size:16px 16px}
+
+.pp{position:absolute;inset:0;color:var(--ink);font-family:var(--serif)}
+.rh{position:absolute;left:0;right:0;top:32px;text-align:center;font-size:9px;letter-spacing:.22em;color:var(--muted)}
+.pn{position:absolute;left:0;right:0;bottom:32px;text-align:center;font:500 11px/1 var(--sans);letter-spacing:.06em;color:var(--muted)}
+.txt{position:absolute;left:54px;right:54px;top:72px;height:528px;overflow:hidden;font-size:15.5px;line-height:24px;text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+.txt p{margin:0;text-indent:1.5em}
+.txt p:first-child{text-indent:0}
+.txt.op{top:216px;height:384px}
+.txt.op p:first-child::first-letter{float:left;font-size:68px;line-height:58px;padding:3px 9px 0 0;color:var(--bac,var(--cobalt))}
+.ch{position:absolute;left:0;right:0;top:108px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ch .lbl{color:var(--bac,var(--cobalt))}
+.ch em{font-family:var(--serif);font-style:italic;font-size:28px;line-height:1}
+.blur .txt{filter:blur(3.6px)}
+.blur::before{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(247,244,236,0) 10%,rgba(247,244,236,.7) 95%)}
+
+.tp{display:flex;flex-direction:column;align-items:center;text-align:center;padding:118px 56px 64px}
+.tp .a{letter-spacing:.3em}
+.tp .rule{width:40px;height:1px;background:var(--ink);margin:22px 0 24px}
+.tp h3{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.tp .orn{margin-top:30px;color:var(--bac,var(--cobalt));width:46px;height:12px}
+.tp .ft{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ship{width:34px;height:34px;display:block}
+.cp{display:flex;flex-direction:column;justify-content:flex-end;gap:12px;padding:0 58px 76px;font-size:12.5px;line-height:1.55;color:var(--muted)}
+.cp b{font:600 9.5px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.cp p{margin:0}
+
+.rnav{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:5}
+.rnav button{width:44px;height:44px;display:grid;place-items:center;transition:color .3s}
+.rnav button svg{width:18px;height:10px;overflow:visible}
+.rnav button:disabled{color:rgba(20,20,20,.22)}
+.rnav .lbl{min-width:64px;text-align:center}
+
+.cta{position:fixed;left:50%;top:50%;z-index:6;width:min(360px,calc(100vw - 48px));background:var(--sheet);border:1px solid var(--rule);padding:30px 30px 24px;text-align:center;visibility:hidden;transform:translate(-50%,-50%);box-shadow:0 34px 80px -34px rgba(20,16,10,.55)}
+.cta .k{color:var(--cobalt)}
+.cta h4{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.12;letter-spacing:-.015em;margin:14px 0 10px;text-wrap:balance}
+.cta h4 em{font-style:italic}
+.cta p{font-family:var(--serif);font-size:15.5px;line-height:1.5;color:var(--muted);margin:0 0 22px}
+.buy{display:flex;align-items:center;justify-content:center;width:100%;height:46px;background:var(--cobalt);color:#fff}
+.again{margin-top:14px;height:30px;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:767px){
+  .pbtn{height:46svh}
+  .reader .rclose{left:16px;top:21px}
+  .rtop{display:none}
+}
+@media (prefers-reduced-motion:reduce){.leaf,.book{transition-duration:1ms}}
+
+/* ---------- restyle: cool grey paper, black ink, Didone display + small grotesk (after the reference) ---------- */
+:root{--paper:#F2F2F2;--sheet:#F2F2F2;--ink:#0A0A0A;--muted:#7C7C7C;--cobalt:#0A0A0A;--rule:rgba(10,10,10,.9);
+  --display:"Bodoni Moda",Didot,"Bodoni 72",serif}
+body{color:var(--ink)}
+.grain{opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .42 0 0 0 0 .42 0 0 0 .32 -.04'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* UI text: small medium grotesk, sentence case, tight */
+.lbl{font-family:var(--sans);font-weight:500;font-size:12px;line-height:1;letter-spacing:-.015em;text-transform:none}
+/* small serif capitals, widely tracked (labels like "Directed by") */
+.cs,.ds,.logo i,.rh,.ch .lbl,.cta .k,.cp b,.tp .a,.dm i,.tp .ft .lbl{font-family:var(--display);font-weight:400;font-style:normal;font-size:9.5px;line-height:1.3;letter-spacing:.22em;text-transform:uppercase;font-variation-settings:"opsz" 8;color:var(--ink)}
+
+/* plain text buttons instead of boxed tags */
+.box{border:0;height:auto;padding:4px 0;background:none}
+.back:hover,.close:hover,.rclose:hover,.foot a:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* logo */
+.logo{gap:6px;color:var(--ink)}
+.logo b{font-family:var(--display);font-weight:400;font-size:22px;line-height:1;letter-spacing:-.02em;text-transform:uppercase;font-variation-settings:"opsz" 11}
+.logo i{padding-left:.22em}
+
+/* decade tabs: text with a sliding dot */
+.tabs{padding-left:0}
+.tab{border:0;margin:0;height:24px;padding:0 10px;color:#8E8E8E;transition:color .45s var(--ease)}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--ink)}
+.ind{top:auto;bottom:-7px;width:4px;height:4px;border-radius:50%;background:var(--ink)}
+
+/* caption */
+.cap{gap:11px}
+.ct{font-family:var(--display);font-weight:400;font-size:36px;line-height:1;letter-spacing:-.045em;text-transform:uppercase;font-variation-settings:"opsz" 16}
+.cy{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:-.01em}
+
+/* play ring + cursor in black */
+.play{border-color:var(--ink);color:var(--ink);background:rgba(242,242,242,.82)}
+.cur .tx{font-weight:500;font-size:10px;letter-spacing:.02em}
+
+/* detail */
+.detail{background:var(--sheet)}
+.dl{gap:20px}
+.dt{font-family:var(--display);font-weight:400;font-size:clamp(46px,5.6vw,92px);line-height:.95;letter-spacing:-.05em;text-transform:uppercase;font-variation-settings:"opsz" 30;padding-bottom:.06em!important}
+.dm{display:flex!important;flex-direction:column;width:min(100%,400px);font:500 13px/1 var(--sans);letter-spacing:-.015em;text-transform:none;color:var(--ink)}
+.dm .row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:8px 0 7px;border-top:1px solid var(--ink)}
+.dm .row:last-child{border-bottom:1px solid var(--ink)}
+.dm b{font-weight:500;text-align:right}
+.dsyn{font-family:var(--sans);font-weight:500;font-size:15px;line-height:1.4;letter-spacing:-.02em;max-width:40ch}
+.dcr{font-family:var(--sans);font-style:normal;font-weight:500;font-size:12px;line-height:1.4;letter-spacing:-.01em;color:var(--muted)}
+.watch{height:42px;padding:0 20px;border:1px solid var(--ink);color:var(--ink);background:none;transition:background .35s var(--ease),color .35s var(--ease)}
+.watch:hover{background:var(--ink);color:var(--paper)}
+
+/* reader */
+.face,.blk{background:#F8F7F4}
+.blk.br{box-shadow:1px 1px 0 #e3e2dd,2px 2px 0 #f6f5f1,3px 3px 0 #dcdad4,4px 4px 0 #f3f2ee,5px 5px 0 #d4d2cb,22px 30px 46px -20px rgba(0,0,0,.35)}
+.blk.bl{box-shadow:-1px 1px 0 #e3e2dd,-2px 2px 0 #f6f5f1,-3px 3px 0 #dcdad4,-4px 4px 0 #f3f2ee,-5px 5px 0 #d4d2cb,-22px 30px 46px -20px rgba(0,0,0,.35)}
+.rh{color:var(--muted);font-size:8.5px}
+.tp h3{font-family:var(--display);font-size:40px;line-height:1;letter-spacing:-.04em;text-transform:uppercase;font-variation-settings:"opsz" 16}
+.ch em{font-family:var(--display);font-style:normal;font-size:26px;letter-spacing:-.03em;text-transform:uppercase;font-variation-settings:"opsz" 12}
+.ch .lbl{color:var(--bac,var(--ink))}
+.txt.op p:first-child::first-letter{font-family:var(--display);font-size:74px;line-height:60px;font-variation-settings:"opsz" 30}
+.blur::before{background:linear-gradient(180deg,rgba(248,247,244,0) 10%,rgba(248,247,244,.75) 95%)}
+.cta{background:var(--paper);border:1px solid var(--ink);box-shadow:0 34px 80px -34px rgba(0,0,0,.4)}
+.cta h4{font-family:var(--display);font-size:30px;line-height:1;letter-spacing:-.04em;text-transform:uppercase;font-variation-settings:"opsz" 16}
+.cta h4 em{font-style:normal}
+.cta p{font-family:var(--sans);font-weight:500;font-size:14px;line-height:1.4;letter-spacing:-.015em}
+.buy{background:var(--ink);color:var(--paper)}
+.again{text-decoration:underline}
+
+@media (max-width:767px){
+  .logo b{font-size:18px}
+  .logo i{font-size:8px}
+  .tab{padding:0 6px;font-size:11px}
+  .ct{font-size:22px}
+  .cap .m{width:calc(100vw - 112px)}
+  .dt{font-size:40px}
+  .dsyn{font-size:14.5px}
+  .top .lbl,.foot .lbl{font-size:11px}
+}
+
+.dl .m:has(.dcr){display:none}
+
+/* filter: wrapper that lets books drop out of / rise into the shelf */
+.tin{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.arr{transition:color .3s var(--ease)}
+.arr:disabled{color:rgba(10,10,10,.18)}
+
+/* more air between the shelf and the caption */
+.cap{top:calc(50% + var(--H) / 2 + 60px)}
+.arr{top:calc(50% + var(--H) / 2 + 55px)}
+@media (max-width:767px){
+  .cap{top:calc(50% + var(--H) / 2 + 46px)}
+  .arr{top:calc(50% + var(--H) / 2 + 41px)}
+}
+
+/* more air between the decade filter and the shelf */
+.tabs{top:calc(50% - var(--H) / 2 - 116px)}
+@media (max-width:767px){.tabs{top:calc(50% - var(--H) / 2 - 92px)}}
+
+/* ---------- store: Ottoline Booksellers ---------- */
+.ship{justify-self:start;color:var(--ink);white-space:nowrap}
+.bag{position:fixed;right:32px;top:27px;z-index:85;display:inline-flex;align-items:center;gap:6px;height:30px}
+.bag .n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--ink);color:var(--paper);font-size:10.5px;letter-spacing:0;overflow:hidden}
+.bag .n span{display:block}
+.dl .m:has(.dcr){display:block}
+.price{font-family:var(--display);font-weight:400;font-size:30px;line-height:1;letter-spacing:-.03em;font-variation-settings:"opsz" 16}
+.price small{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:-.01em;color:var(--muted);margin-left:10px}
+.acts{display:flex;flex-wrap:wrap;gap:10px}
+.addb{display:inline-flex;align-items:center;height:44px;padding:0 22px;background:var(--ink);color:var(--paper);white-space:nowrap;transition:opacity .3s}
+.addb:hover{opacity:.86}
+.addb.ok{background:#2c5a3a}
+
+.bagp{position:fixed;right:24px;top:70px;z-index:90;width:min(340px,calc(100vw - 32px));background:var(--paper);border:1px solid var(--ink);padding:18px 18px 16px;visibility:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.35)}
+.bagp h5{margin:0 0 12px;font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:-.03em;text-transform:uppercase;font-variation-settings:"opsz" 16;display:flex;justify-content:space-between;align-items:baseline}
+.bagp h5 button{font:500 12px/1 var(--sans);letter-spacing:-.01em;text-transform:none}
+.bagp ul{list-style:none;margin:0;padding:0;max-height:min(46vh,320px);overflow:auto}
+.bagp li{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid rgba(10,10,10,.14)}
+.bagp .th{width:38px;height:57px;background-repeat:no-repeat;border-radius:2px;box-shadow:0 4px 10px -4px rgba(0,0,0,.3)}
+.bagp .tt{font:500 13px/1.25 var(--sans);letter-spacing:-.015em}
+.bagp .tt i{display:block;font-style:normal;color:var(--muted);font-size:12px;margin-top:2px}
+.bagp .rt{text-align:right;font:500 13px/1.25 var(--sans)}
+.bagp .rt button{display:block;margin:4px 0 0 auto;font:500 11px/1 var(--sans);color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.bagp .empty{padding:14px 0 18px;border-top:1px solid rgba(10,10,10,.14);font:500 13px/1.4 var(--sans);color:var(--muted)}
+.bagp .sub{display:flex;justify-content:space-between;padding:12px 0 4px;border-top:1px solid var(--ink);font:500 14px/1 var(--sans)}
+.bagp .note{font:500 11.5px/1.4 var(--sans);color:var(--muted);margin:6px 0 12px}
+.bagp .co{display:flex;align-items:center;justify-content:center;width:100%;height:44px;background:var(--ink);color:var(--paper)}
+.bagp .co:disabled{opacity:.35}
+@media (max-width:767px){
+  .ship{display:none}
+  .bag{right:16px;top:17px}
+  .bagp{right:16px;top:58px}
+  .detail{grid-auto-rows:max-content}
+  .foot{gap:16px}
+  .foot .lbl:last-child{white-space:nowrap}
+  .price{font-size:26px}
+}
+
+/* ---------- night library: dark theme over a blurred bookcase ---------- */
+:root{--paper:#0F0D0B;--sheet:#14110E;--ink:#EFE8DC;--muted:#A0968A;--cobalt:#EFE8DC;--rule:rgba(239,232,220,.85)}
+html,body{background:#0F0D0B}
+
+/* background: the bookcase, pushed back with blur, warm overlay and vignette */
+.lib{position:fixed;inset:-3%;z-index:0;pointer-events:none;background:#0F0D0B center/cover no-repeat;will-change:transform}
+.libov{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 46% 40% at 50% 54%,rgba(255,196,130,.10),rgba(255,196,130,0) 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%,rgba(10,8,6,0) 30%,rgba(10,8,6,.75) 100%),
+    linear-gradient(180deg,rgba(12,10,8,.86) 0%,rgba(12,10,8,.68) 38%,rgba(12,10,8,.7) 62%,rgba(12,10,8,.92) 100%)}
+/* the ledge the books stand on */
+.ledge{position:fixed;left:0;right:0;top:calc(50% + var(--H) / 2);height:1px;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,rgba(239,232,220,0),rgba(239,232,220,.28) 22%,rgba(239,232,220,.28) 78%,rgba(239,232,220,0))}
+.ledge::after{content:"";position:absolute;left:0;right:0;top:1px;height:90px;
+  background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0))}
+
+/* grain reads as film on dark */
+.grain{mix-blend-mode:soft-light;opacity:.7}
+
+/* UI colour fixes for the dark ground */
+.tab{color:rgba(239,232,220,.45)}
+.tab:hover,.tab.on{color:var(--ink)}
+.arr:disabled,.rnav button:disabled{color:rgba(239,232,220,.2)}
+.play{background:rgba(15,13,11,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.cur .tx{color:var(--paper)}
+.cur .ring{border-color:rgba(239,232,220,.9)}
+.cv{box-shadow:0 40px 70px -26px rgba(0,0,0,.85),0 0 0 1px rgba(255,236,200,.04)}
+.ct{text-shadow:0 2px 30px rgba(0,0,0,.6)}
+
+/* detail sheet: deep warm black */
+.detail{background:radial-gradient(ellipse 70% 80% at 75% 50%,#1d1813 0%,#14110E 60%)}
+.pbtn{filter:drop-shadow(0 40px 50px rgba(0,0,0,.6))}
+
+/* reader: the open book glows on the dark */
+.reader{background:radial-gradient(ellipse 60% 60% at 50% 50%,#1f1a14 0%,#100d0b 70%)}
+.book{--ink:#0A0A0A;--muted:#7C7C7C;--paper:#F8F7F4}
+.blk.br{box-shadow:1px 1px 0 #e3e2dd,2px 2px 0 #f6f5f1,3px 3px 0 #dcdad4,4px 4px 0 #f3f2ee,5px 5px 0 #d4d2cb,24px 34px 60px -18px rgba(0,0,0,.8)}
+.blk.bl{box-shadow:-1px 1px 0 #e3e2dd,-2px 2px 0 #f6f5f1,-3px 3px 0 #dcdad4,-4px 4px 0 #f3f2ee,-5px 5px 0 #d4d2cb,-24px 34px 60px -18px rgba(0,0,0,.8)}
+.cta{background:#14110E;box-shadow:0 40px 90px -30px rgba(0,0,0,.8)}
+
+/* store */
+.bagp{background:#14110E;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.bagp li,.bagp .empty{border-top-color:rgba(239,232,220,.14)}
+.addb.ok{background:#2f5e3f;color:#EFE8DC}
+.ship{position:fixed;left:32px;top:36px;z-index:31}
+.top .logo{grid-column:2}
+
+/* ---------- the product row sits in a shelf of the bookcase ---------- */
+.ledge{display:none}
+/* the compartment: dark back panel, shadow from the shelf above, warm light on the row */
+.niche{position:fixed;left:0;right:0;z-index:2;pointer-events:none;
+  top:calc(50% - var(--H) * .64);height:calc(var(--H) * 1.14);
+  background:
+    radial-gradient(ellipse 42% 70% at 50% 62%,rgba(255,186,120,.13),rgba(255,186,120,0) 70%),
+    linear-gradient(180deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.35) 26%,rgba(0,0,0,0) 55%),
+    linear-gradient(180deg,#140d08 0%,#1b120b 70%,#22170e 100%)}
+/* fine vertical texture on the back panel */
+.niche::after{content:"";position:absolute;inset:0;opacity:.35;
+  background:repeating-linear-gradient(90deg,rgba(255,220,180,.025) 0 2px,rgba(0,0,0,0) 2px 7px,rgba(0,0,0,.08) 7px 8px,rgba(0,0,0,0) 8px 13px)}
+/* wooden planks: the shelf above (seen from below) and the shelf the books stand on */
+.plank{position:fixed;left:0;right:0;z-index:3;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,0,0,0) 0 37px,rgba(20,10,4,.18) 37px 38px,rgba(0,0,0,0) 38px 91px,rgba(255,210,160,.05) 91px 92px,rgba(0,0,0,0) 92px 140px),
+    linear-gradient(180deg,#5a3720 0%,#4a2c17 30%,#36200f 75%,#24150a 100%)}
+.plank.up{top:calc(50% - var(--H) * .64 - 30px);height:30px;
+  box-shadow:0 1px 0 rgba(0,0,0,.6),0 -1px 0 rgba(255,210,160,.12)}
+.plank.up::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.55))}
+/* bottom shelf: a thin top surface catching the light, then the front edge */
+.plank.dn{top:calc(50% + var(--H) / 2 - 7px);height:44px;
+  background:
+    linear-gradient(180deg,#7c5232 0px,#6a4427 7px,rgba(255,214,160,.22) 7px,rgba(255,214,160,.22) 8px,rgba(0,0,0,0) 8px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,0) 0 37px,rgba(20,10,4,.18) 37px 38px,rgba(0,0,0,0) 38px 91px,rgba(255,210,160,.05) 91px 92px,rgba(0,0,0,0) 92px 140px),
+    linear-gradient(180deg,#5e3a21 8px,#4b2d17 40%,#2c1a0c 100%);
+  box-shadow:0 24px 50px rgba(0,0,0,.6)}
+/* warm light falling on the shelf in the middle, darker toward the edges */
+.plank::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(8,5,3,.55) 0%,rgba(8,5,3,0) 30%,rgba(8,5,3,0) 70%,rgba(8,5,3,.55) 100%)}
+@media (max-width:767px){
+  .niche{top:calc(50% - var(--H) * .68);height:calc(var(--H) * 1.18)}
+  .plank.up{top:calc(50% - var(--H) * .68 - 22px);height:22px}
+  .plank.dn{height:34px}
+}
+/* keep the decade filter clear of the shelf above */
+.tabs{top:calc(50% - var(--H) * .64 - 30px - 52px)}
+@media (max-width:767px){.tabs{top:calc(50% - var(--H) * .68 - 22px - 46px)}}
+:root{--room:url(assets/images/bookcase-wall.webp)}
+
+/* ---------- mahogany: the product row's own compartment ---------- */
+/* back wall: vertical tongue-and-groove boards, lit by pin spots under the shelf above */
+.niche{
+  background:
+    radial-gradient(ellipse 13% 72% at 18% 0%,rgba(255,186,110,.30),rgba(255,186,110,0) 72%),
+    radial-gradient(ellipse 13% 72% at 50% 0%,rgba(255,186,110,.34),rgba(255,186,110,0) 72%),
+    radial-gradient(ellipse 13% 72% at 82% 0%,rgba(255,186,110,.30),rgba(255,186,110,0) 72%),
+    linear-gradient(180deg,rgba(4,1,0,.88) 0%,rgba(4,1,0,.30) 22%,rgba(4,1,0,.42) 70%,rgba(4,1,0,.65) 100%),
+    linear-gradient(90deg,rgba(4,1,0,.75) 0%,rgba(4,1,0,0) 26%,rgba(4,1,0,0) 74%,rgba(4,1,0,.75) 100%),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.55) 0 2px,rgba(255,200,150,.07) 2px 3px,rgba(0,0,0,0) 3px 150px),
+    var(--wpost) 0 0/150px 100% repeat-x,
+    #2a0e06}
+.niche::after{display:none}
+
+/* shared wood surface */
+.plank{background-color:#3a1409}
+.plank::before,.plank::after{content:"";position:absolute;left:0;right:0;pointer-events:none}
+
+/* shelf above: front face with a bead moulding, its underside just visible, brass pin lights */
+.plank.up{height:34px;top:calc(50% - var(--H) * .64 - 34px);
+  background:
+    linear-gradient(180deg,rgba(255,214,170,.32) 0 1px,rgba(255,214,170,.06) 1px,rgba(0,0,0,0) 30%,rgba(0,0,0,.18) 62%,
+      rgba(255,214,170,.22) calc(100% - 9px),rgba(0,0,0,.55) calc(100% - 8px),rgba(0,0,0,.78) 100%),
+    var(--wplank) 0 -14px/1700px 70px repeat-x;
+  box-shadow:0 -1px 0 rgba(0,0,0,.7),0 10px 22px rgba(0,0,0,.55)}
+.plank.up::before{inset:0;background:linear-gradient(90deg,rgba(6,2,1,.6),rgba(6,2,1,0) 26%,rgba(6,2,1,0) 74%,rgba(6,2,1,.6))}
+.plank.up::after{bottom:-5px;height:10px;
+  background:
+    radial-gradient(circle at 18% 50%,#fff3dc 0 2px,#e9b76a 2.5px 4px,rgba(233,183,106,0) 7px),
+    radial-gradient(circle at 50% 50%,#fff3dc 0 2px,#e9b76a 2.5px 4px,rgba(233,183,106,0) 7px),
+    radial-gradient(circle at 82% 50%,#fff3dc 0 2px,#e9b76a 2.5px 4px,rgba(233,183,106,0) 7px)}
+
+/* shelf below: the polished top the books stand on, a rounded nosing, then the front face */
+.plank.dn{top:calc(50% + var(--H) / 2 - 9px);height:50px;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,0) 0 10px,rgba(255,226,190,.55) 10px 11px,rgba(255,200,150,.16) 11px 15px,rgba(0,0,0,0) 22px,
+      rgba(0,0,0,.14) 34px,rgba(255,210,170,.20) 36px 37px,rgba(0,0,0,.45) 38px,rgba(0,0,0,.75) 100%),
+    var(--wplank) -300px -22px/1700px 80px repeat-x;
+  box-shadow:0 30px 60px rgba(0,0,0,.7)}
+/* top surface: compressed grain at a steep angle, a warm pool where the light lands, a faint varnish sheen */
+.plank.dn::before{top:0;height:10px;
+  background:
+    radial-gradient(ellipse 34% 260% at 50% 100%,rgba(255,196,130,.32),rgba(255,196,130,0) 70%),
+    linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.15) 55%,rgba(255,230,200,.18)),
+    var(--wplank) 0 0/1700px 26px repeat-x}
+.plank.dn::after{top:0;bottom:0;background:linear-gradient(90deg,rgba(6,2,1,.62),rgba(6,2,1,0) 28%,rgba(6,2,1,0) 72%,rgba(6,2,1,.62))}
+
+@media (max-width:767px){
+  .plank.up{height:24px;top:calc(50% - var(--H) * .68 - 24px)}
+  .plank.dn{height:38px}
+  .niche{background-size:auto,auto,auto,auto,auto,auto,110px 100%,auto}
+}
+/* let the mahogany room read through a little more, keeping the top and bottom dark for the type */
+.libov{background:
+    radial-gradient(ellipse 120% 90% at 50% 50%,rgba(10,5,3,0) 35%,rgba(10,5,3,.72) 100%),
+    linear-gradient(180deg,rgba(12,6,4,.84) 0%,rgba(12,6,4,.55) 30%,rgba(12,6,4,.55) 66%,rgba(12,6,4,.9) 100%)}
+/* overlay tuned for the mahogany room: warm red-brown, the ceiling and cabinets still read */
+.libov{background:
+    radial-gradient(ellipse 120% 90% at 50% 50%,rgba(14,5,3,0) 40%,rgba(14,5,3,.66) 100%),
+    linear-gradient(180deg,rgba(16,6,4,.74) 0%,rgba(16,6,4,.56) 18%,rgba(16,6,4,.52) 50%,rgba(16,6,4,.6) 80%,rgba(16,6,4,.86) 100%)}
+html,body{background:#120604}
+.libov{background:
+    radial-gradient(ellipse 120% 90% at 50% 50%,rgba(14,5,3,0) 40%,rgba(14,5,3,.66) 100%),
+    linear-gradient(180deg,rgba(16,6,4,.72) 0%,rgba(16,6,4,.66) 9%,rgba(16,6,4,.8) 15%,rgba(16,6,4,.56) 24%,rgba(16,6,4,.52) 50%,rgba(16,6,4,.6) 80%,rgba(16,6,4,.86) 100%)}
+
+/* ---------- the room is built around the display shelf, and stays still ---------- */
+.roomU,.roomL{position:fixed;left:0;right:0;z-index:0;pointer-events:none;background-repeat:repeat-x;background-color:#140705}
+/* bookcase: its lowest row stands on the display shelf's top board */
+.roomU{top:0;height:calc(50% - var(--H) * .64 - 32px);
+  background-image:var(--roomU);background-position:center bottom;background-size:auto calc(var(--H) * 2.2)}
+/* base cabinets: start under the board the books stand on */
+.roomL{top:calc(50% + var(--H) / 2 + 39px);bottom:0;
+  background-image:var(--roomL);background-position:center top;background-size:auto calc(var(--H) * 1.4)}
+@media (max-width:767px){
+  .roomU{height:calc(50% - var(--H) * .68 - 22px)}
+  .roomL{top:calc(50% + var(--H) / 2 + 27px)}
+}
+
+/* ---------- one continuous wall: bookcase, display shelf, cabinets ---------- */
+.niche,.plank,.roomU,.roomL,.ledge,.lib{display:none}
+/* the wall image is 4.6 book-heights tall; its shelf top sits 2.8 book-heights down, right where the books stand */
+.room{position:fixed;left:0;right:0;z-index:0;pointer-events:none;
+  top:calc(50% + var(--H) / 2 - var(--H) * 2.8);height:calc(var(--H) * 4.6);
+  background:var(--room) center top / auto 100% repeat-x}
+/* only the header and footer get extra shade; the shelf keeps its own light */
+.libov{background:
+    linear-gradient(180deg,rgba(14,5,3,.8) 0,rgba(14,5,3,.45) 90px,rgba(14,5,3,0) 170px),
+    linear-gradient(0deg,rgba(14,5,3,.85) 0,rgba(14,5,3,.4) 90px,rgba(14,5,3,0) 180px),
+    linear-gradient(90deg,rgba(14,5,3,.55) 0,rgba(14,5,3,0) 18%,rgba(14,5,3,0) 82%,rgba(14,5,3,.55) 100%)}
+.tabs{top:calc(50% - var(--H) * .72 - 52px)}
+@media (max-width:767px){.tabs{top:calc(50% - var(--H) * .72 - 46px)}}
+/* text over the cabinets and bookcase stays legible */
+.cap,.tabs{text-shadow:0 1px 14px rgba(0,0,0,.8)}
+/* darken the upper bookcase (above the display shelf) so the decade tabs read clearly */
+.libov::before{content:"";position:absolute;left:0;right:0;top:0;height:calc(50% - var(--H) * .72);
+  background:linear-gradient(180deg,rgba(12,5,3,.5) 0%,rgba(12,5,3,.66) 70%,rgba(12,5,3,.6) 100%)}
+.tab{color:rgba(239,232,220,.66)}.tab:hover,.tab.on{color:var(--ink)}
+
+/* ---------- live lights over the wall (positions in wall units: 1 book-height = 400) ---------- */
+.lt{position:absolute;pointer-events:none;mix-blend-mode:screen;transform:translateX(-50%);
+  opacity:0;animation:lon 1.8s var(--d) both,breathe var(--b) ease-in-out calc(var(--d) + 1.8s) infinite}
+/* warm pool thrown down the back wall by each pin light */
+.lt.pool{top:calc(var(--H) * 664 / 400);width:calc(var(--H) * 250 / 400);height:calc(var(--H) * 456 / 400);
+  background:radial-gradient(ellipse 50% 100% at 50% 0%,rgba(255,196,128,.55) 0%,rgba(255,168,98,.22) 30%,rgba(255,150,80,.07) 60%,rgba(0,0,0,0) 100%)}
+/* the lamp itself: a hot point under the board with a small flare */
+.lt.pin{top:calc(var(--H) * 657 / 400);width:calc(var(--H) * 56 / 400);height:calc(var(--H) * 22 / 400);
+  background:radial-gradient(ellipse 50% 50% at 50% 40%,#fff8e8 0%,rgba(255,226,170,.9) 16%,rgba(255,190,110,.35) 40%,rgba(0,0,0,0) 72%)}
+/* reflection on the polished shelf top */
+.lt.refl{top:calc(var(--H) * 1104 / 400);width:calc(var(--H) * 250 / 400);height:calc(var(--H) * 26 / 400);
+  background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(255,206,146,.42),rgba(255,170,100,.12) 55%,rgba(0,0,0,0) 100%)}
+/* brass picture lights washing the top shelf of each bookcase bay */
+.lt.pic{top:calc(var(--H) * 139 / 400);width:calc(var(--H) * 470 / 400);height:calc(var(--H) * 500 / 400);
+  background:radial-gradient(ellipse 50% 100% at 50% 0%,rgba(255,188,112,.44) 0%,rgba(255,150,80,.12) 38%,rgba(0,0,0,0) 100%)}
+.lt.picb{top:calc(var(--H) * 136 / 400);width:calc(var(--H) * 120 / 400);height:calc(var(--H) * 14 / 400);
+  background:linear-gradient(180deg,rgba(255,236,196,.9),rgba(255,200,130,0))}
+/* the featured book's own spotlight, which brightens as a new book lands */
+.lt.spot{top:calc(var(--H) * 664 / 400);width:calc(var(--H) * 640 / 400);height:calc(var(--H) * 470 / 400);
+  background:radial-gradient(ellipse 50% 95% at 50% 0%,rgba(255,206,150,.34) 0%,rgba(255,176,110,.14) 40%,rgba(0,0,0,0) 100%)}
+
+@keyframes lon{0%{opacity:0}6%{opacity:.75}10%{opacity:.08}18%{opacity:.9}23%{opacity:.3}34%{opacity:1}100%{opacity:1}}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:var(--lo,.82)}}
+@media (prefers-reduced-motion:reduce){.lt{animation:none;opacity:1}}
+:root{--table:url(assets/images/table-top.webp)}
+
+/* ---------- book view: the book lies on a mahogany table, seen from above ---------- */
+.detail{background:
+    linear-gradient(180deg,rgba(10,4,2,.62) 0,rgba(10,4,2,0) 150px),
+    linear-gradient(90deg,rgba(10,4,2,.8) 0%,rgba(10,4,2,.62) 34%,rgba(10,4,2,.12) 58%,rgba(10,4,2,0) 70%,rgba(10,4,2,.3) 100%),
+    radial-gradient(ellipse 30% 50% at 73% 50%,rgba(255,192,122,.26) 0%,rgba(255,170,100,.08) 55%,rgba(255,170,100,0) 78%),
+    radial-gradient(ellipse 90% 90% at 66% 50%,rgba(8,3,1,0) 42%,rgba(8,3,1,.72) 100%),
+    var(--table) center / cover #2a0d06}
+/* lying flat: a rotation like a book set down by hand, a tight contact shadow and a soft one cast away from the lamp */
+.pbtn{transform:rotate(-2deg);
+  filter:drop-shadow(2px 3px 2px rgba(0,0,0,.55)) drop-shadow(16px 22px 24px rgba(0,0,0,.5));
+  transition:transform .6s var(--ease),filter .6s var(--ease)}
+.pbtn:hover{transform:translate(-3px,-6px) rotate(-2.8deg);
+  filter:drop-shadow(4px 6px 5px rgba(0,0,0,.45)) drop-shadow(26px 36px 34px rgba(0,0,0,.45))}
+
+/* the reader opens the book on the same table */
+.reader{background:
+    linear-gradient(180deg,rgba(10,4,2,.62) 0,rgba(10,4,2,0) 150px),
+    radial-gradient(ellipse 46% 56% at 50% 50%,rgba(255,192,122,.2) 0%,rgba(255,170,100,.06) 55%,rgba(255,170,100,0) 80%),
+    radial-gradient(ellipse 85% 85% at 50% 50%,rgba(8,3,1,0) 40%,rgba(8,3,1,.75) 100%),
+    var(--table) center / cover #2a0d06}
+.blk.br{box-shadow:1px 1px 0 #e3e2dd,2px 2px 0 #f6f5f1,3px 3px 0 #dcdad4,4px 4px 0 #f3f2ee,5px 5px 0 #d4d2cb,18px 26px 34px -10px rgba(0,0,0,.65)}
+.blk.bl{box-shadow:-1px 1px 0 #e3e2dd,-2px 2px 0 #f6f5f1,-3px 3px 0 #dcdad4,-4px 4px 0 #f3f2ee,-5px 5px 0 #d4d2cb,-10px 26px 34px -10px rgba(0,0,0,.65)}
+
+@media (max-width:767px){
+  .detail{background:
+      linear-gradient(180deg,rgba(10,4,2,.55) 0,rgba(10,4,2,0) 110px),
+      linear-gradient(180deg,rgba(10,4,2,0) 34%,rgba(10,4,2,.55) 52%,rgba(10,4,2,.8) 100%),
+      radial-gradient(ellipse 70% 32% at 50% 28%,rgba(255,192,122,.24) 0%,rgba(255,170,100,.06) 60%,rgba(255,170,100,0) 85%),
+      radial-gradient(ellipse 110% 90% at 50% 35%,rgba(8,3,1,0) 45%,rgba(8,3,1,.7) 100%),
+      var(--table) center / cover #2a0d06;background-attachment:scroll}
+}
+
+/* ---------- book on the left, details on the right (desktop) ---------- */
+@media (min-width:768px){
+  .detail .dr{order:-1}
+  .detail .dl{justify-self:start}
+  .detail{background:
+      linear-gradient(180deg,rgba(10,4,2,.62) 0,rgba(10,4,2,0) 150px),
+      linear-gradient(270deg,rgba(10,4,2,.8) 0%,rgba(10,4,2,.62) 34%,rgba(10,4,2,.12) 58%,rgba(10,4,2,0) 70%,rgba(10,4,2,.3) 100%),
+      radial-gradient(ellipse 30% 50% at 27% 50%,rgba(255,192,122,.26) 0%,rgba(255,170,100,.08) 55%,rgba(255,170,100,0) 78%),
+      radial-gradient(ellipse 90% 90% at 34% 50%,rgba(8,3,1,0) 42%,rgba(8,3,1,.72) 100%),
+      var(--table) center / cover #2a0d06}
+  /* lamp now sits up and to the left of the book, so its shadow falls down and to the right */
+  .pbtn{transform:rotate(2deg)}
+  .pbtn:hover{transform:translate(3px,-6px) rotate(2.6deg)}
+}
+
+/* ---------- book view spacing (desktop): book and details as one centred pair ---------- */
+@media (min-width:768px){
+  .detail{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(48px,6vw,104px);
+    padding:104px max(6vw,calc((100vw - 1240px) / 2)) 72px}
+  .detail .dr{justify-items:end;align-items:center}
+  .detail .dl{align-self:center;max-width:460px}
+  .pbtn{height:min(100%,66vh)}
+  /* light pool follows the book, which now sits just left of centre */
+  .detail{background:
+      linear-gradient(180deg,rgba(10,4,2,.62) 0,rgba(10,4,2,0) 150px),
+      linear-gradient(270deg,rgba(10,4,2,.78) 0%,rgba(10,4,2,.55) 30%,rgba(10,4,2,.1) 50%,rgba(10,4,2,0) 60%,rgba(10,4,2,.35) 100%),
+      radial-gradient(ellipse 26% 46% at 36% 50%,rgba(255,192,122,.26) 0%,rgba(255,170,100,.08) 55%,rgba(255,170,100,0) 78%),
+      radial-gradient(ellipse 90% 90% at 42% 50%,rgba(8,3,1,0) 42%,rgba(8,3,1,.72) 100%),
+      var(--table) center / cover #2a0d06}
+}
+@media (min-width:768px){.detail{column-gap:clamp(72px,9vw,156px)}}
+</style>
+</head>
+<body>
+<div class="probe" id="probe"></div>
+<div class="room" aria-hidden="true"></div><div class="libov" aria-hidden="true"></div><div class="ledge" aria-hidden="true"></div><div class="niche" aria-hidden="true"></div><div class="plank up" aria-hidden="true"></div><div class="plank dn" aria-hidden="true"></div>
+
+<header class="top">
+  <span class="ship lbl">Free shipping over $40</span>
+  <div class="logo"><b>Ottoline</b><i>BOOKSELLERS</i></div>
+  <button class="bag lbl" id="bag" aria-haspopup="dialog" aria-label="Open bag">Bag <span class="n" id="bagN"><span>0</span></span></button>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="Decades">
+  <span class="ind" id="ind"></span>
+  <button class="tab lbl" data-dec="all">All</button>
+  <button class="tab lbl" data-dec="1920">1920s</button>
+  <button class="tab lbl" data-dec="1930">1930s</button>
+  <button class="tab lbl" data-dec="1940">1940s</button>
+  <button class="tab lbl" data-dec="1950">1950s</button>
+  <button class="tab lbl" data-dec="1960">1960s</button>
+</nav>
+
+<section class="shelf" id="shelf" aria-label="Bookshelf">
+  <div class="stage" id="stage"></div>
+</section>
+
+<button class="play" id="play" aria-label="Open book"><svg viewBox="0 0 12 12"><path d="M1 0 L12 6 L1 12 Z" fill="currentColor"/></svg></button>
+
+<div class="cap" aria-live="polite">
+  <div class="m" id="capT"></div>
+  <div class="m" id="capS"></div>
+  <div class="m" id="capY"></div>
+</div>
+
+<button class="arr l" id="prev" aria-label="Previous book"><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 1 L1 5 L5 9 M1 5 L17 5"/></svg></button>
+<button class="arr r" id="next" aria-label="Next book"><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M13 1 L17 5 L13 9 M17 5 L1 5"/></svg></button>
+
+<footer class="foot">
+  <span class="lbl">© 2026 Ottoline Booksellers · Sample store, prices are illustrative</span>
+  <span class="lbl"><a href="#">Help</a> / <a href="#">Instagram</a></span>
+</footer>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="dT">
+  <button class="close box lbl" id="close">Close</button>
+  <div class="logo"><b>Ottoline</b><i>BOOKSELLERS</i></div>
+  <div class="dl">
+    <div class="m"><span class="ds lbl" id="dS"></span></div>
+    <div class="m"><span class="dt" id="dT"></span></div>
+    <div class="m"><span class="dm lbl" id="dM"></span></div>
+    <div class="m"><span class="dsyn" id="dY"></span></div>
+    <div class="m"><span class="dcr" id="dC"></span></div>
+    <div class="m"><span class="price" id="dP"></span></div>
+    <div class="m wm"><span class="acts"><button class="addb lbl" id="addB">Add to bag</button><button class="watch lbl">Read a free sample</button></span></div>
+  </div>
+  <div class="dr">
+    <button class="pbtn" id="pBtn" aria-label="Open the book and read the first pages"><svg class="poster" viewBox="0 0 600 900" aria-hidden="true">
+      <defs>
+        <clipPath id="pClip"><rect width="600" height="900"/></clipPath>
+        <filter id="pInk" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1000" height="1300">
+          <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="t"/>
+          <feDisplacementMap in="SourceGraphic" in2="t" scale="120" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <mask id="pMask" maskUnits="userSpaceOnUse" x="-200" y="-200" width="1000" height="1300">
+          <g filter="url(#pInk)" fill="#fff" id="blobs">
+            <circle cx="190" cy="330" r="0"/><circle cx="430" cy="600" r="0"/><circle cx="316" cy="120" r="0"/>
+            <circle cx="114" cy="760" r="0"/><circle cx="506" cy="250" r="0"/><circle cx="329" cy="860" r="0"/>
+            <circle cx="291" cy="470" r="0"/>
+          </g>
+        </mask>
+      </defs>
+      <g clip-path="url(#pClip)" mask="url(#pMask)"><image id="pImg" preserveAspectRatio="none"/></g>
+    </svg></button>
+  </div>
+</div>
+
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-label="Book preview">
+  <button class="rclose box lbl" id="rClose">Close book</button>
+  <div class="rtop"><span class="lbl" id="rHead"></span></div>
+  <div class="rstage" id="rStage"><div class="book" id="book"></div></div>
+  <div class="rnav">
+    <button id="rPrev" aria-label="Previous page"><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 1 L1 5 L5 9 M1 5 L17 5"/></svg></button>
+    <span class="lbl" id="rNum"></span>
+    <button id="rNext" aria-label="Next page"><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M13 1 L17 5 L13 9 M17 5 L1 5"/></svg></button>
+  </div>
+  <div class="cta" id="cta" role="group" aria-label="End of preview">
+    <span class="lbl k">End of preview</span>
+    <h4 id="ctaH"></h4>
+    <p>That’s the end of the free sample. Get the hardback to keep reading from page 5.</p>
+    <button class="buy lbl" id="buy">Add to bag</button>
+    <button class="again lbl" id="again">Start again</button>
+  </div>
+</div>
+
+<div class="cur" id="cur" aria-hidden="true"><span class="ring"></span><span class="dot"></span><span class="tx"><span class="o">VIEW<br>BOOK</span><span class="r">READ<br>SAMPLE</span></span></div>
+
+<script>
+{
+/* placeholder art: two sheets drawn in code (original cover designs), embedded below and turned into blob URLs */
+const SHEET = {
+  covers: ['data:covers', 3740, 3700],
+  spines: ['data:spines', 4340, 880]
+};
+const CROP = {
+  'cover-sidd':['covers', 20, 20, 600, 900],
+  'spine-sidd':['spines', 20, 20, 160, 840],
+  'cover-gatsby':['covers', 640, 20, 600, 900],
+  'spine-gatsby':['spines', 200, 20, 160, 840],
+  'cover-dalloway':['covers', 1260, 20, 600, 900],
+  'spine-dalloway':['spines', 380, 20, 160, 840],
+  'cover-sunrises':['covers', 1880, 20, 600, 900],
+  'spine-sunrises':['spines', 560, 20, 160, 840],
+  'cover-sound':['covers', 2500, 20, 600, 900],
+  'spine-sound':['spines', 740, 20, 160, 840],
+  'cover-bnw':['covers', 3120, 20, 600, 900],
+  'spine-bnw':['spines', 920, 20, 160, 840],
+  'cover-mice':['covers', 20, 940, 600, 900],
+  'spine-mice':['spines', 1100, 20, 160, 840],
+  'cover-hobbit':['covers', 640, 940, 600, 900],
+  'spine-hobbit':['spines', 1280, 20, 160, 840],
+  'cover-rebecca':['covers', 1260, 940, 600, 900],
+  'spine-rebecca':['spines', 1460, 20, 160, 840],
+  'cover-grapes':['covers', 1880, 940, 600, 900],
+  'spine-grapes':['spines', 1640, 20, 160, 840],
+  'cover-stranger':['covers', 2500, 940, 600, 900],
+  'spine-stranger':['spines', 1820, 20, 160, 840],
+  'cover-animal':['covers', 3120, 940, 600, 900],
+  'spine-animal':['spines', 2000, 20, 160, 840],
+  'cover-brides':['covers', 20, 1860, 600, 900],
+  'spine-brides':['spines', 2180, 20, 160, 840],
+  'cover-n1984':['covers', 640, 1860, 600, 900],
+  'spine-n1984':['spines', 2360, 20, 160, 840],
+  'cover-catcher':['covers', 1260, 1860, 600, 900],
+  'spine-catcher':['spines', 2540, 20, 160, 840],
+  'cover-oldman':['covers', 1880, 1860, 600, 900],
+  'spine-oldman':['spines', 2720, 20, 160, 840],
+  'cover-f451':['covers', 2500, 1860, 600, 900],
+  'spine-f451':['spines', 2900, 20, 160, 840],
+  'cover-lotf':['covers', 3120, 1860, 600, 900],
+  'spine-lotf':['spines', 3080, 20, 160, 840],
+  'cover-road':['covers', 20, 2780, 600, 900],
+  'spine-road':['spines', 3260, 20, 160, 840],
+  'cover-mocking':['covers', 640, 2780, 600, 900],
+  'spine-mocking':['spines', 3440, 20, 160, 840],
+  'cover-catch22':['covers', 1260, 2780, 600, 900],
+  'spine-catch22':['spines', 3620, 20, 160, 840],
+  'cover-dune':['covers', 1880, 2780, 600, 900],
+  'spine-dune':['spines', 3800, 20, 160, 840],
+  'cover-solitude':['covers', 2500, 2780, 600, 900],
+  'spine-solitude':['spines', 3980, 20, 160, 840],
+  'cover-slaughter':['covers', 3120, 2780, 600, 900],
+  'spine-slaughter':['spines', 4160, 20, 160, 840]
+};
+const FILMS = [
+  {id:'sidd',t:'Siddhartha',y:1922,g:'Philosophical fiction',au:'Hermann Hesse',syn:'The son of a Brahmin leaves home in search of enlightenment, and finds it at last beside a river, working as a ferryman.'},
+  {id:'gatsby',t:'The Great Gatsby',y:1925,g:'Literary fiction',au:'F. Scott Fitzgerald',syn:'A mysterious millionaire throws lavish parties on Long Island in the hope that one woman across the bay will walk through his door.'},
+  {id:'dalloway',t:'Mrs Dalloway',y:1925,g:'Modernist fiction',au:'Virginia Woolf',syn:'Over a single June day in London, Clarissa Dalloway prepares for a party while the past keeps breaking through.'},
+  {id:'sunrises',t:'The Sun Also Rises',y:1926,g:'Literary fiction',au:'Ernest Hemingway',syn:'A group of restless expatriates drift from the cafés of Paris to the bullfights of Pamplona.'},
+  {id:'sound',t:'The Sound and the Fury',y:1929,g:'Southern gothic',au:'William Faulkner',syn:'The decline of the Compson family is told four times, through four very different minds.'},
+  {id:'bnw',t:'Brave New World',y:1932,g:'Dystopian',au:'Aldous Huxley',syn:'In a world engineered for comfort and stability, a man raised outside it arrives and refuses to be happy on command.'},
+  {id:'mice',t:'Of Mice and Men',y:1937,g:'Novella',au:'John Steinbeck',syn:'Two drifting ranch hands, George and Lennie, hold on to a shared dream of a small farm of their own.'},
+  {id:'hobbit',t:'The Hobbit',y:1937,g:'Fantasy',au:'J. R. R. Tolkien',syn:'A comfortable hobbit is swept off on a quest to win back a dragon’s hoard from beneath a lonely mountain.'},
+  {id:'rebecca',t:'Rebecca',y:1938,g:'Gothic',au:'Daphne du Maurier',syn:'A young bride arrives at Manderley and finds her husband’s first wife still present in every room.'},
+  {id:'grapes',t:'The Grapes of Wrath',y:1939,g:'Literary fiction',au:'John Steinbeck',syn:'Driven off their Oklahoma farm by drought and debt, the Joad family heads west toward a California that does not want them.'},
+  {id:'stranger',t:'The Stranger',y:1942,g:'Philosophical fiction',au:'Albert Camus',syn:'A clerk in Algiers shows no grief at his mother’s funeral, and a shot fired on a blinding beach changes everything.'},
+  {id:'animal',t:'Animal Farm',y:1945,g:'Satire',au:'George Orwell',syn:'The animals of Manor Farm overthrow their farmer, then watch the pigs who lead them become just like him.'},
+  {id:'brides',t:'Brideshead Revisited',y:1945,g:'Literary fiction',au:'Evelyn Waugh',syn:'Charles Ryder looks back on his entanglement with the aristocratic Flyte family and their great house.'},
+  {id:'n1984',t:'Nineteen Eighty-Four',y:1949,g:'Dystopian',au:'George Orwell',syn:'Winston Smith rewrites history for the Party by day, and risks everything on a forbidden diary and a forbidden love.'},
+  {id:'catcher',t:'The Catcher in the Rye',y:1951,g:'Coming of age',au:'J. D. Salinger',syn:'Expelled from prep school, Holden Caulfield drifts through New York for three days, looking for anything that isn’t phony.'},
+  {id:'oldman',t:'The Old Man and the Sea',y:1952,g:'Novella',au:'Ernest Hemingway',syn:'An old Cuban fisherman, eighty-four days without a catch, hooks a giant marlin far out in the Gulf Stream.'},
+  {id:'f451',t:'Fahrenheit 451',y:1953,g:'Dystopian',au:'Ray Bradbury',syn:'A fireman whose job is to burn books begins to wonder what is inside them.'},
+  {id:'lotf',t:'Lord of the Flies',y:1954,g:'Allegory',au:'William Golding',syn:'Schoolboys stranded on an island try to govern themselves, and order falls away faster than any of them expects.'},
+  {id:'road',t:'On the Road',y:1957,g:'Beat fiction',au:'Jack Kerouac',syn:'Sal Paradise and Dean Moriarty crisscross America by car, chasing jazz, freedom and the next town.'},
+  {id:'mocking',t:'To Kill a Mockingbird',y:1960,g:'Coming of age',au:'Harper Lee',syn:'In a small Alabama town, Scout Finch watches her father defend a Black man falsely accused of a crime.'},
+  {id:'catch22',t:'Catch-22',y:1961,g:'Satire',au:'Joseph Heller',syn:'A bombardier tries every trick to stop flying missions, trapped by a rule that makes escape impossible.'},
+  {id:'dune',t:'Dune',y:1965,g:'Science fiction',au:'Frank Herbert',syn:'On the desert planet Arrakis, a young heir is drawn into a war over the most valuable substance in the universe.'},
+  {id:'solitude',t:'One Hundred Years of Solitude',y:1967,g:'Magical realism',au:'Gabriel García Márquez',syn:'Seven generations of the Buendía family rise and fall in Macondo, a town where the miraculous is ordinary.'},
+  {id:'slaughter',t:'Slaughterhouse-Five',y:1969,g:'Satire',au:'Kurt Vonnegut',syn:'Billy Pilgrim comes unstuck in time, bouncing between his own life, an alien zoo and the firebombing of Dresden.'}
+];
+const PH = { covers: 'assets/images/book-covers.webp', spines: 'assets/images/book-spines.webp' };
+/* sheets as data: URLs (blob: URLs are blocked by some file viewers); each sheet is declared once as a CSS class */
+for (const k in PH) SHEET[k][0] = PH[k];
+{ const st = document.createElement('style');
+  st.textContent = Object.keys(SHEET).map(k => '.sh-' + k + '{background-image:url("' + SHEET[k][0] + '")}').join('');
+  document.head.appendChild(st); }
+/* sample prices (USD, hardback) */
+const PRICE = { sidd:16, gatsby:18, dalloway:17, sunrises:19, sound:21, bnw:18, mice:14, hobbit:24, rebecca:19, grapes:22,
+  stranger:16, animal:14, brides:21, n1984:19, catcher:18, oldman:15, f451:17, lotf:18, road:20, mocking:19, catch22:21,
+  dune:26, solitude:22, slaughter:19 };
+const money = id => '$' + (PRICE[id] || 18).toFixed(2);
+const BLOBS = [0,120,220,300,360,420,180];
+
+const N = FILMS.length;
+let LIST = FILMS.map((_, i) => i), n = N, L = N * 3, loop = true, filter = 'all', swapping = false;
+const $ = id => document.getElementById(id);
+const stage = $('stage'), shelf = $('shelf'), play = $('play'), cur = $('cur'), detail = $('detail');
+const tabs = [...document.querySelectorAll('.tab')], ind = $('ind');
+const blobs = [...$('blobs').children], pImg = $('pImg');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const D = ms => reduced ? 1 : ms;
+const mod = (a, n) => ((a % n) + n) % n;
+const smooth = x => x * x * (3 - 2 * x);
+
+/* preload sheets */
+const preload = Object.values(SHEET).map(([u]) => { const i = new Image(); i.src = u; return i; });
+
+function crop(el, key) {
+  const [sh, x, y, w, h] = CROP[key], [u, W, H] = SHEET[sh];
+  el.classList.add('sh-' + sh);
+  el.style.backgroundSize = (W / w * 100) + '% ' + (H / h * 100) + '%';
+  el.style.backgroundPosition = (x / (W - w) * 100) + '% ' + (y / (H - h) * 100) + '%';
+}
+
+/* shelf: the books in the current filter; under All they repeat three times so the shelf loops endlessly */
+const START = Math.max(0, FILMS.findIndex(f => f.id === 'oldman'));
+const tapes = [];
+function buildShelf() {
+  stage.innerHTML = ''; tapes.length = 0; hover = -1;
+  const copies = loop ? 3 : 1;
+  for (let c = 0; c < copies; c++) LIST.forEach((fi, j) => {
+    const v = c * n + j, el = document.createElement('div'), tin = document.createElement('div');
+    el.className = 'tape'; tin.className = 'tin';
+    const sp = document.createElement('div'), cv = document.createElement('div');
+    sp.className = 'f sp'; cv.className = 'f cv';
+    crop(sp, 'spine-' + FILMS[fi].id); crop(cv, 'cover-' + FILMS[fi].id);
+    tin.append(sp, cv); el.append(tin); stage.append(el);
+    tapes.push({ v, i: fi, el, tin, sp, cv, lift: 0, vis: true });
+    el.addEventListener('pointerenter', () => { hover = v; });
+    el.addEventListener('pointerleave', () => { if (hover === v) hover = -1; });
+    el.addEventListener('click', () => {
+      if (suppress) { suppress = false; return; }
+      if (isOpen || swapping) return;
+      const r = rel(v);
+      if (Math.abs(r) < .5) openDetail(); else T = Math.round(T + r);
+    });
+  });
+}
+
+/* state */
+let s = START + N, T = s, hover = -1, active = START, mx = innerWidth / 2, my = -999, cx = mx, cy = my;
+let tiltX = 0, tiltY = 0, onCover = false, isOpen = false, busy = false, dragging = false, hasPtr = false;
+let H = 0, ws = 0, d = 0, gap = 0, W = innerWidth, VH = innerHeight, CY = VH / 2;
+let lastTarget = null;
+
+buildShelf();
+function measure() {
+  H = $('probe').getBoundingClientRect().height;
+  ws = H * 160 / 840; d = H * 600 / 900; gap = H * .03;
+  stage.style.setProperty('--ws', ws + 'px');
+  stage.style.setProperty('--d', d + 'px');
+  W = innerWidth; VH = innerHeight;
+  const r = shelf.getBoundingClientRect(); CY = r.top + r.height / 2;
+  updateInd();
+}
+function rel(v) { if (!loop) return v - s; let r = mod(v - s, L); if (r > L / 2) r -= L; return r; }
+function B(r) { return Math.abs(r) < 1 ? (r + Math.sin(Math.PI * r) / Math.PI) / 2 : Math.sign(r) * .5; }
+function F(r) { return r * (ws + gap) + (d - ws + 1.6 * gap) * B(r); }
+
+/* caption */
+const capT = $('capT'), capS = $('capS'), capY = $('capY');
+function swap(mask, text, dir) {
+  const n = document.createElement('span'); n.textContent = text;
+  if (mask === capS) n.className = 'lbl cs';
+  else if (mask === capT) n.className = 'ct';
+  else n.className = 'cy';
+  const olds = [...mask.children];
+  mask.append(n);
+  if (reduced || dir === 0) { olds.forEach(o => o.remove()); return; }
+  for (const o of olds) {
+    if (o.dataset.leaving) continue;
+    o.dataset.leaving = '1';
+    const m = new DOMMatrixReadOnly(getComputedStyle(o).transform);
+    const from = m.m42;
+    o.getAnimations().forEach(a => a.cancel());
+    const a = o.animate([{ transform: 'translateY(' + from + 'px)' }, { transform: 'translateY(' + (-dir * 1.05 * o.offsetHeight) + 'px)' }],
+      { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+    a.onfinish = () => o.remove();
+  }
+  n.animate([{ transform: 'translateY(' + (dir * 105) + '%)' }, { transform: 'translateY(0)' }],
+    { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+}
+function setActive(i, dir) {
+  if (spotEl && dir && !reduced) spotEl.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 1200, easing: 'cubic-bezier(.2,.8,.2,1)' });
+  active = i; const f = FILMS[i];
+  swap(capT, f.t, dir); swap(capS, f.au, dir); swap(capY, 'Hardback · ' + money(f.id), dir);
+  updateInd();
+}
+function updateInd() {
+  const dec = filter;
+  tabs.forEach(t => t.classList.toggle('on', t.dataset.dec === String(dec)));
+  const t = tabs.find(t => t.dataset.dec === String(dec));
+  if (t) { ind.style.width = '4px'; ind.style.transform = 'translateX(' + (t.offsetLeft + t.offsetWidth / 2 - 2) + 'px)'; }
+}
+
+/* frame loop */
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (!loop) T = Math.max(0, Math.min(n - 1, T));
+  const k = dragging ? 18 : 5.2;
+  s += (T - s) * (reduced ? 1 : 1 - Math.exp(-k * dt));
+  if (Math.abs(T - s) < 1e-4) s = T;
+  if (loop && s > L * 4) { s -= L * 4; T -= L * 4; }
+  else if (loop && s < -L * 4) { s += L * 4; T += L * 4; }
+  prevB.disabled = !loop && T <= 0; nextB.disabled = !loop && T >= n - 1;
+
+  const a = LIST[mod(Math.round(s), n)];
+  if (a !== active) setActive(a, Math.sign(T - s) || 1);
+
+  /* cover / tilt test */
+  const settled = Math.abs(T - s) < .3;
+  onCover = hasPtr && !isOpen && settled && Math.abs(mx - W / 2) < .55 * d && Math.abs(my - CY) < .55 * H;
+  const tY = onCover ? (mx - W / 2) / (.55 * d) * 9 : (hasPtr ? (mx - W / 2) / W * 5 : 0);
+  const tX = onCover ? -(my - CY) / (H / 2) * 6 : 0;
+  const te = reduced ? 1 : 1 - Math.exp(-7 * dt);
+  tiltY += (tY - tiltY) * te; tiltX += (tX - tiltX) * te;
+
+  const le = reduced ? 1 : 1 - Math.exp(-12 * dt), lim = W / 2 + 1.5 * d;
+  for (const t of tapes) {
+    const r = rel(t.v);
+    t.lift += ((hover === t.v && Math.abs(r) > .5 ? 1 : 0) - t.lift) * le;
+    const x = F(r) + slideOf(t, now);
+    if (Math.abs(x) > lim) { if (t.vis) { t.el.style.visibility = 'hidden'; t.vis = false; } continue; }
+    if (!t.vis) { t.el.style.visibility = ''; t.vis = true; }
+    const o = smooth(Math.max(0, 1 - Math.abs(r)));
+    const ry = -90 * o + tiltY * o, rx = tiltX * o, rz = -4.5 * o;
+    const z = o * .2 * H, y = -o * .025 * H - t.lift * .045 * H + (t.sy || 0);
+    t.el.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,' + z.toFixed(2) + 'px) rotateZ(' + rz.toFixed(3) + 'deg) rotateX(' + rx.toFixed(3) + 'deg) rotateY(' + ry.toFixed(3) + 'deg)';
+    t.el.style.zIndex = Math.round(100 - Math.abs(r) * 4);
+    t.sp.style.setProperty('--shade', (o * .55).toFixed(3));
+    t.cv.style.setProperty('--shade', ((1 - o) * .5).toFixed(3));
+  }
+
+  /* play ring */
+  const ps = (isOpen || swapping) ? 0 : smooth(Math.max(0, 1 - Math.abs(T - s) * 3));
+  play.style.left = (W / 2 - .5 * d - 6) + 'px';
+  play.style.top = (CY + .36 * H) + 'px';
+  play.style.transform = 'scale(' + ps.toFixed(3) + ')';
+  play.style.pointerEvents = ps > .5 ? '' : 'none';
+
+  /* cursor */
+  const ce = 1 - Math.exp(-16 * dt);
+  cx += (mx - cx) * ce; cy += (my - cy) * ce;
+  cur.style.transform = 'translate3d(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px,0)';
+  let st = '';
+  if (isOpen) {
+    if (readerOpen) { if (lastTarget && lastTarget.closest('.book')) st = 'page'; else if (lastTarget && lastTarget.closest('button,a')) st = 'btn'; }
+    else if (lastTarget && lastTarget.closest('.pbtn')) st = 'read';
+    else if (lastTarget && lastTarget.closest('button,a')) st = 'btn';
+  }
+  else if (onCover) st = 'open';
+  else if (hover >= 0 && Math.abs(rel(hover)) > .5) st = 'spine';
+  else if (lastTarget && lastTarget.closest('button,a') && !lastTarget.closest('.shelf')) st = 'btn';
+  if (cur.dataset.st !== st) {
+    cur.dataset.st = st;
+    cur.classList.toggle('open', st === 'open');
+    cur.classList.toggle('spine', st === 'spine' || st === 'page');
+    cur.classList.toggle('read', st === 'read');
+    cur.classList.toggle('btn', st === 'btn');
+  }
+  requestAnimationFrame(frame);
+}
+
+/* detail */
+const dlines = [...detail.querySelectorAll('.dl .m > span')];
+let inkStart = 0, inkRaf = 0, openAnim = null;
+function coverRect() {
+  let best = tapes[0], bd = 1e9;
+  for (const t of tapes) { const r = Math.abs(rel(t.v)); if (r < bd) { bd = r; best = t; } }
+  const b = best.cv.getBoundingClientRect();
+  const a = 4.5 * Math.PI / 180, c = Math.cos(a), sn = Math.sin(a), q = c * c - sn * sn;
+  const w = (b.width * c - b.height * sn) / q, h = (b.height * c - b.width * sn) / q;
+  const mx0 = b.left + b.width / 2, my0 = b.top + b.height / 2;
+  return { cx: mx0, cy: my0, t: my0 - h / 2, l: mx0 - w / 2, r: innerWidth - (mx0 + w / 2), b: innerHeight - (my0 + h / 2) };
+}
+const insetOf = R => 'inset(' + R.t + 'px ' + R.r + 'px ' + R.b + 'px ' + R.l + 'px round 3px)';
+const FULL = { clipPath: 'inset(0px 0px 0px 0px round 0px)', transform: 'rotate(0deg)' };
+const SHEET_EASE = 'cubic-bezier(.76,0,.18,1)';
+
+function openDetail() {
+  if (isOpen || busy) return;
+  T = Math.round(T);
+  const f = FILMS[LIST[mod(T, n)]]; detailFilm = f;
+  $('dS').textContent = 'Modern classics · ' + (FILMS.indexOf(f) + 1) + ' / ' + FILMS.length;
+  $('dP').innerHTML = money(f.id) + '<small>Hardback</small>';
+  $('addB').textContent = 'Add to bag'; $('addB').classList.remove('ok');
+  $('dT').textContent = f.t;
+  $('dM').innerHTML = [['Author', f.au], ['First published', f.y], ['Genre', f.g], ['Format', 'Hardback, 2026 edition']].map(([k, v]) => '<span class="row"><i>' + k + '</i><b>' + esc(v) + '</b></span>').join('');
+  $('dC').textContent = 'Free shipping on orders over $40. Ships in 2–3 working days.';
+  $('dY').textContent = f.syn;
+  const [sh, x, y, w, h] = CROP['cover-' + f.id], [u, SW, SH] = SHEET[sh];
+  pImg.setAttribute('href', u);
+  pImg.setAttribute('x', -x * 600 / w); pImg.setAttribute('y', -y * 900 / h);
+  pImg.setAttribute('width', SW * 600 / w); pImg.setAttribute('height', SH * 900 / h);
+  blobs.forEach(b => b.setAttribute('r', 0));
+
+  const R = coverRect();
+  isOpen = true;
+  detail.getAnimations({ subtree: true }).forEach(a => a.cancel());
+  detail.scrollTop = 0;
+  detail.style.visibility = 'visible';
+  detail.style.transformOrigin = R.cx + 'px ' + R.cy + 'px';
+  openAnim = detail.animate([{ clipPath: insetOf(R), transform: 'rotate(-4.5deg)' }, FULL],
+    { duration: D(1050), easing: SHEET_EASE, fill: 'both' });
+  dlines.forEach((el, i) => el.animate([{ transform: 'translateY(110%)' }, { transform: 'translateY(0)' }],
+    { duration: D(900), delay: reduced ? 0 : 620 + i * 75, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }));
+  inkStart = performance.now() + (reduced ? -5000 : 520);
+  cancelAnimationFrame(inkRaf); inkRaf = requestAnimationFrame(ink);
+  $('close').focus({ preventScroll: true });
+}
+function ink(now) {
+  const e = now - inkStart;
+  blobs.forEach((b, i) => {
+    const p = Math.min(1, Math.max(0, (e - BLOBS[i]) / 1250));
+    b.setAttribute('r', (780 * (1 - Math.pow(1 - p, 3))).toFixed(1));
+  });
+  if (e < 2400) inkRaf = requestAnimationFrame(ink);
+}
+function closeDetail() {
+  if (!isOpen || busy) return;
+  busy = true;
+  const R = coverRect();
+  detail.style.transformOrigin = R.cx + 'px ' + R.cy + 'px';
+  if (openAnim) openAnim.cancel();
+  const a = detail.animate([FULL, { clipPath: insetOf(R), transform: 'rotate(-4.5deg)' }],
+    { duration: D(850), easing: SHEET_EASE, fill: 'both' });
+  a.onfinish = () => {
+    detail.style.visibility = 'hidden';
+    detail.getAnimations({ subtree: true }).forEach(x => x.cancel());
+    cancelAnimationFrame(inkRaf);
+    isOpen = false; busy = false;
+    document.activeElement && document.activeElement.blur();
+  };
+}
+
+
+/* ---------- reader: open the book and read the first pages ---------- */
+let readerOpen = false, rBusy = false, step = 0, flipped = 0, leaves = [], rK = 1, rCY = 0, ctaOn = false, detailFilm = null;
+const PW = 440, PGH = 660, FLIP = reduced ? 1 : 900;
+const reader = $('reader'), rStage = $('rStage'), book = $('book'), cta = $('cta');
+const EP = { sidd:'#c27c22', dalloway:'#c97b84', sunrises:'#a8361f', sound:'#2b2b3a', mice:'#8a6a3a', hobbit:'#3f5f3a', rebecca:'#5a1a24', stranger:'#E2B33C', animal:'#8a2a1f', brides:'#2d4a5c', road:'#d4a23a', slaughter:'#1e2a3a',
+  gatsby:'#13263b', bnw:'#d9cfb5', grapes:'#5b2a4a', n1984:'#161616', catcher:'#b8432f', oldman:'#1d3a9e',
+  f451:'#1b1a18', lotf:'#2f5a3c', mocking:'#cdbf9f', catch22:'#3d4a2c', dune:'#c47a2c', solitude:'#d8c98f' };
+/* accent inside each book = the cover's main colour (Gatsby's gold title is too pale on paper, so it takes the navy cover) */
+const AC = { sidd:'#8a4b12', dalloway:'#9b2f4a', sunrises:'#D2442A', sound:'#141414', mice:'#6a4a20', hobbit:'#3f5f3a', rebecca:'#9b2a3a', stranger:'#141414', animal:'#8a2a1f', brides:'#2d4a5c', road:'#141414', slaughter:'#1e2a3a',
+  gatsby:'#13263b', bnw:'#1F3FB0', grapes:'#5b2a4a', n1984:'#D2442A', catcher:'#141414', oldman:'#1F3FB0',
+  f451:'#E0562A', lotf:'#2f5a3c', mocking:'#141414', catch22:'#D2442A', dune:'#5e2d10', solitude:'#141414' };
+/* placeholder copy: replace with the publisher's licensed sample for each title */
+const LOREM = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+  'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
+  'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',
+  'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.',
+  'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.',
+  'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.',
+  'Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
+  'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const SHIP = '<svg viewBox="-20 -20 40 40" class="ship" aria-hidden="true"><circle r="17" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M-9 5 H9 L6 9 H-6Z M0 4 V-11 L8 3Z M-2 -8 L-8 3 H-2Z" fill="currentColor"/></svg>';
+const ORN = '<svg class="orn" viewBox="0 0 46 12" aria-hidden="true"><path d="M0 6 H17 M29 6 H46" stroke="currentColor" stroke-width="1"/><path d="M23 1 L28 6 L23 11 L18 6Z" fill="currentColor"/></svg>';
+const isMobile = () => matchMedia('(max-width:767px)').matches;
+/* each step = [leaves turned, view]; c closed, s spread, l left page, r right page */
+const STEPS_D = [[0,'c'],[1,'s'],[2,'s'],[3,'s'],[4,'s']];
+const STEPS_M = [[0,'r'],[1,'r'],[2,'l'],[2,'r'],[3,'l'],[3,'r'],[4,'l']];
+const steps = () => isMobile() ? STEPS_M : STEPS_D;
+
+function textPage(paras, n, head, opener, blur) {
+  return '<div class="pp' + (blur ? ' blur' : '') + '">' +
+    (head ? '<div class="rh lbl">' + esc(head) + '</div>' : '') +
+    (opener ? '<div class="ch"><span class="lbl">One</span><em>Chapter One</em></div>' : '') +
+    '<div class="txt' + (opener ? ' op' : '') + '" lang="la">' + paras.map(p => '<p>' + p + '</p>').join('') + '</div>' +
+    '<div class="pn">' + n + '</div></div>';
+}
+function buildBook(f) {
+  const ep = EP[f.id] || '#555', n = parseInt(ep.slice(1), 16);
+  const dark = ((n >> 16) * .3 + ((n >> 8) & 255) * .59 + (n & 255) * .11) < 140;
+  book.style.setProperty('--bac', AC[f.id] || '#1F3FB0');
+  const L = LOREM;
+  const title = '<div class="pp tp"><span class="lbl a">' + esc(f.au) + '</span><span class="rule"></span><h3>' + esc(f.t) + '</h3>' + ORN +
+    '<div class="ft">' + SHIP + '<span class="lbl">First published ' + f.y + '</span></div></div>';
+  const note = '<div class="pp cp"><b>Free sample</b><p>Placeholder text fills these sample pages. It stands in for the publisher’s extract of <i>' + esc(f.t) + '</i> by ' + esc(f.au) + ', first published in ' + f.y + '. </p><p>Ottoline Booksellers hardback edition. Cover design original to this store.</p></div>';
+  const faces = [
+    ['<div class="cvr"></div>', '<div class="endp" style="--ep:' + ep + ';--dot:' + (dark ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.09)') + '"></div>'],
+    [title, note],
+    [textPage([L[0], L[1], L[2]], 1, '', true), textPage([L[3], L[4], L[5]], 2, f.au)],
+    [textPage([L[6], L[7], L[0]], 3, f.t), textPage([L[1], L[2], L[3]], 4, f.au, false, true)],
+    [textPage([L[4], L[5], L[6]], 5, f.t, false, true), '<div class="pp"></div>']
+  ];
+  book.innerHTML = '<div class="blk bl"></div><div class="blk br"></div>' + faces.map(([a, b], i) =>
+    '<div class="leaf" style="z-index:' + (100 - i) + '"><div class="face fr">' + a + '</div><div class="face bk">' + b + '</div></div>').join('');
+  crop(book.querySelector('.cvr'), 'cover-' + f.id);
+  leaves = [...book.querySelectorAll('.leaf')];
+  $('rHead').textContent = 'Free sample — ' + f.t;
+  $('ctaH').innerHTML = 'Keep reading <em>' + esc(f.t) + '</em>';
+  $('buy').textContent = 'Add to bag — ' + money(f.id);
+}
+function setFlip(nf, stagger) {
+  const prev = flipped; flipped = nf;
+  leaves.forEach((lf, i) => {
+    const want = i < nf;
+    if (want === lf.classList.contains('f')) return;
+    const delay = stagger ? (want ? i - prev : prev - 1 - i) * stagger : 0;
+    clearTimeout(lf._d); clearTimeout(lf._t);
+    lf._d = setTimeout(() => {
+      lf.style.zIndex = 300 + (want ? i : 50 - i);
+      lf.classList.toggle('f', want);
+      lf._t = setTimeout(() => { lf.style.zIndex = want ? 10 + i : 100 - i; }, FLIP);
+    }, Math.max(0, delay));
+  });
+  book.classList.toggle('open', nf > 0);
+}
+function applyStep(stagger) {
+  const S = steps();
+  step = Math.max(0, Math.min(S.length - 1, step));
+  const [f, v] = S[step];
+  setFlip(f, stagger || 0);
+  book.style.transform = 'translateX(' + (v === 's' ? 0 : v === 'l' ? PW / 2 : -PW / 2) + 'px)';
+  $('rNum').textContent = (step + 1) + ' / ' + S.length;
+  $('rPrev').disabled = step === 0;
+  $('rNext').disabled = step === S.length - 1;
+  showCta(step === S.length - 1);
+}
+function go(d) {
+  if (!readerOpen || rBusy) return;
+  const n = Math.max(0, Math.min(steps().length - 1, step + d));
+  if (n === step) return;
+  step = n; applyStep();
+}
+function showCta(on) {
+  if (on === ctaOn) return;
+  ctaOn = on;
+  cta.getAnimations().forEach(a => a.cancel());
+  cta.style.visibility = 'visible';
+  const a = cta.animate([
+    { transform: 'translate(-50%,-50%) scale(.9)', clipPath: 'inset(50% 0 50% 0 round 2px)' },
+    { transform: 'translate(-50%,-50%) scale(1)', clipPath: 'inset(0% 0 0% 0 round 2px)' }
+  ], { duration: D(700), delay: on && !reduced ? 650 : 0, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both', direction: on ? 'normal' : 'reverse' });
+  if (!on) a.onfinish = () => { if (!ctaOn) cta.style.visibility = 'hidden'; };
+}
+function layoutReader() {
+  const m = isMobile(), top = m ? 64 : 84, bot = m ? 76 : 84;
+  rCY = top + (innerHeight - top - bot) / 2;
+  rK = m ? Math.min((innerWidth - 28) / PW, (innerHeight - top - bot - 16) / PGH)
+         : Math.min(1.15, (innerWidth - 120) / (2 * PW), (innerHeight - top - bot - 24) / PGH);
+  rStage.style.top = rCY + 'px';
+  cta.style.top = rCY + 'px';
+  rStage.style.transform = 'scale(' + rK + ')';
+}
+function posterFrom() {
+  const pr = $('pBtn').getBoundingClientRect();
+  return {
+    t: 'translate(' + (pr.left + pr.width / 2 - innerWidth / 2) + 'px,' + (pr.top + pr.height / 2 - rCY) + 'px) scale(' + (pr.width / PW) + ')',
+    clip: 'inset(' + pr.top + 'px ' + (innerWidth - pr.right) + 'px ' + (innerHeight - pr.bottom) + 'px ' + pr.left + 'px round 3px)'
+  };
+}
+function openReader() {
+  if (!isOpen || busy || readerOpen || rBusy || !detailFilm) return;
+  readerOpen = true; rBusy = true; ctaOn = false;
+  cta.getAnimations().forEach(a => a.cancel()); cta.style.visibility = 'hidden';
+  buildBook(detailFilm); flipped = 0; step = 0;
+  book.style.transition = 'none'; book.classList.remove('open');
+  book.style.transform = 'translateX(' + (-PW / 2) + 'px)';
+  void book.offsetWidth; book.style.transition = '';
+  layoutReader();
+  const P0 = posterFrom();
+  reader.style.visibility = 'visible';
+  const sa = rStage.animate([{ transform: P0.t }, { transform: 'translate(0px,0px) scale(' + rK + ')' }], { duration: D(900), easing: SHEET_EASE });
+  reader.animate([{ clipPath: P0.clip }, { clipPath: 'inset(0px 0px 0px 0px round 0px)' }], { duration: D(900), easing: SHEET_EASE });
+  sa.onfinish = () => { step = 1; applyStep(); rBusy = false; };
+  $('rClose').focus({ preventScroll: true });
+}
+function closeReader() {
+  if (!readerOpen || rBusy) return;
+  rBusy = true;
+  const was = flipped;
+  step = 0; applyStep(reduced ? 0 : 90);
+  setTimeout(() => {
+    const P0 = posterFrom();
+    rStage.animate([{ transform: 'translate(0px,0px) scale(' + rK + ')' }, { transform: P0.t }], { duration: D(800), easing: SHEET_EASE, fill: 'forwards' });
+    const a = reader.animate([{ clipPath: 'inset(0px 0px 0px 0px round 0px)' }, { clipPath: P0.clip }], { duration: D(800), easing: SHEET_EASE, fill: 'forwards' });
+    a.onfinish = () => {
+      reader.style.visibility = 'hidden';
+      reader.getAnimations({ subtree: true }).forEach(x => x.cancel());
+      readerOpen = false; rBusy = false;
+      $('close').focus({ preventScroll: true });
+    };
+  }, was ? FLIP + (reduced ? 0 : 90 * Math.max(0, was - 1)) + 60 : 0);
+}
+$('pBtn').addEventListener('click', openReader);
+document.querySelector('.watch').addEventListener('click', openReader);
+$('rClose').addEventListener('click', closeReader);
+$('rPrev').addEventListener('click', () => go(-1));
+$('rNext').addEventListener('click', () => go(1));
+$('again').addEventListener('click', () => { if (!rBusy) { step = 1; applyStep(); } });
+$('buy').addEventListener('click', () => { if (detailFilm) { addToBag(detailFilm.id); $('buy').textContent = 'Added to bag'; } });
+book.addEventListener('click', e => {
+  if (rBusy) return;
+  if (isMobile()) { go(e.clientX > innerWidth * .4 ? 1 : -1); return; }
+  const r = book.getBoundingClientRect();
+  go(step === 0 || e.clientX > r.left + r.width / 2 ? 1 : -1);
+});
+addEventListener('resize', () => { if (readerOpen) { rStage.getAnimations().forEach(a => a.finish()); layoutReader(); applyStep(); } });
+
+/* inputs */
+play.addEventListener('click', openDetail);
+$('close').addEventListener('click', closeDetail);
+const prevB = $('prev'), nextB = $('next');
+prevB.addEventListener('click', () => { T = Math.round(T) - 1; });
+$('next').addEventListener('click', () => { T = Math.round(T) + 1; });
+/* decade filter: books on the shelf drop out, the chosen decade's books rise in */
+const TAB_ORDER = ['all', '1920', '1930', '1940', '1950', '1960'];
+/* per-book horizontal offset while the shelf changes; a small lift mid-move, like a book being slid by hand */
+function slideOf(t, now) {
+  const w = t.tw; if (!w) { t.sy = 0; return 0; }
+  if (w.kind === 'gone') { t.sy = 0; return 1e6; }
+  const p = Math.max(0, Math.min(1, (now - w.t0 - w.delay) / w.dur));
+  const e = w.kind === 'out' ? p * p * p : 1 - Math.pow(1 - p, 4);
+  t.sy = -Math.sin(Math.PI * p) * H * .03;
+  if (p >= 1 && w.kind === 'in') { t.tw = null; t.sy = 0; return 0; }
+  return w.from + (w.to - w.from) * e;
+}
+function applyFilter(dec) {
+  if (dec === filter || isOpen || swapping) return;
+  const next = FILMS.map((_, i) => i).filter(i => dec === 'all' || Math.floor(FILMS[i].y / 10) * 10 === +dec);
+  if (!next.length) return;
+  /* later decade: books leave to the left and the new ones arrive from the right; earlier decade: the reverse */
+  const dir = Math.sign(TAB_ORDER.indexOf(dec) - TAB_ORDER.indexOf(filter)) || 1;
+  swapping = true; filter = dec; updateInd();
+  const keep = active, span = W + d * 1.4, OUT = reduced ? 1 : 520, IN = reduced ? 1 : 860, LEAD = reduced ? 0 : 220;
+  const t0 = performance.now(), lim = W / 2 + 1.5 * d;
+  /* only the books on screen move; the rest of the endless shelf is held out of view until the new row has settled */
+  tapes.forEach(t => {
+    const x = F(rel(t.v));
+    if (Math.abs(x) > lim) { t.tw = { kind: 'gone' }; return; }
+    const k = Math.max(0, Math.min(1, dir > 0 ? (x + W / 2) / W : (W / 2 - x) / W));
+    t.tw = { kind: 'out', t0, delay: reduced ? 0 : k * LEAD, dur: OUT, from: 0, to: -dir * span };
+  });
+  setTimeout(() => {
+    LIST = next; n = next.length; loop = dec === 'all'; L = n * (loop ? 3 : 1);
+    let j = next.indexOf(keep); if (j < 0) j = 0;
+    s = T = (loop ? n : 0) + j;
+    buildShelf();
+    const t1 = performance.now(), STAG = reduced ? 0 : 32;
+    const lim2 = W / 2 + 1.5 * d, inView = [];
+    tapes.forEach(t => { if (Math.abs(F(rel(t.v))) > lim2) t.tw = { kind: 'gone' }; else inView.push(t); });
+    inView.sort((a, b) => dir * (rel(a.v) - rel(b.v)))
+      .forEach((t, i) => { t.tw = { kind: 'in', t0: t1, delay: Math.min(i, 14) * STAG, dur: IN, from: dir * span, to: 0 }; });
+    setTimeout(() => { tapes.forEach(t => { if (t.tw && t.tw.kind === 'gone') t.tw = null; }); swapping = false; }, IN + 14 * STAG + 40);
+  }, OUT + LEAD + 30);
+}
+tabs.forEach(t => t.addEventListener('click', () => applyFilter(t.dataset.dec)));
+document.querySelectorAll('a[href="#"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+
+addEventListener('keydown', e => {
+  if (readerOpen) {
+    if (e.key === 'Escape') closeReader();
+    else if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); }
+    return;
+  }
+  if (e.key === 'Escape') { closeDetail(); return; }
+  if (isOpen) return;
+  if (e.key === 'ArrowLeft') { T = Math.round(T) - 1; e.preventDefault(); }
+  else if (e.key === 'ArrowRight') { T = Math.round(T) + 1; e.preventDefault(); }
+  else if (e.key === 'Enter' && (document.activeElement === document.body || !document.activeElement)) openDetail();
+});
+
+let wheelTimer = 0;
+addEventListener('wheel', e => {
+  if (isOpen) return;
+  let dl = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  if (e.deltaMode === 1) dl *= 16; else if (e.deltaMode === 2) dl *= innerHeight;
+  T += dl / (ws + gap) * .5;
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => { T = Math.round(T); }, 160);
+}, { passive: true });
+
+let down = null, suppress = false;
+shelf.addEventListener('pointerdown', e => {
+  if (isOpen || e.button > 0) return;
+  down = { x: e.clientX, T0: T, id: e.pointerId }; suppress = false;
+});
+addEventListener('pointermove', e => {
+  mx = e.clientX; my = e.clientY; lastTarget = e.target;
+  if (!hasPtr && e.pointerType === 'mouse') { hasPtr = true; cx = mx; cy = my; }
+  if (down && e.pointerId === down.id) {
+    const dx = e.clientX - down.x;
+    if (!dragging && Math.abs(dx) > 5) dragging = true;
+    if (dragging) T = down.T0 - dx / (ws + gap);
+  }
+});
+addEventListener('pointerover', e => { lastTarget = e.target; });
+const up = () => {
+  if (dragging) { T = Math.round(T); suppress = true; setTimeout(() => { suppress = false; }, 0); }
+  dragging = false; down = null;
+};
+addEventListener('pointerup', up);
+addEventListener('pointercancel', up);
+document.documentElement.addEventListener('pointerleave', () => { if (hasPtr) { mx = -999; my = -999; } });
+
+addEventListener('resize', measure);
+
+/* bag */
+const bagItems = [], bagP = document.createElement('div');
+bagP.className = 'bagp'; bagP.setAttribute('role', 'dialog'); bagP.setAttribute('aria-label', 'Your bag');
+document.body.append(bagP);
+let bagOpen = false;
+function renderBag() {
+  const sub = bagItems.reduce((a, it) => a + PRICE[it.id] * it.q, 0), cnt = bagItems.reduce((a, it) => a + it.q, 0);
+  bagP.innerHTML = '<h5>Your bag <button id="bagX">Close</button></h5>' +
+    (bagItems.length ? '<ul>' + bagItems.map(it => { const f = FILMS.find(x => x.id === it.id);
+      return '<li><span class="th" data-id="' + it.id + '"></span><span class="tt">' + esc(f.t) + '<i>' + esc(f.au) + (it.q > 1 ? ' · ×' + it.q : '') + '</i></span><span class="rt">$' + (PRICE[it.id] * it.q).toFixed(2) + '<button data-rm="' + it.id + '">Remove</button></span></li>'; }).join('') + '</ul>'
+      : '<div class="empty">Your bag is empty. Open a book on the shelf to add it.</div>') +
+    '<div class="sub"><span>Subtotal</span><span>$' + sub.toFixed(2) + '</span></div>' +
+    '<p class="note">' + (sub >= 40 || !sub ? 'Free shipping on orders over $40.' : 'Add $' + (40 - sub).toFixed(2) + ' more for free shipping.') + '</p>' +
+    '<button class="co lbl" id="bagCo"' + (cnt ? '' : ' disabled') + '>Checkout</button>';
+  bagP.querySelectorAll('.th').forEach(el => crop(el, 'cover-' + el.dataset.id));
+  bagP.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', e => { e.stopPropagation();
+    const k = bagItems.findIndex(it => it.id === b.dataset.rm); if (k > -1) bagItems.splice(k, 1); renderBag(); bumpBag(-1); }));
+  $('bagX').addEventListener('click', () => toggleBag(false));
+  $('bagCo').addEventListener('click', () => { $('bagCo').textContent = 'Checkout is off in this sample store'; });
+}
+function bumpBag(dir) {
+  /* one number in the badge at a time; the new one rolls in from below (or above when removing) */
+  const cnt = bagItems.reduce((a, it) => a + it.q, 0), box = $('bagN'), nn = document.createElement('span');
+  nn.textContent = cnt; box.replaceChildren(nn);
+  if (!reduced) nn.animate([{ transform: 'translateY(' + (dir * 110) + '%)' }, { transform: 'translateY(0)' }], { duration: 400, easing: 'cubic-bezier(.2,.8,.2,1)' });
+}
+function addToBag(id) {
+  const it = bagItems.find(x => x.id === id);
+  if (it) it.q++; else bagItems.push({ id, q: 1 });
+  renderBag(); bumpBag(1);
+}
+function toggleBag(on) {
+  bagOpen = on === undefined ? !bagOpen : on;
+  bagP.getAnimations().forEach(a => a.cancel());
+  bagP.style.visibility = 'visible';
+  const a = bagP.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }],
+    { duration: reduced ? 1 : 420, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both', direction: bagOpen ? 'normal' : 'reverse' });
+  if (!bagOpen) a.onfinish = () => { if (!bagOpen) bagP.style.visibility = 'hidden'; };
+}
+renderBag();
+$('bag').addEventListener('click', e => { e.stopPropagation(); toggleBag(); });
+bagP.addEventListener('click', e => e.stopPropagation());
+addEventListener('click', () => { if (bagOpen) toggleBag(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && bagOpen) { toggleBag(false); e.stopImmediatePropagation(); } }, true);
+$('addB').addEventListener('click', () => { if (!detailFilm) return; addToBag(detailFilm.id); $('addB').textContent = 'Added to bag'; $('addB').classList.add('ok'); });
+/* the bag sits above the detail and reader layers */
+document.body.append($('bag'));
+
+/* lights: one group per pin light (every 176 wall units, offset 88 from the centre), one picture light per bay */
+var spotEl = null;
+{ const room = document.querySelector('.room'), U = n => 'calc(var(--H) * ' + n + ' / 400)';
+  const mk = (cls, off, d, b, lo) => { const el = document.createElement('div'); el.className = 'lt ' + cls;
+    el.style.left = 'calc(50% + ' + U(off) + ')'; el.style.setProperty('--d', d + 'ms'); el.style.setProperty('--b', b + 's'); el.style.setProperty('--lo', lo);
+    room.append(el); return el; };
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let m = -13; m <= 12; m++) { const off = 88 * (2 * m + 1), d = 260 + Math.abs(off) / 88 * 85;
+    const b = 4.2 + rnd() * 3, lo = (.78 + rnd() * .1).toFixed(2);
+    mk('pool', off, d, b, lo); mk('pin', off, d, (2.6 + rnd() * 1.6).toFixed(2), (.86 + rnd() * .08).toFixed(2)); mk('refl', off, d, b, lo); }
+  for (let k = -6; k <= 6; k++) { const off = 352 * k, d = 1100 + Math.abs(k) * 140, b = 5 + rnd() * 3, lo = (.8 + rnd() * .1).toFixed(2);
+    mk('pic', off, d, b, lo); mk('picb', off, d, b, lo); }
+  spotEl = mk('spot', 0, 200, 6, .86); }
+
+/* start */
+measure();
+setActive(START, 0);
+if (document.fonts) document.fonts.ready.then(updateInd);
+requestAnimationFrame(t => { last = t; frame(t); });
+}
+</script>
+</body>
+</html>
