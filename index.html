@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aequitas Law: Blind to bias, clear on the law</title>
+<script>
+/* motion is opted in before paint, so nothing flashes; if the motion script fails to start, everything shows */
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.documentElement.classList.add('motion');
+  setTimeout(() => { if (!window.__motion) document.documentElement.classList.remove('motion'); }, 3500);
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="Aequitas Law is an independent law firm for businesses and families: corporate, disputes, employment, real estate, intellectual property and private client.">
+<style>
+@font-face{font-family:"Geist";src:url("https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("assets/fonts/GeistMono-Variable.woff2") format("woff2");font-weight:100 900;font-display:swap}   /* variable, built in: labels and buttons use 500 */
+@font-face{font-family:"Inter";src:url("https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2") format("woff2");font-weight:500;font-display:swap}
+
+/* palette: orange field, white type, black ink */
+/* palette: oxblood ground, warm cream type, light panels with near-black type, one antique-gold accent */
+:root{--bg:#45171B;--ink:#F8EFE4;--accent:#B08D4A;--panel:#F5F5F5;--black:#040203;--blue:#45171B;--raise:var(--panel);--line:rgba(248,239,228,.24);--line-dark:rgba(4,2,3,.14);--mark:var(--accent);--u:1px;--pad:max(16px,3.125vw);--ease:cubic-bezier(.22,1,.36,1);--ease-io:cubic-bezier(.77,0,.18,1);
+  --sans:"Geist",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);scroll-padding-top:72px}
+::selection{background:var(--accent);color:var(--black)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:500;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.on-white a:focus-visible,.on-white button:focus-visible{outline-color:var(--bg)}
+
+/* ------------------------------------------------------------------ hero */
+.stage{position:relative}
+/* the bust lives on a sticky layer behind the hero and the two scenes after it */
+.pin{position:sticky;top:0;z-index:0;height:100vh;height:100svh;min-height:560px;overflow:hidden;pointer-events:none}
+/* the hero is pulled up over the sticky layer, so the layer is released exactly where the second scene ends */
+.hero{position:relative;z-index:1;height:100vh;height:100svh;min-height:560px;margin-top:-100vh;margin-top:calc(-1 * max(560px, 100svh));overflow:hidden}
+/* WebGL artboard: 1440 x 1000, scaled by K and anchored to the hero's bottom (set in JS) */
+.board{position:absolute;left:0;top:0;width:1440px;height:1000px;transform-origin:0 0;will-change:transform}
+.board canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+/* type layer: artboard coordinates x --u, anchored to the hero's edges */
+.ui{position:absolute;inset:0;pointer-events:none}
+.ui a{pointer-events:auto}
+.logo{display:flex;align-items:center;gap:.5em;line-height:1;color:var(--ink)}
+/* logo lockup: the A-and-scales emblem beside the serif wordmark */
+.logo .lg-em{height:1.75em;width:2.153em;flex:none}
+.logo .lg-wm{height:.92em;width:3.792em;flex:none;margin-top:.12em}
+.ui .logo{position:absolute;left:calc(45*var(--u));top:calc(26*var(--u));font-size:max(18px,calc(22*var(--u)))}
+.links{position:absolute;left:50%;top:calc(39*var(--u));transform:translateX(-50%);display:flex;gap:calc(56*var(--u))}
+.links a,.btn{font-family:var(--mono);font-weight:400;font-size:max(10px,calc(16.39*var(--u)));line-height:1.2;letter-spacing:calc(-.68*var(--u))}
+.links a,.bar nav a{position:relative}
+.links a::after,.bar nav a::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
+.links a:hover::after,.bar nav a:hover::after,.links a:focus-visible::after{transform:scaleX(1);transform-origin:left}
+.btn{display:flex;align-items:center;justify-content:center;border:1px solid var(--ink);white-space:nowrap;isolation:isolate;overflow:hidden;transition:color .45s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--accent);transform:translateY(101%);transition:transform .55s var(--ease)}
+.btn:hover,.btn:focus-visible{color:var(--black);border-color:var(--accent)}
+.btn:hover::before,.btn:focus-visible::before{transform:none}
+.bar .btn{position:relative}
+.ui .btn{position:absolute;right:calc(45*var(--u));top:calc(31*var(--u));height:max(24px,calc(35.67*var(--u)));padding:0 max(8px,calc(16*var(--u)))}
+.h{position:absolute;font-weight:400;font-size:max(34px,calc(96*var(--u)));line-height:1;letter-spacing:-.08em;white-space:pre}
+.ui .h{color:var(--accent)}                         /* the two hero headlines in lime */
+.h1{left:calc(45*var(--u));top:calc(155.3*var(--u))}
+.h2{right:calc(44.7*var(--u));bottom:calc(40*var(--u));width:max(132px,calc(371.3*var(--u)));text-align:left;white-space:normal}
+.stat{position:absolute;display:flex;gap:max(7px,calc(12.2*var(--u)))}
+.stat i{display:block;flex:none;width:max(8px,calc(13*var(--u)));height:max(8px,calc(13*var(--u)));background:var(--mark)}
+.stat b{display:block;font-variant-numeric:tabular-nums;font-weight:500;font-size:max(9px,calc(12*var(--u)));line-height:1.1}
+.stat span{display:block;margin-top:calc(1.9*var(--u));font-family:var(--mono);font-weight:400;font-size:max(9px,calc(12*var(--u)));line-height:1.1;opacity:.75;white-space:pre}
+.s1{right:calc(63*var(--u));top:calc(222.9*var(--u))}
+.s2{right:calc(120*var(--u));top:calc(433*var(--u))}
+.s3{left:calc(224*var(--u));top:calc(670*var(--u))}
+.tag{position:absolute;left:calc(45*var(--u));bottom:calc(40*var(--u));width:max(200px,calc(340*var(--u)));font-weight:500;font-size:max(11px,calc(18*var(--u)));line-height:1.1}
+
+/* portrait hero: headline, bust between, then the tagline and a row of three stats */
+.portrait .logo{left:16px;top:12px;font-size:19px}
+.portrait .btn{right:16px;top:14px;height:34px;padding:0 12px;font-size:12px;letter-spacing:-.4px}
+.portrait .links{left:16px;top:64px;transform:none;gap:18px}
+.portrait .links a{font-size:11.5px;letter-spacing:-.3px}
+.portrait .h{font-size:clamp(44px,13.5vw,72px)}
+.portrait .h2{text-shadow:0 0 10px var(--bg),0 0 24px var(--bg),0 0 44px var(--bg)}   /* lifts the lime off the bust's dots on phones */
+.portrait .h1{left:16px;top:100px}
+.portrait .h2{right:16px;bottom:166px;width:min(72%,330px);text-align:right;white-space:normal}
+.portrait .tag{left:16px;bottom:72px;width:min(340px,calc(100% - 32px));font-size:14px}
+.portrait .stat{top:auto;bottom:16px;width:calc((100% - 52px)/3);gap:7px}
+.portrait .stat i{width:9px;height:9px;margin-top:1px}
+.portrait .stat b,.portrait .stat span{font-size:10.5px}
+.portrait .stat span{white-space:normal}
+.portrait .s3{left:16px;right:auto}
+.portrait .s1{left:calc(26px + (100% - 52px)/3);right:auto}
+.portrait .s2{right:16px;left:auto}
+
+/* ------------------------------------------------------------------ scenes: the bust glides right, then left */
+.scene{position:relative;z-index:1;min-height:100vh;min-height:100svh;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-content:center;padding:clamp(96px,12vh,140px) var(--pad)}
+.scene .copy{display:grid;gap:24px;align-content:start}
+.scene-a .copy{grid-column:1/6}
+.scene-b .copy{grid-column:8/13}
+.scene .title{text-wrap:balance}
+.scene .more{justify-self:start}
+.points{list-style:none;display:grid;gap:12px;margin-top:4px}
+.points li{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:400;font-size:14px;letter-spacing:-.3px;text-transform:uppercase}
+.points i{display:block;flex:none;width:10px;height:10px;background:var(--accent)}
+.portrait .scene{align-content:start;padding-top:92px}
+.portrait .scene .copy{grid-column:1/-1;gap:14px}
+.portrait .scene .title{font-size:clamp(38px,11vw,56px)}
+.portrait .scene .body{font-size:16px}
+.portrait .points li{font-size:12px}
+@media (min-width:600px) and (max-width:1100px){.scene-a .copy{grid-column:1/7}.scene-b .copy{grid-column:7/13}}
+
+/* ------------------------------------------------------------------ sticky bar (after the hero) */
+.bar{position:fixed;left:0;right:0;top:0;z-index:20;display:flex;align-items:center;gap:24px;height:60px;padding:0 var(--pad);background:rgba(69,23,27,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transform:translateY(-101%);transition:transform .35s ease}
+.bar.show{transform:none}
+.bar .logo{font-size:18px}
+.bar nav{display:flex;gap:32px;margin:0 auto}
+.bar nav a,.bar .btn{font-family:var(--mono);font-weight:400;font-size:13px;letter-spacing:-.4px}
+.bar .btn{height:36px;padding:0 14px}
+@media (max-width:760px){.bar nav{display:none}.bar .btn{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){.bar{transition:none}}
+
+/* ------------------------------------------------------------------ sections */
+.sec{position:relative;padding:clamp(72px,9vw,140px) var(--pad)}
+.sec.dark,.sec.on-white,.sec.accent{padding-left:calc(var(--pad) - clamp(8px,1vw,14px));padding-right:calc(var(--pad) - clamp(8px,1vw,14px))}
+.accent{border-radius:clamp(20px,2.6vw,36px);margin:0 clamp(8px,1vw,14px)}
+main>.sec.dark,main>.sec.on-white,main>.sec.accent{margin-top:clamp(8px,1vw,14px);margin-bottom:clamp(8px,1vw,14px)}
+.dark,.on-white{background:var(--panel);color:var(--black)}
+.accent{background:var(--accent);color:var(--black)}
+/* light panels sit on the blue like cards, with rounded corners as in the reference */
+.dark,.on-white{border-radius:clamp(20px,2.6vw,36px);margin:0 clamp(8px,1vw,14px)}
+.dark a:focus-visible,.accent a:focus-visible,.accent button:focus-visible,.accent input:focus-visible,.accent select:focus-visible,.accent textarea:focus-visible{outline-color:var(--black)}
+.label{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:400;font-size:13px;line-height:1.2;letter-spacing:-.3px;text-transform:uppercase}
+.label i{display:block;flex:none;width:10px;height:10px;background:var(--accent)}
+.on-white .label i,.dark .label i{background:var(--blue)}
+.accent .label i{background:var(--black)}
+.title{font-weight:400;font-size:clamp(44px,6.67vw,96px);line-height:1;letter-spacing:-.08em}
+.lead{font-weight:400;font-size:clamp(28px,3.9vw,56px);line-height:1.04;letter-spacing:-.055em;text-wrap:balance}
+.body{font-size:17px;line-height:1.45;max-width:46ch}
+.more{position:relative;display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:400;font-size:14px;letter-spacing:-.3px;padding-bottom:5px}
+.more::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform-origin:left}
+.more>span{display:inline-block;transition:transform .45s var(--ease)}
+a:hover>.more::after,.more:hover::after{animation:redraw .8s var(--ease-io)}
+a:hover>.more>span,.more:hover>span{transform:translateX(5px)}
+@keyframes redraw{0%{transform:scaleX(1);transform-origin:right}45%{transform:scaleX(0);transform-origin:right}55%{transform:scaleX(0);transform-origin:left}100%{transform:scaleX(1);transform-origin:left}}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
+.note{font-family:var(--mono);font-weight:400;font-size:13px;opacity:.7;margin-top:28px}
+
+/* the firm */
+.firm .label{grid-column:1/4}
+.firm .lead{grid-column:4/13}
+.firm .cols{grid-column:4/13;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 48px;margin-top:clamp(40px,5vw,72px)}
+
+/* practice areas */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px 48px;margin-bottom:clamp(40px,5vw,72px)}
+.head .body{opacity:.85}
+.rows{list-style:none;border-bottom:1px solid var(--line-dark)}
+.rows a{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,3fr) minmax(0,5fr) 40px;align-items:baseline;gap:16px 24px;padding:26px 0;border-top:1px solid var(--line-dark);transition:opacity .45s var(--ease)}
+.rows h3{font-weight:400;font-size:clamp(26px,2.8vw,40px);line-height:1.05;letter-spacing:-.05em}
+.rows p{font-size:17px;line-height:1.45;opacity:.8}
+.rows .go{font-family:var(--mono);font-weight:400;font-size:18px;text-align:right;transition:transform .2s}
+.rows h3{transition:transform .6s var(--ease)}
+.rows a:hover .go,.rows a:focus-visible .go{color:var(--blue)}
+.rows.dim a{opacity:.32}
+.rows.dim a.cur{opacity:1}
+/* practice images: one card floats in the middle column, follows the pointer and changes picture per row */
+.pa{position:relative}
+.pa-thumb{display:none}
+.pa-float{position:absolute;left:0;top:0;z-index:3;width:260px;margin:0;pointer-events:none;will-change:transform}
+.pa-frame{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--accent);border-radius:18px;clip-path:inset(50% 0 50% 0 round 18px);transition:clip-path .7s var(--ease-io)}
+.pa-frame img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;clip-path:inset(100% 0 0 0);transform:scale(1.18);transition:clip-path .75s var(--ease-io),transform 1.2s var(--ease)}
+.pa-frame img.on{transform:none}
+.pa-float.show .pa-frame{clip-path:inset(0 round 18px)}
+.pa-float figcaption{display:flex;gap:12px;margin-top:10px;font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:-.3px;text-transform:uppercase;opacity:0;transform:translateY(6px);transition:opacity .45s var(--ease),transform .6s var(--ease)}
+.pa-float.show figcaption{opacity:1;transform:none;transition-delay:.15s}
+.pa-num{color:var(--blue)}
+@media (hover:none),(max-width:900px){
+  .pa-float{display:none}
+  .pa-slot{display:none}
+  .pa-thumb{display:block;width:64px;height:80px;grid-column:1;grid-row:1/span 2;align-self:start;background:var(--accent);border-radius:10px;object-fit:cover}
+  .rows a{grid-template-columns:64px minmax(0,1fr) 28px;align-items:start;gap:6px 16px}
+  .rows h3{grid-column:2;grid-row:1}
+  .rows p{grid-column:2;grid-row:2}
+  .rows .go{grid-column:3;grid-row:1}
+}
+@media (prefers-reduced-motion:reduce){.pa-frame,.pa-frame img,.pa-float figcaption{transition:none}}
+.rows a:hover h3{transform:translateX(14px)}
+.rows a:hover .go{transform:translateX(6px)}
+
+/* approach */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 24px;margin-top:clamp(40px,5vw,72px)}
+.step{border-top:1px solid var(--ink);padding-top:20px}
+.step h3{font-weight:400;font-size:clamp(28px,2.6vw,38px);letter-spacing:-.05em;line-height:1.05;margin:18px 0 12px}
+.step p{font-size:16px;line-height:1.45;max-width:34ch}
+
+/* how we work: a pinned section whose four steps slide sideways while the object beside them changes */
+.hs{position:relative;height:400vh;height:400svh}
+.hs-pin{position:sticky;top:0;height:100vh;height:100svh;min-height:560px;overflow:hidden}
+.hs-board{pointer-events:none;z-index:0}
+.hs-head{position:absolute;z-index:2;left:var(--pad);right:var(--pad);top:clamp(84px,12vh,120px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px}
+.hs-head .label{font-size:13px}
+.hs-steps{list-style:none;display:flex;gap:6px}
+.hs-steps li{position:relative;width:clamp(64px,8vw,120px);padding-top:10px;font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:-.3px;text-transform:uppercase;opacity:.55;transition:opacity .25s}
+.hs-steps li::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--ink);opacity:.35}
+.hs-steps li::after{content:"";position:absolute;left:0;top:0;height:2px;width:calc(var(--fill,0)*100%);background:var(--accent)}
+.hs-steps li.on{opacity:1}
+.hs-track{position:absolute;z-index:1;top:0;left:0;height:100%;width:400%;display:flex;will-change:transform}
+.hs-panel{flex:0 0 25%;height:100%;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-content:center;padding:clamp(150px,18vh,190px) var(--pad) clamp(56px,8vh,96px)}
+.hs-copy{grid-column:1/6;display:grid;gap:22px;align-content:start}
+.hs-copy .title{text-wrap:balance}
+.hs-copy .more{justify-self:start}
+.hs-kicker{font-family:var(--mono);font-weight:400;font-size:13px;letter-spacing:-.3px;text-transform:uppercase}
+@media (min-width:600px) and (max-width:1100px){.hs-copy{grid-column:1/7}}
+@media (max-aspect-ratio:9/10){
+  .hs-head{top:76px}
+  .hs-steps li{width:auto;flex:1}
+  .hs-head{flex-direction:column;align-items:stretch}
+  .hs-panel{align-content:start;padding-top:170px}
+  .hs-copy{grid-column:1/-1;gap:14px}
+  .hs-copy .title{font-size:clamp(38px,11vw,56px)}
+  .hs-copy .body{font-size:16px}
+}
+
+/* partners */
+.people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 24px}
+.person .ph{overflow:hidden;border-radius:18px;background:var(--blue);aspect-ratio:4/5}
+.person .ph img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.person:hover .ph img{transform:scale(1.04)}
+.person h3{font-weight:400;font-size:clamp(24px,2.2vw,32px);letter-spacing:-.05em;line-height:1.05;margin-top:18px}
+.person .role{font-family:var(--mono);font-weight:400;font-size:13px;letter-spacing:-.3px;margin-top:8px;opacity:.7;text-transform:uppercase}
+.person p{font-size:16px;line-height:1.45;margin-top:12px;max-width:36ch}
+
+/* insights */
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 24px}
+.post{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--ink);padding-top:20px}
+.post .meta{font-family:var(--mono);font-weight:400;font-size:13px;letter-spacing:-.3px;text-transform:uppercase;opacity:.85}
+.post h3{font-weight:400;font-size:clamp(24px,2.2vw,32px);line-height:1.08;letter-spacing:-.05em}
+.post p{font-size:16px;line-height:1.45;opacity:.9}
+.post .more{align-self:flex-start;margin-top:auto}
+.post:hover h3{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+
+/* contact */
+.contact .grid{row-gap:48px}
+.contact .intro{grid-column:1/6}
+.contact form{grid-column:7/13}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:40px}
+.details dt{font-family:var(--mono);font-weight:400;font-size:13px;opacity:.6;text-transform:uppercase;margin-bottom:6px}
+.details dd{font-size:16px;line-height:1.45}
+.field{display:block;margin-bottom:22px}
+.field span{display:block;font-family:var(--mono);font-weight:400;font-size:13px;letter-spacing:-.3px;text-transform:uppercase;opacity:.75;margin-bottom:8px}
+.field input,.field select,.field textarea{display:block;width:100%;min-height:48px;padding:10px 0;font:500 16px/1.4 var(--sans);color:var(--ink);background:transparent;border:0;border-bottom:1px solid rgba(4,2,3,.35);color:var(--black);border-radius:0;appearance:none}
+.field textarea{min-height:120px;resize:vertical}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--black) 50%),linear-gradient(-45deg,transparent 50%,var(--black) 50%);background-position:calc(100% - 12px) 22px,calc(100% - 6px) 22px;background-size:6px 6px;background-repeat:no-repeat}
+.field select option{color:#000}
+.field input:focus,.field select:focus,.field textarea:focus{border-bottom-color:var(--black);box-shadow:0 1px 0 var(--black);outline:none}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.45;opacity:.9;margin:6px 0 26px;cursor:pointer}
+.check input{flex:none;width:20px;height:20px;margin-top:1px;accent-color:var(--black)}
+.submit{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 26px;border:0;background:var(--black);color:var(--ink);font-family:var(--mono);font-weight:400;font-size:14px;letter-spacing:-.3px;cursor:pointer;transition:background .2s,color .2s}
+.submit{position:relative;isolation:isolate;overflow:hidden}
+.submit::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--blue);transform:translateY(101%);transition:transform .55s var(--ease)}
+.submit:hover{color:var(--ink)}
+.submit:hover::before{transform:none}
+.status{min-height:1.45em;margin-top:18px;font-size:15px;line-height:1.45}
+
+/* footer */
+.foot{padding:clamp(56px,7vw,96px) var(--pad) 28px}
+.foot .cols{display:grid;grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:40px 24px}
+.foot h4{font-family:var(--mono);font-weight:400;font-size:13px;letter-spacing:-.3px;text-transform:uppercase;opacity:.8;margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:8px;font-size:16px}
+.foot ul a:hover{text-decoration:underline;text-underline-offset:4px}
+.foot .tag2{font-size:17px;line-height:1.45;max-width:30ch}
+.wordmark{display:block;margin:clamp(48px,7vw,96px) 0 clamp(24px,3vw,40px);color:var(--ink)}
+.wordmark svg{display:block;width:100%;height:auto}
+.legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px;border-top:1px solid var(--line);padding-top:18px;font-family:var(--mono);font-weight:400;font-size:12px;line-height:1.5;opacity:.9}
+.legal p{max-width:80ch}
+
+@media (max-width:900px){
+  .firm .label,.firm .lead,.firm .cols{grid-column:1/-1}
+  .firm .lead{margin-top:20px}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .people,.posts{grid-template-columns:minmax(0,1fr)}
+  .people{gap:48px}
+  .person{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:0 20px;align-items:start}
+  .person h3{margin-top:0}
+  .contact .intro,.contact form{grid-column:1/-1}
+  .foot .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .foot .cols>div:first-child{grid-column:1/-1}
+}
+@media (max-width:600px){
+  .firm .cols,.two,.details{grid-template-columns:minmax(0,1fr)}
+  .rows a{grid-template-columns:56px minmax(0,1fr) 28px}
+  .pa-thumb{width:56px;height:70px}
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .person{grid-template-columns:112px minmax(0,1fr);gap:0 16px}
+  .person h3{margin-top:0}
+}
+
+/* ------------------------------------------------------------------ motion (html.motion only: off for reduced motion and without script) */
+.progress{position:fixed;left:0;top:0;z-index:30;width:100%;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;pointer-events:none}
+/* the mask is padded past the glyph box on every side (tight tracking lets letters overhang), with matching negative margins so layout is unchanged */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:.12em .16em .26em .06em;margin:-.12em -.16em -.26em -.06em}
+.w>span{display:inline-block}
+.motion .w>span{transform:translateY(110%);transition:transform 1.1s var(--ease);transition-delay:calc(var(--d,0s) + var(--i,0) * 45ms)}
+.motion .in .w>span,.motion .in.w>span,.motion .hs-panel.active .w>span{transform:none}
+.motion [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--d,0s) + var(--i,0) * 80ms)}
+.motion [data-reveal].in{opacity:1;transform:none}
+.motion .label i,.motion .points i{transform:scale(0);transition:transform .6s var(--ease) calc(var(--d,0s) + .1s)}
+.motion .in .label i,.motion .label.in i,.motion .in .points i,.motion .points .in i{transform:none}
+/* hero intro */
+.motion .ui .logo,.motion .ui .links,.motion .ui .btn{opacity:0;transform:translateY(-12px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.motion .ui .links{transform:translate(-50%,-12px)}
+.motion .portrait .ui .links{transform:translateY(-12px)}
+.motion .ui .stat,.motion .ui .tag{opacity:0;transform:translateY(16px);transition:opacity 1s var(--ease),transform 1.1s var(--ease)}
+.motion .ui .stat i{transform:scale(0);transition:transform .7s var(--ease)}
+.motion .hero canvas,.motion #gl{opacity:0;transition:opacity 1.6s ease .25s}
+.motion.loaded .ui .logo,.motion.loaded .ui .btn{opacity:1;transform:none}
+.motion.loaded .ui .links{opacity:1;transform:translateX(-50%)}
+.motion.loaded .portrait .ui .links{transform:none}
+.motion.loaded .ui .stat,.motion.loaded .ui .tag{opacity:1;transform:none}
+.motion.loaded .ui .stat i{transform:none}
+.motion.loaded #gl{opacity:1}
+.motion .ui .links{transition-delay:.15s}.motion .ui .btn{transition-delay:.25s}
+.motion .ui .s1{transition-delay:1.0s}.motion .ui .s2{transition-delay:1.12s}.motion .ui .s3{transition-delay:1.24s}
+.motion .ui .s1 i{transition-delay:1.1s}.motion .ui .s2 i{transition-delay:1.22s}.motion .ui .s3 i{transition-delay:1.34s}
+.motion .ui .tag{transition-delay:1.1s}
+/* horizontal steps: the copy of the step in view comes forward */
+.motion .hs-copy>*{transition:opacity .7s var(--ease),transform .9s var(--ease)}
+.motion .hs-panel:not(.active) .hs-copy>*:not(.title){opacity:0;transform:translateY(18px)}
+.motion .hs-panel.active .hs-copy>*:nth-child(1){transition-delay:.05s}
+.motion .hs-panel.active .hs-copy>*:nth-child(3){transition-delay:.25s}
+.motion .hs-panel.active .hs-copy>*:nth-child(4){transition-delay:.35s}
+/* partner portraits open like a shutter */
+.motion .person .ph{clip-path:inset(100% 0 0 0);transition:clip-path 1.3s var(--ease-io) calc(var(--i,0) * 120ms)}
+.motion .person.in .ph{clip-path:inset(0)}
+/* practice rows draw their rules */
+.motion .rows li{position:relative}
+.motion .rows a{border-top-color:transparent}
+.motion .rows li::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line-dark);transform:scaleX(0);transform-origin:left;transition:transform 1.2s var(--ease-io) calc(var(--i,0) * 70ms)}
+.motion .rows li.in::before{transform:none}
+/* footer wordmark rises letter by letter */
+.motion .wordmark .c{display:inline-block;transform:translateY(105%);transition:transform 1.2s var(--ease);transition-delay:calc(var(--i,0) * 55ms)}
+.wordmark .cw{display:inline-block;overflow:hidden;vertical-align:top;padding:.1em .12em .24em .04em;margin:-.1em -.12em -.24em -.04em}
+.motion .wordmark.in .c{transform:none}
+@media (prefers-reduced-motion:reduce){.progress{display:none}.btn::before,.submit::before{transition:none}}
+
+/* headings one step heavier; the year in the hero tagline picks up the accent */
+.h,.title,.lead,.rows h3,.step h3,.person h3,.post h3,.wordmark{font-weight:500}
+.hl{color:var(--accent)}
+.yr{font-weight:700}
+
+/* crumpled-paper texture over the whole page: a neutral-grey relief map blended in soft light,
+   so it adds texture to every colour without tinting it; it never takes clicks */
+.paper{position:fixed;inset:0;z-index:40;pointer-events:none;background:var(--paper) center/cover no-repeat;mix-blend-mode:soft-light;opacity:.85}
+
+/* three partner faces set into the firm statement, overlapping like a stack of chips */
+.faces{display:inline-flex;vertical-align:-.14em;margin:0 .02em 0 .28em;padding:0 .04em;pointer-events:auto}
+/* the statement sets one idea per line on wide screens; narrower screens wrap naturally */
+.lead .lb{display:none}
+.nw{white-space:nowrap}
+@media (min-width:901px){.lead .lb{display:inline}.firm .lead{text-wrap:wrap}}
+.faces img{display:block;width:1em;height:1em;border-radius:50%;object-fit:cover;border:.065em solid var(--ink);margin-left:-.3em;transition:transform .5s var(--ease)}
+.faces img:first-child{margin-left:0}
+.faces:hover img{transform:translateY(-.08em)}
+.faces:hover img:nth-child(2){transition-delay:.04s}.faces:hover img:nth-child(3){transition-delay:.08s}
+.motion .faces img{transform:scale(0)}
+.motion .in .faces img{transform:none;transition:transform .9s var(--ease);transition-delay:calc(.35s + var(--k) * .09s)}
+.motion .in .faces:hover img{transform:translateY(-.08em);transition-delay:0s}
+
+.motion .wordmark svg{clip-path:inset(0 0 100% 0);transform:translateY(12%);transition:clip-path 1.4s var(--ease-io),transform 1.4s var(--ease)}
+.motion .wordmark.in svg{clip-path:inset(0 0 -2% 0);transform:none}
+
+/* ------------------------------------------------------------------ contact: message on the oxblood page, form on a solid cream card */
+.cta{padding-top:clamp(96px,11vw,160px);padding-bottom:clamp(96px,11vw,160px)}
+.cta-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(40px,6vw,96px);align-items:start}
+.cta-intro{position:sticky;top:110px;display:grid;gap:28px}
+.cta .title{font-size:clamp(48px,6.4vw,104px)}
+.cta-lead{font-size:clamp(18px,1.5vw,21px);line-height:1.45;max-width:30ch}
+.cta-promise{list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.cta-promise li{display:flex;align-items:center;gap:9px;padding:10px 16px;border:1px solid rgba(248,239,228,.3);border-radius:0;font-size:15px;line-height:1}
+.cta-promise i{width:7px;height:7px;border-radius:0;background:var(--accent);flex:none}
+.cta-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 32px;padding-top:30px;border-top:1px solid var(--line)}
+.cta-details dt{font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.cta-details dd{font-size:17px;line-height:1.5}
+.cta-details a{border-bottom:1px solid rgba(248,239,228,.35);transition:border-color .3s,color .3s}
+.cta-details a:hover{color:var(--accent);border-color:var(--accent)}
+.cta-note{font-size:13px;line-height:1.4;color:rgba(248,239,228,.6)}
+/* the form card */
+.cta-card{--card:#F8EFE4;--text:#2A0E11;--muted:#6B4A45;--rule:rgba(69,23,27,.28);background:var(--card);color:var(--text);border-radius:clamp(20px,2.2vw,32px);padding:clamp(26px,3.4vw,52px);box-shadow:0 40px 90px -30px rgba(10,2,3,.55)}
+.cta-card-head{margin-bottom:34px;padding-bottom:26px;border-bottom:1px solid var(--rule)}
+.cta-card-head h3{font-weight:500;font-size:clamp(26px,2.4vw,34px);line-height:1.05;letter-spacing:-.045em}
+.cta-card-head p{margin-top:10px;font-size:15px;line-height:1.5;color:var(--muted);max-width:44ch}
+.cta-card .two{gap:0 28px}
+.cta-card .field{margin-bottom:26px}
+.cta-card .field span{opacity:1;color:var(--bg);font-size:12px;letter-spacing:.06em;margin-bottom:6px}
+.cta-card .field input,.cta-card .field select,.cta-card .field textarea{color:var(--text);font-size:17px;font-weight:500;border-bottom:1px solid var(--rule);transition:border-color .3s,box-shadow .3s}
+.cta-card .field textarea{min-height:110px}
+.cta-card .field input:hover,.cta-card .field select:hover,.cta-card .field textarea:hover{border-bottom-color:rgba(69,23,27,.55)}
+.cta-card .field input:focus,.cta-card .field select:focus,.cta-card .field textarea:focus{border-bottom-color:var(--bg);box-shadow:0 1px 0 var(--bg)}
+.cta-card .field select{background-image:linear-gradient(45deg,transparent 50%,var(--text) 50%),linear-gradient(-45deg,transparent 50%,var(--text) 50%)}
+.cta-card .field select:invalid{color:var(--muted)}
+.cta-card .check{opacity:1;color:var(--muted);font-size:14px;margin:4px 0 30px}
+.cta-card .check input{accent-color:var(--bg)}
+.cta-card .submit{width:100%;height:60px;justify-content:space-between;padding:0 26px;border-radius:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:500;font-size:17px;letter-spacing:-.01em}
+.cta-card .submit::before{background:var(--accent)}
+.cta-card .submit:hover{color:var(--black)}
+.cta-card .submit span{transition:transform .45s var(--ease)}
+.cta-card .submit:hover span{transform:translateX(6px)}
+.cta-card .status{color:var(--text)}
+.cta-card a:focus-visible,.cta-card button:focus-visible,.cta-card input:focus-visible,.cta-card select:focus-visible,.cta-card textarea:focus-visible{outline-color:var(--bg)}
+@media (max-width:900px){.cta-grid{grid-template-columns:minmax(0,1fr)}.cta-intro{position:static}}
+@media (max-width:600px){.cta-details{grid-template-columns:minmax(0,1fr)}.cta-card .two{grid-template-columns:minmax(0,1fr)}}
+
+/* ------------------------------------------------------------------ buttons and small type: one system, tuned for legibility on the textured ground */
+/* small caps-style labels: medium weight, open tracking, near-full strength */
+.links a,.bar nav a,.label,.hs-kicker,.points li,.post .meta,.person .role,.foot h4,.field span,.cta-details dt,.hs-steps li,.pa-float figcaption,.stat span,.legal,.note,.more,.rows .go{font-weight:500}
+.ui .links a,.bar nav a{letter-spacing:.035em}
+.label,.hs-kicker,.points li,.post .meta,.person .role,.foot h4,.pa-float figcaption,.hs-steps li{letter-spacing:.04em}
+.stat span{letter-spacing:.03em;opacity:.88}
+.hs-steps li{opacity:.72}
+.person .role{opacity:.78}
+.rows p{opacity:.86}
+.note{opacity:.82}
+.legal{letter-spacing:.01em}
+.more{letter-spacing:.01em;font-size:14.5px}
+/* header buttons: pill, medium weight; the gold fill rises and the text turns dark as it passes, never before */
+.ui .btn,.bar .btn{border-radius:0;font-weight:500;letter-spacing:.04em;padding:0 max(14px,calc(20*var(--u)))}
+.bar .btn{padding:0 18px;height:38px}
+.btn{transition:color .38s var(--ease) .1s,border-color .5s var(--ease),scale .35s var(--ease)}
+.btn::before{border-radius:inherit;transition:transform .6s var(--ease)}
+.motion .ui .btn{transition:opacity .9s var(--ease),transform .9s var(--ease),color .38s var(--ease),border-color .5s var(--ease),scale .35s var(--ease);transition-delay:.25s,.25s,.1s,0s,0s}
+.btn:hover,.btn:focus-visible{color:var(--black);border-color:var(--accent)}
+.btn:active,.submit:active{scale:.97}
+/* the form's button follows the same timing */
+.cta-card .submit{transition:color .38s var(--ease) .1s,scale .35s var(--ease)}
+.cta-card .submit::before{border-radius:inherit;transition:transform .6s var(--ease)}
+/* touch screens: no sticky hover state after a tap, just the press */
+@media (hover:none){
+  .btn:hover:not(:focus-visible){color:var(--ink);border-color:var(--ink)}
+  .btn:hover:not(:focus-visible)::before,.submit:hover::before{transform:translateY(101%)}
+  .cta-card .submit:hover{color:var(--ink)}
+  .rows a:hover h3,.person:hover .ph img{transform:none}
+}
+@media (prefers-reduced-motion:reduce){.btn,.cta-card .submit,.btn::before,.cta-card .submit::before{transition:none}}
+</style>
+</head>
+<body>
+
+<!-- shared dot pattern for the partner portraits -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="dots" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="#F8EFE4"/></pattern>
+    <pattern id="dots2" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="#F8EFE4"/><rect x="3" y="3" width="2" height="2" fill="#F8EFE4"/></pattern>
+    <symbol id="mark" viewBox="0 0 486 395"><path fill="currentColor" fill-rule="evenodd" d="M27.7 389.8C27.9 389.3 28.9 389.0 30.0 389.0C33.6 389.0 45.6 384.3 53.0 380.0C63.4 374.1 77.6 359.6 86.9 345.5C90.9 339.4 97.7 327.3 102.0 318.5C109.6 302.9 136.5 240.5 146.9 214.3C149.8 207.1 152.9 200.5 153.9 199.6C159.8 194.2 173.4 193.6 179.5 198.4C184.1 202.1 184.6 200.2 166.0 248.0C137.1 322.3 135.7 326.2 134.0 338.9C131.7 355.6 137.2 370.5 148.7 378.7C154.4 382.8 166.6 386.8 176.1 387.6C190.9 389.0 183.0 390.0 156.8 390.0C141.8 390.1 106.5 390.2 78.3 390.3C50.2 390.4 27.4 390.2 27.7 389.8ZM297.0 390.0C290.8 389.3 291.3 389.1 305.2 386.6C324.4 383.1 334.1 375.1 337.6 360.1C339.4 352.8 339.3 346.6 337.5 337.7C335.7 329.1 334.3 325.4 307.0 257.7L285.7 204.8L287.7 202.2C291.2 197.4 298.5 195.7 315.7 195.6L331.0 195.5L339.9 217.5C350.5 243.8 370.5 291.2 378.9 310.0C394.2 343.9 409.0 364.1 428.1 377.1C434.9 381.7 448.3 387.6 454.3 388.6C456.3 389.0 458.2 389.5 458.4 389.9C458.9 390.6 304.7 390.7 297.0 390.0ZM161.0 177.5C161.0 177.1 167.0 163.9 174.4 148.2C189.5 115.8 211.6 68.4 231.9 24.5C239.5 8.1 241.0 5.5 243.1 5.2C245.2 5.0 245.9 5.8 248.2 11.2C251.2 18.4 284.3 89.8 307.3 138.6C315.8 156.7 323.0 172.5 323.2 173.5C323.6 176.1 320.6 176.8 307.5 176.9C293.1 177.0 282.8 175.1 274.8 170.8C267.3 166.9 269.0 169.9 242.8 113.2C233.4 92.7 225.3 75.7 225.0 75.5C224.6 75.2 223.1 77.9 221.7 81.3C218.3 89.5 195.2 145.1 188.3 161.7C183.3 173.5 182.4 175.0 179.6 176.0C175.9 177.4 161.0 178.6 161.0 177.5Z"/><path style="fill:var(--accent)" fill-rule="evenodd" d="M26.5 390.1C27.2 389.5 36.3 390.0 37.0 390.6C37.2 390.9 34.9 391.0 31.7 390.9C28.6 390.8 26.2 390.4 26.5 390.1ZM42.3 390.3C44.9 390.1 49.0 390.1 51.3 390.3C53.6 390.5 51.5 390.6 46.5 390.6C41.5 390.6 39.7 390.5 42.3 390.3ZM72.7 390.3C77.8 390.1 86.2 390.1 91.2 390.3C96.3 390.4 92.2 390.6 82.0 390.6C71.8 390.6 67.7 390.4 72.7 390.3ZM106.8 390.3C110.2 390.1 115.6 390.1 118.8 390.3C121.9 390.5 119.1 390.6 112.5 390.6C105.9 390.6 103.3 390.5 106.8 390.3ZM142.8 390.3C150.7 390.1 163.3 390.1 170.8 390.3C178.3 390.4 171.9 390.6 156.5 390.6C141.1 390.6 134.9 390.4 142.8 390.3ZM291.0 389.5C291.0 388.7 291.8 388.0 292.8 388.0C294.2 388.0 294.3 388.2 293.0 389.0C292.0 389.6 293.2 390.0 297.0 390.3L302.5 390.6L296.8 390.8C292.2 391.0 291.0 390.7 291.0 389.5ZM317.8 390.3C319.0 390.1 321.0 390.1 322.2 390.3C323.5 390.5 322.5 390.7 320.0 390.7C317.5 390.7 316.5 390.5 317.8 390.3ZM353.8 390.3C367.2 390.1 388.8 390.1 401.8 390.3C414.8 390.4 403.9 390.5 377.5 390.5C351.1 390.5 340.4 390.4 353.8 390.3ZM442.7 390.3C444.5 390.1 447.7 390.1 449.7 390.3C451.8 390.5 450.4 390.7 446.5 390.7C442.6 390.7 441.0 390.5 442.7 390.3ZM43.1 384.6C44.1 383.7 50.0 381.0 50.0 381.4C50.0 382.0 44.5 385.0 43.4 385.0C43.0 385.0 42.9 384.8 43.1 384.6ZM152.8 381.4C148.9 379.3 149.3 378.6 153.2 380.6C157.0 382.5 157.7 383.0 156.4 383.0C155.9 382.9 154.3 382.2 152.8 381.4ZM434.8 381.4C430.9 379.3 431.3 378.6 435.2 380.6C439.0 382.5 439.7 383.0 438.4 383.0C437.9 382.9 436.3 382.2 434.8 381.4ZM62.0 373.7C62.0 373.6 65.5 370.1 69.8 366.0L77.5 358.5L70.0 366.2C63.1 373.4 62.0 374.5 62.0 373.7ZM412.5 363.8L405.5 356.5L412.8 363.5C419.5 369.9 420.5 371.0 419.7 371.0C419.6 371.0 416.3 367.7 412.5 363.8ZM136.1 361.9C135.5 360.1 135.0 358.2 135.1 357.6C135.1 357.0 135.8 358.3 136.6 360.4C137.4 362.6 137.8 364.5 137.6 364.7C137.4 364.9 136.7 363.7 136.1 361.9ZM337.8 352.5C338.1 347.6 338.4 343.3 338.6 343.1C339.3 342.3 338.8 355.5 338.0 358.5C337.6 360.1 337.5 357.4 337.8 352.5ZM133.5 350.0C133.1 346.6 133.0 343.7 133.3 343.4C133.5 343.1 134.0 345.7 134.4 349.1C134.8 352.4 134.9 355.4 134.7 355.7C134.4 355.9 133.9 353.4 133.5 350.0ZM135.1 332.7C135.0 330.5 142.0 308.7 142.6 309.3C142.8 309.5 142.3 311.7 141.4 314.1C140.6 316.5 138.8 322.1 137.5 326.5C136.2 330.9 135.1 333.7 135.1 332.7ZM96.5 328.0C97.9 325.2 99.3 323.0 99.5 323.0C99.8 323.0 98.9 325.2 97.5 328.0C96.1 330.8 94.7 333.0 94.5 333.0C94.2 333.0 95.1 330.8 96.5 328.0ZM384.9 322.9C382.2 317.3 380.0 312.6 380.2 312.4C380.4 312.2 382.9 316.8 385.8 322.5C388.6 328.3 390.8 333.0 390.5 333.0C390.2 333.0 387.7 328.5 384.9 322.9ZM328.7 313.8C327.8 311.5 327.2 309.5 327.4 309.3C327.6 309.1 328.5 310.8 329.4 313.1C330.3 315.4 330.9 317.4 330.7 317.6C330.5 317.8 329.6 316.1 328.7 313.8ZM41.3 314.5C26.3 311.2 12.7 301.0 6.9 288.6C5.2 285.0 4.1 281.6 4.5 281.0C4.9 280.3 21.3 280.0 53.6 280.0C96.2 280.0 102.1 280.2 102.7 281.5C103.7 284.4 97.3 295.4 91.2 301.2C78.2 313.6 59.8 318.5 41.3 314.5ZM419.6 314.5C404.1 310.6 391.7 301.0 385.8 288.5C383.9 284.2 383.1 281.5 383.7 280.9C384.3 280.3 403.0 280.0 433.1 280.2L481.5 280.5L481.2 282.9C480.5 289.9 471.7 301.4 462.9 307.0C450.9 314.8 433.0 317.9 419.6 314.5ZM107.1 306.5C107.1 305.9 107.9 303.9 109.0 302.0C110.1 300.1 110.9 298.9 110.9 299.5C110.9 300.1 110.1 302.1 109.0 304.0C107.9 305.9 107.1 307.1 107.1 306.5ZM145.6 301.0C145.9 299.6 146.7 297.8 147.2 297.0C147.8 296.0 147.9 296.3 147.4 298.0C147.1 299.4 146.3 301.2 145.8 302.0C145.2 303.0 145.1 302.7 145.6 301.0ZM373.7 298.5C371.3 293.5 371.7 292.7 374.1 297.3C375.2 299.5 376.0 301.4 375.8 301.6C375.5 301.8 374.6 300.4 373.7 298.5ZM150.6 288.0C150.9 286.6 151.7 284.8 152.2 284.0C152.8 283.0 152.9 283.3 152.4 285.0C152.1 286.4 151.3 288.2 150.8 289.0C150.2 290.0 150.1 289.7 150.6 288.0ZM14.0 276.4C14.0 275.7 15.8 271.6 38.7 221.2C52.8 189.9 52.8 190.7 39.2 190.0C29.7 189.5 24.9 187.4 24.2 183.6C23.9 182.1 28.5 182.0 80.8 182.0C126.8 182.0 139.4 181.7 146.3 180.5C156.6 178.7 159.7 177.4 161.6 174.1C163.0 171.7 162.8 173.0 161.3 176.8C160.9 177.7 162.4 178.0 166.6 178.1C172.4 178.2 172.4 178.2 168.5 179.0C156.6 181.5 159.9 181.9 186.5 181.7C213.5 181.5 213.5 181.5 219.2 178.8C230.2 173.7 239.4 162.1 241.5 150.8C242.4 145.8 243.6 146.0 244.4 151.2C246.3 163.0 255.7 174.7 267.0 179.3L272.5 181.5L367.8 181.8C421.1 181.9 463.0 182.4 463.0 182.9C463.0 183.4 461.4 185.2 459.5 186.9C456.1 189.9 455.6 190.0 447.1 190.0C437.8 190.0 437.0 190.4 437.0 195.1C437.0 196.1 444.9 214.5 454.5 235.9C464.1 257.3 472.0 275.3 472.0 275.9C472.0 276.5 471.1 277.0 469.9 277.0C467.7 277.0 468.7 279.1 450.4 238.5C444.0 224.2 437.4 209.6 435.8 206.1L432.9 199.6L429.9 206.1C428.2 209.6 421.0 225.3 414.0 241.0C396.8 279.4 398.0 277.0 395.3 277.0C394.0 277.0 393.0 276.7 393.0 276.4C393.0 275.8 397.9 264.8 414.0 229.0C429.3 195.1 429.1 195.5 428.0 192.6L427.0 190.0L353.8 190.0C274.4 190.0 271.4 190.2 262.5 195.4C253.6 200.7 246.6 211.2 244.5 222.3C243.6 227.1 242.3 227.0 241.5 221.9C240.4 215.8 234.4 204.6 230.0 200.6C224.6 195.7 217.4 192.3 209.9 191.0C205.6 190.3 180.0 190.0 131.5 190.2L59.5 190.5L58.6 193.2C57.8 195.5 60.0 201.0 75.3 234.7C85.0 256.0 93.2 274.3 93.5 275.2C94.1 276.6 93.7 277.0 91.7 277.0C89.5 277.0 88.2 274.8 77.0 250.2C70.3 235.5 62.5 218.2 59.7 211.8C56.8 205.3 54.3 200.0 54.0 200.0C53.7 200.0 45.7 217.2 36.2 238.2C20.6 273.0 18.8 276.5 16.5 276.8C15.1 277.0 14.0 276.8 14.0 276.4ZM155.1 276.8C155.0 275.6 158.2 267.9 158.6 268.3C158.9 268.5 158.2 270.7 157.1 273.1C156.0 275.5 155.1 277.2 155.1 276.8ZM360.7 267.8C359.2 264.4 358.2 261.5 358.4 261.3C358.6 261.1 359.9 263.7 361.4 267.1C362.9 270.5 363.9 273.4 363.7 273.6C363.5 273.8 362.1 271.2 360.7 267.8ZM355.1 254.9C353.9 252.0 353.1 249.5 353.3 249.3C353.5 249.1 354.7 251.3 355.9 254.1C357.1 257.0 357.9 259.5 357.7 259.7C357.5 259.9 356.3 257.7 355.1 254.9ZM162.6 257.0C162.9 255.6 163.7 253.8 164.2 253.0C164.8 252.0 164.9 252.3 164.4 254.0C164.1 255.4 163.3 257.2 162.8 258.0C162.2 259.0 162.1 258.7 162.6 257.0ZM169.6 239.0C169.9 237.6 170.7 235.8 171.2 235.0C171.8 234.0 171.9 234.3 171.4 236.0C171.1 237.4 170.3 239.2 169.8 240.0C169.2 241.0 169.1 240.7 169.6 239.0ZM343.1 225.9C341.9 223.0 341.1 220.5 341.3 220.3C341.5 220.1 342.7 222.3 343.9 225.1C345.1 228.0 345.9 230.5 345.7 230.7C345.5 230.9 344.3 228.7 343.1 225.9ZM176.6 221.0C176.9 219.6 177.7 217.8 178.2 217.0C178.8 216.0 178.9 216.3 178.4 218.0C178.1 219.4 177.3 221.2 176.8 222.0C176.2 223.0 176.1 222.7 176.6 221.0ZM337.7 212.3C336.2 208.6 335.2 205.5 335.4 205.3C335.6 205.1 337.0 207.9 338.4 211.6C339.9 215.2 340.9 218.4 340.7 218.6C340.5 218.8 339.1 216.0 337.7 212.3ZM150.0 204.3C150.0 203.6 151.0 202.1 152.2 200.8C153.5 199.5 154.0 199.1 153.4 200.0C152.8 200.8 151.8 202.4 151.2 203.5C150.6 204.6 150.0 205.0 150.0 204.3ZM332.8 199.8L331.3 195.5L318.9 195.0L306.5 194.4L318.6 194.2C327.3 194.1 331.0 194.4 331.7 195.2C333.0 196.8 335.1 203.2 334.6 203.7C334.4 203.9 333.6 202.2 332.8 199.8ZM165.8 194.3C167.0 194.1 168.8 194.1 169.8 194.3C170.7 194.6 169.7 194.8 167.5 194.7C165.3 194.7 164.5 194.5 165.8 194.3ZM303.2 177.3C305.9 177.1 310.1 177.1 312.8 177.3C315.4 177.5 313.2 177.6 308.0 177.6C302.8 177.6 300.6 177.5 303.2 177.3ZM274.8 171.9C272.7 170.8 271.0 169.7 271.0 169.5C271.0 169.0 278.9 172.7 279.9 173.6C281.1 174.7 278.1 173.7 274.8 171.9ZM164.1 168.5C164.1 167.9 165.6 164.6 167.5 161.0C169.4 157.4 170.9 154.9 170.9 155.5C170.9 156.1 169.4 159.4 167.5 163.0C165.6 166.6 164.1 169.1 164.1 168.5ZM313.2 151.5C310.2 145.3 310.5 144.4 313.6 150.3C315.0 153.0 316.0 155.4 315.8 155.6C315.5 155.8 314.4 153.9 313.2 151.5ZM259.7 151.5C257.3 146.5 257.7 145.7 260.1 150.3C261.2 152.5 262.0 154.4 261.8 154.6C261.5 154.8 260.6 153.4 259.7 151.5ZM172.1 151.5C172.1 150.9 173.4 148.0 175.0 145.0C176.6 142.0 177.9 139.9 177.9 140.5C177.9 141.1 176.6 144.0 175.0 147.0C173.4 150.0 172.1 152.1 172.1 151.5ZM305.2 134.5C302.2 128.3 302.5 127.4 305.6 133.3C307.0 136.0 308.0 138.4 307.8 138.6C307.5 138.8 306.4 136.9 305.2 134.5ZM179.1 136.5C179.1 135.9 180.6 132.6 182.5 129.0C184.4 125.4 185.9 123.0 185.9 123.5C185.9 124.0 184.4 127.4 182.5 131.0C180.6 134.6 179.1 137.1 179.1 136.5ZM298.2 119.5C295.2 113.3 295.5 112.4 298.6 118.3C300.0 121.0 301.0 123.4 300.8 123.6C300.5 123.8 299.4 121.9 298.2 119.5ZM290.2 102.5C287.2 96.3 287.5 95.4 290.6 101.3C292.0 104.0 293.0 106.4 292.8 106.6C292.5 106.8 291.4 104.9 290.2 102.5ZM195.1 102.5C195.1 102.0 195.9 99.9 197.0 98.0C198.1 96.1 198.9 95.0 198.9 95.5C198.9 96.0 198.1 98.1 197.0 100.0C195.9 101.9 195.1 103.0 195.1 102.5ZM276.7 73.5C274.3 68.5 274.7 67.7 277.1 72.3C278.2 74.5 279.0 76.4 278.8 76.6C278.5 76.8 277.6 75.4 276.7 73.5ZM269.7 58.5C267.3 53.5 267.7 52.7 270.1 57.3C271.2 59.5 272.0 61.4 271.8 61.6C271.5 61.8 270.6 60.4 269.7 58.5ZM263.7 45.5C261.3 40.5 261.7 39.7 264.1 44.3C265.2 46.5 266.0 48.4 265.8 48.6C265.5 48.8 264.6 47.4 263.7 45.5ZM239.4 6.7C239.7 5.7 240.0 4.6 240.0 4.4C240.0 4.2 241.5 4.1 243.2 4.1C246.0 4.2 246.1 4.3 244.0 4.7C242.6 4.9 240.9 5.9 240.1 6.8C238.8 8.4 238.8 8.4 239.4 6.7Z"/></symbol>
+    <symbol id="wordmark" viewBox="0 0 948 230"><path fill="currentColor" fill-rule="evenodd" d="M395.0 224.5C395.0 223.7 397.2 222.1 399.9 221.0C402.6 219.8 405.9 217.6 407.3 216.2C412.4 210.9 413.2 206.4 413.8 182.6L414.2 160.7L407.9 165.2C399.1 171.4 393.9 173.9 386.1 175.6C377.0 177.5 369.7 177.3 360.6 175.0C350.0 172.3 343.7 168.7 336.0 161.0C328.4 153.4 323.7 145.1 320.9 134.3C318.6 125.5 318.2 110.5 319.9 102.5C324.1 83.8 336.6 67.3 352.5 59.5C362.3 54.6 369.7 53.0 381.5 53.0C393.4 53.0 401.9 54.9 411.7 59.5C415.6 61.4 419.1 63.0 419.4 63.0C419.7 63.0 423.1 61.0 426.9 58.5C430.7 56.0 434.8 54.0 435.9 54.0L438.0 54.0L438.0 125.8C438.0 167.0 438.4 200.0 439.0 203.4C440.7 213.6 445.8 220.2 453.2 221.7C455.1 222.1 456.0 222.9 456.0 224.1C456.0 225.9 454.7 226.0 425.5 226.0C399.3 226.0 395.0 225.8 395.0 224.5ZM240.0 175.4C228.8 173.0 218.3 167.1 210.3 158.7C198.3 146.0 193.5 133.3 193.6 114.0C193.7 104.1 194.1 101.3 196.5 94.1C203.2 74.4 218.9 59.6 238.6 54.6C246.5 52.6 262.7 52.5 270.4 54.5C287.2 58.9 299.1 69.3 304.6 84.5C307.6 92.6 308.8 104.3 307.0 106.5C305.9 107.8 300.0 108.0 262.3 108.0L218.9 108.0L219.5 113.8C220.3 121.4 223.6 132.6 226.5 137.5C229.8 143.2 239.1 151.7 245.1 154.5C262.2 162.4 283.8 158.8 297.0 146.0C303.2 139.9 305.0 140.2 305.0 147.2C305.0 152.2 304.9 152.4 297.2 159.9C288.5 168.6 280.8 172.8 269.3 175.4C260.6 177.3 248.8 177.3 240.0 175.4ZM492.0 175.4C481.8 172.7 473.6 166.1 469.0 156.9C464.7 148.7 464.0 141.5 464.0 107.2C464.0 70.7 463.7 69.0 457.5 66.4C454.7 65.3 453.9 64.4 454.2 62.7C454.5 60.8 456.1 60.2 469.5 57.3C477.8 55.4 485.3 54.1 486.4 54.2C488.2 54.5 488.3 56.2 488.4 97.5L488.5 140.5L490.9 145.8C495.5 156.0 504.3 160.7 516.5 159.8C525.6 159.0 532.6 155.3 539.5 147.8L545.0 141.7L545.0 107.6C545.0 82.4 544.6 72.8 543.7 71.0C543.0 69.6 540.8 67.7 538.7 66.6C535.8 65.2 535.0 64.3 535.2 62.6C535.5 60.7 537.2 60.1 550.0 57.3C558.0 55.5 565.6 54.1 567.0 54.3L569.5 54.5L570.0 107.8C570.5 159.2 570.6 161.2 572.4 162.6C573.5 163.4 575.4 164.0 576.6 164.0C579.6 164.0 580.9 167.9 578.5 169.6C576.7 171.0 556.8 176.0 553.3 176.0C551.1 176.0 547.5 172.2 546.6 169.2C546.4 168.3 545.9 165.0 545.5 162.0L544.9 156.5L538.8 162.2C525.2 174.8 507.9 179.7 492.0 175.4ZM679.3 175.6C669.3 173.1 662.9 166.7 659.3 156.0C657.7 151.0 657.5 146.5 657.5 108.8L657.5 67.0L648.8 67.0L640.0 67.0L640.0 63.8C640.0 60.7 640.5 60.3 647.8 56.6C656.5 52.1 666.3 43.0 672.5 33.7C675.7 28.8 676.8 27.9 678.9 28.2L681.5 28.5L681.8 41.9L682.1 55.3L699.0 54.8L716.0 54.4L716.0 60.7L716.0 67.0L699.0 67.0L681.9 67.0L682.2 108.2C682.5 145.5 682.7 149.8 684.3 152.7C688.9 161.2 701.9 162.9 711.6 156.4C713.6 155.0 715.6 154.2 716.1 154.7C716.5 155.1 717.0 157.7 717.2 160.4C717.5 165.3 717.4 165.4 712.5 169.2C709.8 171.3 705.5 173.7 703.0 174.6C696.8 176.7 685.6 177.2 679.3 175.6ZM755.0 176.0C735.8 171.4 725.2 155.8 729.0 137.7C731.3 126.3 740.7 117.3 756.9 111.1C763.9 108.4 786.9 101.4 799.8 98.0L804.0 96.9L804.0 90.2C804.0 81.2 802.6 76.6 798.2 71.8C791.2 64.1 780.3 61.7 768.8 65.6C762.1 67.8 754.7 75.2 750.5 83.8C748.4 88.0 746.8 90.2 745.1 90.6C742.2 91.4 741.9 91.1 738.5 78.9L735.6 68.9L738.6 66.5C748.8 58.1 765.2 53.0 782.0 53.0C806.0 53.0 821.2 62.2 827.3 80.4C827.8 82.2 828.5 100.4 828.9 121.8L829.5 160.2L831.9 162.1C833.2 163.1 835.5 164.0 837.1 164.0C839.6 164.0 840.0 164.4 840.0 166.9C840.0 169.5 839.4 170.0 834.2 171.8C821.0 176.6 815.7 177.1 811.5 173.8C808.3 171.3 805.1 164.7 805.0 160.7C805.0 158.0 805.0 158.0 798.5 163.4C794.9 166.5 789.8 170.1 787.0 171.5C777.6 176.3 764.1 178.1 755.0 176.0ZM879.5 175.9C872.5 174.9 862.4 171.7 855.7 168.3L851.0 166.0L851.6 154.2C852.3 140.1 852.3 140.0 855.3 140.0C856.9 140.0 858.1 140.9 859.2 143.2C861.8 148.6 868.6 156.7 873.6 160.1C885.3 168.1 902.0 169.1 912.3 162.4C917.6 158.9 920.0 154.6 920.0 148.5C920.0 138.6 915.1 134.4 893.6 125.9C869.3 116.3 861.0 110.9 855.3 101.2C851.8 95.3 851.0 84.5 853.5 77.1C855.7 70.5 863.5 61.9 870.3 58.6C879.9 53.9 887.1 52.7 901.5 53.3C911.8 53.7 915.9 54.3 921.5 56.3C929.0 58.9 936.6 62.5 937.3 63.7C937.6 64.3 935.7 77.8 934.0 86.8C934.0 86.9 933.2 87.0 932.1 87.0C931.0 87.0 928.8 84.7 926.1 80.6C918.2 68.4 910.9 63.9 897.8 63.2C890.2 62.8 888.6 63.0 883.6 65.3C876.9 68.4 874.0 72.5 874.0 78.9C874.0 88.2 878.1 91.2 905.6 102.5C924.2 110.1 930.8 113.9 936.5 120.3C950.6 135.8 944.1 161.2 923.5 171.0C912.0 176.5 895.9 178.3 879.5 175.9ZM4.7 173.3C3.0 171.7 4.3 170.1 8.8 168.5C15.1 166.1 23.3 157.6 29.1 147.5C33.7 139.6 53.5 101.9 87.0 37.2C102.2 7.9 104.5 4.0 106.6 4.0C108.6 4.0 110.2 6.5 119.3 25.2C150.2 88.0 179.2 146.3 182.4 151.5C187.1 159.5 192.9 165.1 199.0 168.0C202.3 169.6 204.0 171.0 204.0 172.2C204.0 173.9 202.2 174.0 168.5 174.0C133.8 174.0 133.0 174.0 133.0 172.0C133.0 170.7 133.9 169.8 135.8 169.4C144.3 167.5 146.6 166.6 149.3 163.9C153.5 159.7 152.9 157.4 141.2 133.1L131.2 112.5L98.9 112.3C81.1 112.2 65.4 112.3 64.0 112.6C61.8 113.0 59.8 116.1 50.7 134.0C38.9 157.0 38.0 160.3 42.5 164.4C43.9 165.7 47.2 167.3 49.8 168.0C56.9 169.8 59.2 170.9 58.7 172.3C58.4 173.2 51.8 173.6 31.8 173.8C17.3 173.9 5.1 173.7 4.7 173.3ZM593.8 173.3C590.0 172.7 590.1 169.5 593.9 167.6C595.5 166.7 597.3 164.7 597.9 162.9C599.5 158.1 599.4 74.4 597.7 71.0C597.0 69.6 595.0 67.9 593.2 67.1C590.8 66.0 590.0 65.0 590.0 63.0C590.0 60.5 590.4 60.3 602.8 57.5C609.8 55.9 617.3 54.6 619.5 54.6L623.5 54.5L624.0 108.5C624.3 138.2 624.9 163.3 625.4 164.3C625.9 165.3 627.6 166.8 629.2 167.6C632.9 169.5 632.5 172.3 628.5 173.1C625.2 173.8 598.1 174.0 593.8 173.3ZM783.0 159.4C789.4 157.5 794.1 154.6 799.8 149.1L804.0 145.0L804.0 126.1L804.0 107.1L798.9 108.6C784.4 112.9 766.7 120.9 761.1 125.6C755.0 130.7 751.9 140.2 753.9 147.7C755.2 152.4 761.4 158.6 765.7 159.6C767.3 159.9 769.0 160.3 769.5 160.5C772.0 161.4 778.1 160.9 783.0 159.4ZM401.0 155.8C404.0 154.4 408.1 151.9 410.0 150.2L413.5 147.2L413.5 116.4C413.5 81.6 413.8 82.9 405.4 74.0C399.0 67.1 390.7 63.6 381.0 63.7C372.4 63.8 366.9 65.5 360.4 70.2C348.4 78.8 341.5 98.6 344.0 116.9C346.8 137.8 356.2 151.2 372.1 157.0C380.0 160.0 393.4 159.4 401.0 155.8ZM124.8 100.1C123.5 96.5 97.5 44.0 97.1 44.0C96.5 44.0 68.0 99.2 68.0 100.4C68.0 100.7 80.9 101.0 96.6 101.0C113.3 101.0 125.0 100.6 124.8 100.1ZM280.7 91.5C279.6 80.7 273.0 70.2 264.5 65.7C258.9 62.8 247.3 62.8 240.9 65.7C231.9 69.8 224.9 79.1 221.7 91.3L220.2 97.0L250.7 97.0L281.3 97.0L280.7 91.5ZM604.0 32.8C597.8 29.6 595.6 26.1 595.6 19.7C595.6 10.2 601.5 4.0 610.7 4.0C619.7 4.0 626.0 10.3 626.0 19.4C626.0 25.7 623.2 30.2 617.6 32.9C612.2 35.6 609.5 35.5 604.0 32.8Z"/></symbol>
+  </defs>
+</svg>
+
+<div class="paper" aria-hidden="true" style="--paper:url(assets/images/paper-texture.jpg)"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="bar" id="bar" aria-hidden="true">
+  <a class="logo" href="#top" tabindex="-1" aria-label="Aequitas Law, home"><svg class="lg-em" aria-hidden="true"><use href="#mark"/></svg><svg class="lg-wm" aria-hidden="true"><use href="#wordmark"/></svg></a>
+  <nav aria-label="Sections"><a href="#practice" tabindex="-1">PRACTICE</a><a href="#approach" tabindex="-1">APPROACH</a><a href="#people" tabindex="-1">PEOPLE</a><a href="#insights" tabindex="-1">INSIGHTS</a></nav>
+  <a class="btn" href="#contact" tabindex="-1">BOOK A CONSULTATION</a>
+</div>
+
+<div class="stage" id="stage">
+<div class="pin" id="pin"><div class="board" id="board"><canvas id="gl" aria-hidden="true"></canvas></div></div>
+<header class="hero" id="top">
+  <div class="ui" id="ui">
+    <a class="logo" href="#top" aria-label="Aequitas Law, home"><svg class="lg-em" aria-hidden="true"><use href="#mark"/></svg><svg class="lg-wm" aria-hidden="true"><use href="#wordmark"/></svg></a>
+    <nav class="links" aria-label="Primary"><a href="#practice">PRACTICE</a><a href="#approach">APPROACH</a><a href="#people">PEOPLE</a><a href="#insights">INSIGHTS</a></nav>
+    <a class="btn" href="#contact">BOOK A CONSULTATION</a>
+    <h1 class="h h1" data-split style="--d:.25s">Blind
+to bias.</h1>
+    <div class="stat s1"><i></i><div><b>24h</b><span>FIRST RESPONSE</span></div></div>
+    <div class="stat s2"><i></i><div><b>1,200+</b><span>MATTERS RESOLVED</span></div></div>
+    <div class="stat s3"><i></i><div><b>38 yrs</b><span>INDEPENDENT
+PRACTICE</span></div></div>
+    <p class="h h2" data-split style="--d:.75s">Clear on<br>the law</p>
+    <p class="tag">Independent counsel for businesses and families since <span class="hl yr">1988</span>.<br>We weigh the facts, not the noise.</p>
+  </div>
+</header>
+
+<section class="scene scene-a" id="impartial" aria-labelledby="impartial-t">
+  <div class="copy">
+    <p class="label" data-reveal><i></i>Our standard</p>
+    <h2 class="title" data-split id="impartial-t">Impartial by design.</h2>
+    <p class="body" data-reveal style="--i:2">We judge a matter on its merits, not on who is on the other side. That is how we can tell you, plainly, when to fight and when to settle.</p>
+    <ul class="points" data-reveal style="--i:3">
+      <li><i></i>Honest odds, in writing</li>
+      <li><i></i>Conflicts cleared before we act</li>
+      <li><i></i>Fight or settle, on the facts</li>
+    </ul>
+  </div>
+</section>
+
+<section class="scene scene-b" id="perspective" aria-labelledby="perspective-t">
+  <div class="copy">
+    <p class="label" data-reveal><i></i>Our method</p>
+    <h2 class="title" data-split id="perspective-t">Seen from every side.</h2>
+    <p class="body" data-reveal style="--i:2">Before we advise, we read your matter the way the other side, the regulator and the judge will. Then we build a position that holds from every angle.</p>
+    <a class="more" data-reveal style="--i:3" href="#practice">What we practise <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+</div>
+
+<main>
+  <section class="sec firm" id="firm" aria-labelledby="firm-t">
+    <div class="grid">
+      <p class="label" id="firm-t" data-reveal><i></i>The firm</p>
+      <p class="lead" data-split>Justice is meant to be <span class="nw"><span class="hl">blind</span>.</span><br class="lb"> <span class="nw">Your<a class="faces" href="#people" aria-label="Meet the partners: Helena Marsh, Daniel Osei and Priya Raman"><img src="assets/images/avatar-helena-marsh.jpg" alt="" width="96" height="96" style="--k:0"><img src="assets/images/avatar-daniel-osei.jpg" alt="" width="96" height="96" style="--k:1"><img src="assets/images/avatar-priya-raman.jpg" alt="" width="96" height="96" style="--k:2"></a></span> lawyer shouldn’t be.<br class="lb"> We see <span class="hl">every detail</span> of your matter,<br class="lb"> and judge it on nothing else.</p>
+      <div class="cols">
+        <p class="body" data-reveal style="--i:1">Aequitas is an independent firm of advisers and advocates. We act for founders, family businesses, executives and private clients who want straight answers and a lawyer who stays with the matter from the first call to the final word.</p>
+        <p class="body" data-reveal style="--i:2">Small by choice. Every client has a partner’s direct line, every matter has one person accountable for it, and you always know what happens next.<br><br><a class="more" href="#people">Meet the partners <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec dark" id="practice" aria-labelledby="practice-t">
+    <div class="head">
+      <h2 class="title" data-split id="practice-t">Practice areas</h2>
+      <p class="body" data-reveal style="--i:2">Six disciplines under one roof, so a contract question, a dispute and a family matter can be handled by people who already know your business.</p>
+    </div>
+    <div class="pa" id="pa">
+    <ul class="rows">
+      <li><a href="#contact" data-pa="0"><img class="pa-thumb" alt="" width="64" height="80"><h3>Corporate &amp; commercial</h3><span class="pa-slot" aria-hidden="true"></span><p>Formation, financing, acquisitions and the contracts that hold a business together.</p><span class="go" aria-hidden="true">→</span></a></li>
+      <li><a href="#contact" data-pa="1"><img class="pa-thumb" alt="" width="64" height="80"><h3>Disputes &amp; litigation</h3><span class="pa-slot" aria-hidden="true"></span><p>Commercial claims, arbitration and appeals, argued from the first letter to the final judgment.</p><span class="go" aria-hidden="true">→</span></a></li>
+      <li><a href="#contact" data-pa="2"><img class="pa-thumb" alt="" width="64" height="80"><h3>Employment</h3><span class="pa-slot" aria-hidden="true"></span><p>Contracts, investigations, exits and tribunal claims, for employers and senior executives.</p><span class="go" aria-hidden="true">→</span></a></li>
+      <li><a href="#contact" data-pa="3"><img class="pa-thumb" alt="" width="64" height="80"><h3>Real estate</h3><span class="pa-slot" aria-hidden="true"></span><p>Acquisitions, development, leasing, and the disputes that follow property.</p><span class="go" aria-hidden="true">→</span></a></li>
+      <li><a href="#contact" data-pa="4"><img class="pa-thumb" alt="" width="64" height="80"><h3>Intellectual property</h3><span class="pa-slot" aria-hidden="true"></span><p>Protecting brands, designs and know-how, and enforcing them when it counts.</p><span class="go" aria-hidden="true">→</span></a></li>
+      <li><a href="#contact" data-pa="5"><img class="pa-thumb" alt="" width="64" height="80"><h3>Private client</h3><span class="pa-slot" aria-hidden="true"></span><p>Wills, trusts, estates and family wealth, handled with discretion across borders.</p><span class="go" aria-hidden="true">→</span></a></li>
+    </ul>
+    <figure class="pa-float" id="pa-float" aria-hidden="true">
+      <div class="pa-frame">
+        <img src="assets/images/practice-corporate-commercial.jpg" alt="" data-i="0" loading="lazy">
+        <img src="assets/images/practice-disputes-litigation.jpg" alt="" data-i="1" loading="lazy">
+        <img src="assets/images/practice-employment.jpg" alt="" data-i="2" loading="lazy">
+        <img src="assets/images/practice-real-estate.jpg" alt="" data-i="3" loading="lazy">
+        <img src="assets/images/practice-intellectual-property.jpg" alt="" data-i="4" loading="lazy">
+        <img src="assets/images/practice-private-client.jpg" alt="" data-i="5" loading="lazy">
+      </div>
+      <figcaption><span class="pa-num">01</span><span class="pa-name">Corporate &amp; commercial</span></figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section class="hs" id="approach" aria-labelledby="approach-t">
+    <div class="hs-pin" id="hs-pin">
+      <div class="board hs-board" id="hs-board"><canvas id="hs-gl" aria-hidden="true"></canvas></div>
+      <div class="hs-head">
+        <h2 class="label" id="approach-t"><i></i>Our approach</h2>
+        <ol class="hs-steps" aria-hidden="true"><li class="on">Listen</li><li>Weigh</li><li>Act</li><li>Resolve</li></ol>
+      </div>
+      <div class="hs-track" id="hs-track">
+        <article class="hs-panel"><div class="hs-copy"><p class="hs-kicker">Step 1 of 4 · Listen</p><h3 class="title" data-split>Hear it all first</h3><p class="body">A first conversation with a partner, at no cost. We ask questions before we give opinions, and listen for what you haven’t said yet.</p></div></article>
+        <article class="hs-panel"><div class="hs-copy"><p class="hs-kicker">Step 2 of 4 · Weigh</p><h3 class="title" data-split>Facts against law</h3><p class="body">We test your position honestly against the law and the evidence, weak points included, and tell you what a good outcome really looks like.</p></div></article>
+        <article class="hs-panel"><div class="hs-copy"><p class="hs-kicker">Step 3 of 4 · Act</p><h3 class="title" data-split>A plan with a price</h3><p class="body">A written plan, a timetable and a fee you agree before work starts. No surprise invoices. Then we move quickly.</p></div></article>
+        <article class="hs-panel"><div class="hs-copy"><p class="hs-kicker">Step 4 of 4 · Resolve</p><h3 class="title" data-split>Close it properly</h3><p class="body">Settled, signed or decided, we finish the paperwork and make sure the result holds long after the file is closed.</p><a class="more" href="#contact">Book a consultation <span aria-hidden="true">→</span></a></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec on-white" id="people" aria-labelledby="people-t">
+    <div class="head">
+      <h2 class="title" data-split id="people-t">The partners</h2>
+      <a class="more" data-reveal style="--i:2" href="#contact">Talk to a partner <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="people">
+      <article class="person">
+        <div class="ph"><img src="assets/images/partner-helena-marsh.jpg" alt="Portrait of Helena Marsh" width="640" height="800" loading="lazy"></div>
+        <div><h3>Helena Marsh</h3><p class="role">Managing partner · Disputes</p><p>Commercial litigator and arbitrator. Leads our largest cases and still answers her own phone.</p></div>
+      </article>
+      <article class="person">
+        <div class="ph"><img src="assets/images/partner-daniel-osei.jpg" alt="Portrait of Daniel Osei" width="640" height="800" loading="lazy"></div>
+        <div><h3>Daniel Osei</h3><p class="role">Partner · Corporate</p><p>Advises founders and family businesses on deals, investment and governance, from first round to exit.</p></div>
+      </article>
+      <article class="person">
+        <div class="ph"><img src="assets/images/partner-priya-raman.jpg" alt="Portrait of Priya Raman" width="640" height="800" loading="lazy"></div>
+        <div><h3>Priya Raman</h3><p class="role">Partner · Private client</p><p>Wills, trusts and estates for families with assets in more than one country.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="insights" aria-labelledby="insights-t">
+    <div class="head">
+      <h2 class="title" data-split id="insights-t">Insights</h2>
+      <a class="more" data-reveal style="--i:2" href="#insights">All insights <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="posts">
+      <a class="post" href="#insights"><p class="meta">Disputes · 12 Nov 2026</p><h3>The first 48 hours of a commercial dispute</h3><p>What to keep, what to say, and what to stop saying, before anyone has called a lawyer.</p><span class="more">Read <span aria-hidden="true">→</span></span></a>
+      <a class="post" href="#insights"><p class="meta">Corporate · 28 Oct 2026</p><h3>Founders’ agreements: five clauses that prevent the fight later</h3><p>Vesting, deadlock, exits and the other questions that are easy to answer while everyone still agrees.</p><span class="more">Read <span aria-hidden="true">→</span></span></a>
+      <a class="post" href="#insights"><p class="meta">Private client · 03 Oct 2026</p><h3>Writing a will when your family lives across borders</h3><p>Why one will may not be enough, and how to keep several from contradicting each other.</p><span class="more">Read <span aria-hidden="true">→</span></span></a>
+    </div>
+  </section>
+
+  <section class="sec cta" id="contact" aria-labelledby="contact-t">
+    <div class="cta-grid">
+      <div class="cta-intro">
+        <p class="label" data-reveal><i></i>Contact</p>
+        <h2 class="title" data-split id="contact-t">Tell us what <span class="hl">happened.</span></h2>
+        <p class="cta-lead" data-reveal style="--i:2">A partner reads every enquiry and replies within 24 hours on working days.</p>
+        <ul class="cta-promise" data-reveal style="--i:3">
+          <li><i></i>First conversation free</li>
+          <li><i></i>Partner reply within 24h</li>
+          <li><i></i>Strictly confidential</li>
+        </ul>
+        <dl class="cta-details" data-reveal style="--i:4">
+          <div><dt>Office</dt><dd>18 Harbour Street, Level 9<br>Central District</dd></div>
+          <div><dt>Hours</dt><dd>Mon–Fri, 8:30–18:30<br>Urgent matters, any time</dd></div>
+          <div><dt>Phone</dt><dd><a href="tel:+10000000000">+1 000 000 0000</a></dd></div>
+          <div><dt>Email</dt><dd><a href="mailto:hello@aequitas.law">hello@aequitas.law</a></dd></div>
+        </dl>
+        <p class="cta-note">Sample address and contact details.</p>
+      </div>
+      <form id="enquiry" class="cta-card" name="enquiry" method="POST" data-netlify="true" netlify-honeypot="company" novalidate data-reveal style="--i:2">
+        <input type="hidden" name="form-name" value="enquiry">
+        <p hidden><label>Leave this empty <input name="company" tabindex="-1" autocomplete="off"></label></p>
+        <div class="cta-card-head"><h3>Start your enquiry</h3><p>Takes about two minutes. Everything you write stays between you and the partner who reads it.</p></div>
+        <div class="two">
+          <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
+          <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
+        </div>
+        <div class="two">
+          <label class="field"><span>Phone (optional)</span><input name="phone" type="tel" autocomplete="tel"></label>
+          <label class="field"><span>Matter</span><select name="matter" required>
+            <option value="" disabled selected>Choose one</option>
+            <option>Corporate &amp; commercial</option><option>Disputes &amp; litigation</option><option>Employment</option>
+            <option>Real estate</option><option>Intellectual property</option><option>Private client</option><option>Something else</option>
+          </select></label>
+        </div>
+        <label class="field"><span>In a few lines, what happened?</span><textarea name="message" required></textarea></label>
+        <label class="check"><input type="checkbox" name="ack" required><span>I understand that sending this does not make Aequitas my lawyer, and I won’t include confidential details until the firm confirms it can act for me.</span></label>
+        <button class="submit" type="submit">Send enquiry <span aria-hidden="true">→</span></button>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="cols" data-reveal>
+    <div><a class="logo" href="#top" style="font-size:26px" aria-label="Aequitas Law, home"><svg class="lg-em" aria-hidden="true"><use href="#mark"/></svg><svg class="lg-wm" aria-hidden="true"><use href="#wordmark"/></svg></a><p class="tag2" style="margin-top:18px">Independent counsel for businesses and families. Blind to bias, clear on the law.</p></div>
+    <div><h4>Practice</h4><ul><li><a href="#practice">Corporate</a></li><li><a href="#practice">Disputes</a></li><li><a href="#practice">Employment</a></li><li><a href="#practice">Private client</a></li></ul></div>
+    <div><h4>Firm</h4><ul><li><a href="#firm">About</a></li><li><a href="#people">Partners</a></li><li><a href="#insights">Insights</a></li><li><a href="#contact">Careers</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a href="mailto:hello@aequitas.law">hello@aequitas.law</a></li><li><a href="tel:+10000000000">+1 000 000 0000</a></li><li><a href="#contact">Book a consultation</a></li></ul></div>
+  </div>
+  <span class="wordmark" aria-hidden="true"><svg viewBox="0 0 948 230"><use href="#wordmark"/></svg></span>
+  <div class="legal">
+    <p>© 2026 Aequitas Law. The information on this website is general and is not legal advice. Prior results do not guarantee a similar outcome.</p>
+    <p>Privacy · Terms · Complaints</p>
+  </div>
+</footer>
+
+<script>
+/* One dithered 3D stage. mountStage() is called once for the hero (bust -> scales -> gavel down the page)
+   and once for "How we work" (ear -> law books -> money -> thumbs up across the horizontal scroll). */
+function mountStage(opts) {
+'use strict';
+
+/* =================================================================== config */
+/* The bust ships inside this file (the #bust-glb block above, a GLB in base64), so the page
+   needs no network for it. To use another model instead, put the URL of its .glb here; if that
+   download fails, the built-in bust is used. */
+const MESH_URL = opts.meshUrl || '';
+const ART_W = 1440, ART_H = 1000;
+const BG = [0x45 / 255, 0x17 / 255, 0x1B / 255];     // oxblood ground; also the dither's dark tone, so shadows melt into the page
+const DOT = [0xF8 / 255, 0xEF / 255, 0xE4 / 255];  // cream dots for the lit side of each object
+const CFG = {
+  boxes: opts.boxes,                                 // framing per object, artboard px
+  sequence: opts.sequence,                           // which object becomes which, and where along the stage
+  rotX: -12.45, rotY: 16.26, spinStart: opts.spinStart ?? -30, spinPeriod: 15,
+  look: { tint: [.86, .87, .90], flow: .55, scale: 1.9, sharp: .25, bright: 1.25, depth: .8, contrast: .8, rough: .01, cursor: .8 },
+  ditherSize: .0025,                                 // dot size as a fraction of the artboard height (~2.5 px)
+  dis: { size: .18, wind: 15, drift: .35, turb: .55, burst: .55, radius: .16, recovery: 1.6,
+         glow: .7, glowColor: [0xB0 / 255, 0x8D / 255, 0x4A / 255], fade: .35, quality: .4, maxSide: 512 }
+};
+const STEP = 1 / 60, MAX_STEPS = 4;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* =================================================================== layout and scroll stage */
+const stage = opts.stage, pin = opts.pin, board = opts.board, canvas = opts.canvas, ui = opts.ui || null;
+const scenes = opts.scenes || [];
+let K = 1, VW = 1, VH = 1, portrait = false, boardRect = { left: 0, top: 0, width: ART_W, height: ART_H };
+let anchors = [0, 1, 2];                                  // page scroll positions of the hero and each scene
+/* pose per position: object centre as a fraction of the viewport width, scale, and the angle it turns to
+   (-16 would be straight on). Pose 0 of the hero is the full-size spinning bust. */
+const POSES = opts.poses, POSES_PORTRAIT = opts.posesPortrait;
+
+function layout() {
+  VW = pin.clientWidth; VH = pin.clientHeight;
+  portrait = VW / VH < 0.9;
+  stage.classList.toggle('portrait', portrait);
+  K = portrait ? Math.min(VW / 520, (VH - 360) / 1000) : Math.min(VH / 1000, VW / 1100);
+  K = Math.max(K, 1e-3);
+  if (ui) ui.style.setProperty('--u', Math.min(VW / 1440, VH / 1000) + 'px');
+  if (!opts.progress) anchors = [stage, ...scenes].map(el => el.getBoundingClientRect().top + scrollY);
+  placeBoard();
+}
+const POSE_OBJ = opts.poseObj;
+const ASPECT = Object.assign({}, opts.aspect);            // width / height of each object, updated when it loads
+const LAST = POSE_OBJ.length - 1;
+function poseBox(i) {
+  if (i === 0 && opts.heroPose) return { L: (VW - ART_W * K) / 2, T: portrait ? VH - 150 - 1000 * K : VH - 1000 * K, S: 1 };
+  const p = (portrait ? POSES_PORTRAIT : POSES)[i], name = POSE_OBJ[i], box = CFG.boxes[name];
+  const bw = box.h * ASPECT[name];
+  // never wider than its half of the screen (40% beside the copy; 90% under it on phones)
+  const S = Math.min(p.s, (portrait ? 0.9 : 0.40) * VW / (bw * K));
+  // the layer stays anchored to the bottom of the screen (its lower edge never shows inside the window)
+  const T = portrait ? Math.max(VH - 40 - (box.top + box.h) * K * S, VH - 1000 * K * S)   // phones: under the copy
+                     : VH - 1000 * K * S;                                                  // beside the copy
+  return { L: VW * p.x - box.cx * K * S, T, S };
+}
+function stagePos() {                                     // 0 at the first pose, 1 at the next, and so on
+  if (opts.progress) return Math.min(LAST, Math.max(0, opts.progress() * LAST));
+  const y = scrollY;
+  if (y <= anchors[0]) return 0;
+  for (let i = 1; i < anchors.length; i++)
+    if (y < anchors[i]) return i - 1 + (y - anchors[i - 1]) / Math.max(1, anchors[i] - anchors[i - 1]);
+  return anchors.length - 1;
+}
+const smooth = t => t * t * (3 - 2 * t);
+let stageF = 0;
+function placeBoard() {
+  let f = stagePos();
+  if (reduced) f = Math.round(f);                         // reduced motion: no glide, just the pose for the section in view
+  stageF = f;
+  const i = Math.min(Math.floor(f), LAST - 1), u = smooth(Math.min(1, f - i));
+  const a = poseBox(i), b = poseBox(i + 1);
+  const L = a.L + (b.L - a.L) * u, T = a.T + (b.T - a.T) * u, k = K * (a.S + (b.S - a.S) * u);
+  board.style.transform = `translate(${L}px,${T}px) scale(${k})`;
+  boardRect = { left: L, top: T, width: ART_W * k, height: ART_H * k };
+}
+const angleTo = (from, to) => ((to - from) % 360 + 540) % 360 - 180;
+function spinTarget(f) {                                  // the angle the object turns to at stage position f
+  const P = portrait ? POSES_PORTRAIT : POSES, first = opts.heroPose ? 1 : 0;
+  if (f <= first) return P[first].spin;
+  const i = Math.min(Math.floor(f), LAST - 1), t = Math.min(1, f - i);
+  const from = P[Math.max(i, first)].spin;
+  return from + angleTo(from, P[i + 1].spin) * (opts.linearSpin ? t : smooth(t));   // linear: keeps turning as you scroll
+}
+layout();
+
+/* =================================================================== shaders */
+const FS_VERT = `#version 300 es
+in vec2 aPosition; out vec2 vUv;
+void main(){ vUv = aPosition*0.5 + 0.5; gl_Position = vec4(aPosition, 0.0, 1.0); }`;
+
+const COMMON = `#version 300 es
+precision highp float; precision highp int;
+uniform vec2 uResolution; uniform float uDelta;
+uniform vec2 uMouse; uniform vec2 uMousePrev; uniform float uHover;
+uniform sampler2D uInput;
+in vec2 vUv; out vec4 outColor;
+vec4 premultiply(vec4 c){ return vec4(c.rgb*c.a, c.a); }
+vec4 unpremultiply(vec4 c){ return c.a > 0.0 ? vec4(clamp(c.rgb/c.a, 0.0, 1.0), c.a) : vec4(0.0); }
+uint hash3(uvec3 v){ uint h = v.x*0x8da6b343u ^ v.y*0xd8163841u ^ v.z*0xcb1ab31fu;
+  h ^= h>>16; h *= 0x7feb352du; h ^= h>>15; h *= 0x846ca68bu; h ^= h>>16; return h; }
+float unit(uint h){ return float(h>>8)/16777216.0; }
+vec2 lattice(ivec2 c, uint seed){ float a = unit(hash3(uvec3(uvec2(c), seed)))*6.2831853; return vec2(cos(a), sin(a)); }
+float gradientNoise(vec2 p, uint seed){
+  ivec2 i = ivec2(floor(p)); vec2 f = p - floor(p);
+  vec2 u = f*f*f*(f*(f*6.0 - 15.0) + 10.0);
+  float a = dot(lattice(i, seed), f);
+  float b = dot(lattice(i + ivec2(1,0), seed), f - vec2(1,0));
+  float c = dot(lattice(i + ivec2(0,1), seed), f - vec2(0,1));
+  float d = dot(lattice(i + ivec2(1,1), seed), f - vec2(1,1));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+`;
+
+/* ---- 3D pass: liquid metal ---- */
+const MODEL_VS = `#version 300 es
+in vec3 aPosition; in vec3 aNormal;
+uniform mat4 uModel; uniform mat3 uNormalMatrix; uniform vec3 uStretch;
+uniform float uDistance; uniform vec2 uCenter; uniform vec2 uSize;
+out vec3 vNormal; out vec3 vViewPos; out vec3 vLocal;
+void main(){
+  vec4 wp = uModel*vec4(aPosition, 1.0);
+  vNormal = normalize(uNormalMatrix*aNormal);
+  vViewPos = wp.xyz;
+  vLocal = aPosition*uStretch;
+  float w = (uDistance - wp.z)/uDistance;
+  vec2 xy = (uCenter*w + wp.xy)*2.0/uSize - w;
+  gl_Position = vec4(xy, -wp.z/uDistance, w);
+}`;
+
+const MODEL_FS = `#version 300 es
+precision highp float;
+in vec3 vNormal; in vec3 vViewPos; in vec3 vLocal; out vec4 outColor;
+uniform float uDistance; uniform mat3 uNormalMatrix; uniform vec3 uStretch;
+uniform float uFlowTime; uniform vec4 uLookPointer;
+uniform vec3 uTint; uniform float uScale, uSharpness, uBrightness, uDepth, uContrast, uRoughness, uCursor;
+
+float lmHeight(vec3 q, float t, float s){
+  vec3 w = q;
+  w += 0.75*sin(w.zxy*0.93 + vec3(1.7,9.2,4.1) + t*vec3(0.71,0.53,0.89));
+  w += 0.30*sin(w.yzx*1.71 + vec3(6.3,2.8,7.5) - t*vec3(0.47,0.83,0.61));
+  w += 0.14*sin(w.zxy*2.87 + vec3(3.9,5.1,0.6) + t*vec3(0.37,0.29,0.53));
+  float g = sin(w.x)*cos(w.y) + sin(w.y)*cos(w.z) + sin(w.z)*cos(w.x);
+  float r = sin(1.3*w.x + 0.6*w.z)*cos(1.2*w.y - 0.4*w.x);
+  float k = mix(0.6, 0.08, s);
+  float swell = sin(0.55*q.x + 0.31*t)*sin(0.62*q.y - 1.3)*sin(0.5*q.z + 0.7 + 0.23*t);
+  return g*0.4 + swell*0.45 - s*sqrt(r*r + k*k)*0.5;
+}
+float band(float x, float at, float width){
+  float d = (x - at)/(width*mix(1.35, 0.7, uSharpness));
+  return exp(-d*d*d*d*0.6 - d*d*0.4);
+}
+float lmStudio(vec3 R){
+  float y = R.y, az = atan(R.x, R.z);
+  float around = 0.68 + 0.32*cos(az + 0.3);
+  float m = 0.07 + 0.35*smoothstep(0.0, 1.0, y) - 0.04*smoothstep(-0.1, -0.9, y);
+  m += around*(1.3*band(y,.86,.16) + .85*band(y,.44,.07) + 1.5*band(y,.17,.05) + .95*band(y,-.3,.06) + .35*band(y,-.62,.12));
+  m += (1.6*band(az,-.8,.14) + 1.1*band(az,1.15,.1))*smoothstep(-.4, 0.0, y)*smoothstep(.95, .6, y);
+  m += 0.7*band(abs(az), 2.8, .25)*band(y, .1, .2);
+  float card = (0.25 + 0.95*smoothstep(-.35, .55, y))*band(y, .12, .42);
+  m += card*(band(az, -.36, .2) + 0.8*band(az, .46, .17));
+  return m*(1.0 - 0.85*band(y, -0.03, 0.04));
+}
+vec3 softEnv(vec3 d){
+  float y = d.y;
+  float n = smoothstep(.25, .75, y)*1.4;
+  float r = 0.2 + 0.06*(1.0 - abs(y));
+  float i = smoothstep(0.0, -.4, y)*0.05;
+  vec3 c = vec3(r+n+i, r+n+i, 1.02*r+n+i);
+  c += 0.45*smoothstep(cos(.9), cos(.35), dot(d, normalize(vec3(-1.0, .25, .3))));
+  c += 0.35*smoothstep(cos(.9), cos(.35), dot(d, normalize(vec3( 1.0, .25, -.3))));
+  return c;
+}
+vec2 EnvBRDFApprox(float NoV, float rough){
+  const vec4 c0 = vec4(-1.0, -0.0275, -0.572, 0.022);
+  const vec4 c1 = vec4( 1.0,  0.0425,  1.04, -0.04);
+  vec4 r = rough*c0 + c1;
+  float a004 = min(r.x*r.x, exp2(-9.28*NoV))*r.x + r.y;
+  return vec2(-1.04, 1.04)*a004 + r.zw;
+}
+vec3 ACESFilm(vec3 x){ return clamp((x*(2.51*x + 0.03))/(x*(2.43*x + 0.59) + 0.14), 0.0, 1.0); }
+vec3 srgbEncode(vec3 c){ return mix(1.055*pow(max(c, vec3(0.0)), vec3(1.0/2.4)) - 0.055, c*12.92, step(c, vec3(0.0031308))); }
+vec3 bend(vec3 N, vec3 g, float amount){
+  g *= uStretch; float len = length(g);
+  if (len <= 0.0) return N;
+  vec3 gw = normalize(uNormalMatrix*g)*len;
+  return normalize(N - amount*(gw - dot(gw, N)*N));
+}
+void main(){
+  vec3 V = normalize(vec3(0.0, 0.0, uDistance) - vViewPos);
+  vec3 N = normalize(vNormal);
+  vec3 face = cross(dFdx(vViewPos), dFdy(vViewPos));
+  if (dot(N, face)*dot(V, face) < 0.0) N = -N;
+
+  float t = uFlowTime, freq = 2.6/uScale, e = 0.015;
+  vec3 q = vLocal*freq;
+  float h = lmHeight(q, t, uSharpness);
+  vec3 g = vec3(lmHeight(q + vec3(e,0,0), t, uSharpness),
+                lmHeight(q + vec3(0,e,0), t, uSharpness),
+                lmHeight(q + vec3(0,0,e), t, uSharpness)) - h;
+  g *= freq/e;
+  vec3 N0 = N;
+  float facing = clamp(dot(N0, V), 0.0, 1.0);
+  float form = mix(0.3, 1.0, 1.0 - smoothstep(0.02, 0.12, length(fwidth(N0))));
+  float fine = 1.0 - smoothstep(0.1, 0.4, length(fwidth(q)));
+  N = bend(N0, g, uDepth*0.9*form*fine*mix(0.55, 1.0, smoothstep(0.0, 0.4, facing)));
+
+  float hov = uLookPointer.w;
+  if (uCursor > 0.0 && hov > 0.001){
+    vec2 ptr = (uLookPointer.xy - vViewPos.xy)/max(uLookPointer.z, 1.0);
+    float r = length(ptr);
+    vec2 away = r > 1e-4 ? -ptr/r : vec2(0.0);
+    float ring = cos(17.0*r - 9.0*t)*exp(-2.6*r)*(1.0 - exp(-26.0*r))
+               + 0.45*cos(29.0*r - 13.0*t + 1.3)*exp(-4.5*r)*(1.0 - exp(-40.0*r));
+    float dent = 2.2*r*exp(-7.0*r*r);
+    N = normalize(N + vec3(away*(0.55*ring + 0.8*dent)*uCursor*hov, 0.0));
+  }
+
+  vec3 tint = pow(uTint, vec3(2.2));
+  float nv = dot(N, V);
+  if (nv < 0.04) N = normalize(N + V*(0.04 - nv));
+  float rough = clamp(uRoughness + (1.0 - uSharpness)*0.02, 0.0, 1.0);
+  vec3 R = reflect(-V, N);
+  float studio = lmStudio(R);
+  vec3 F0 = tint*uBrightness;
+  vec3 hue = mix(vec3(1.02, 1.0, .97), vec3(.94, .98, 1.06), smoothstep(-.3, .6, R.y));
+  vec3 envScale = mix(vec3(1.0), studio*hue, uContrast);
+  vec3 emitted = tint*hue*max(studio - 0.6, 0.0)*0.3*uContrast*uBrightness;
+  vec2 brdf = EnvBRDFApprox(max(dot(N, V), 1e-4), rough);
+  vec3 color = softEnv(R)*(F0*brdf.x + brdf.y)*envScale + emitted;
+  outColor = vec4(srgbEncode(ACESFilm(color)), 1.0);
+}`;
+
+/* ---- dither: Bayer 8x8, two tones ---- */
+const DITHER_FS = COMMON + `
+uniform float uSize; uniform vec3 uDark; uniform vec3 uLight;
+uniform sampler2D uInputB; uniform float uMorph;
+vec4 tap4(sampler2D t, vec2 c, vec2 o){
+  return 0.25*(texture(t, c + vec2(-o.x, -o.y)) + texture(t, c + vec2(o.x, -o.y)) + texture(t, c + vec2(-o.x, o.y)) + texture(t, c + o));
+}
+float bayer8(uvec2 p){
+  uint v = 0u;
+  for (int i = 0; i < 3; i++){
+    uint bx = (p.x >> uint(i)) & 1u, by = (p.y >> uint(i)) & 1u;
+    v += (2u*(bx ^ by) + by) << uint(2*(2 - i));
+  }
+  return (float(v) + 0.5)/64.0;
+}
+void main(){
+  vec2 ar = vec2(uResolution.x/uResolution.y, 1.0);
+  float size = max(uSize, 1e-4);
+  vec2 cell = floor(vUv*ar/size);
+  vec2 centre = (cell + 0.5)*size/ar;
+  vec2 o = vec2(0.25*size)/ar;
+  /* each dot switches from the bust to the scales at its own moment: noise in clumps plus per-dot jitter */
+  float n = clamp(0.55*unit(hash3(uvec3(uvec2(max(cell, vec2(0.0))), 9u))) + 0.45*(0.5 + 0.9*gradientNoise(cell*size*9.0, 3u)), 0.0, 0.999);
+  vec4 cA = tap4(uInput, centre, o), cB = tap4(uInputB, centre, o);   // sample both outside any branch
+  vec4 col = n < uMorph ? cB : cA;
+  vec4 s = unpremultiply(col);
+  float t = bayer8(uvec2(max(cell, vec2(0.0))));
+  float luma = dot(clamp(s.rgb, 0.0, 1.0), vec3(0.2126, 0.7152, 0.0722));
+  float bit = floor(luma + t);
+  outColor = premultiply(vec4(mix(uDark, uLight, bit), s.a));
+}`;
+
+/* ---- disintegrate: burst spring field ---- */
+const BURST_FS = COMMON + `
+uniform sampler2D uPrevious;
+uniform float uBurst, uRadius, uRecovery, uTurbulence, uDrift, uWind, uStir;
+float falloff(float d, float r){ float x = d/max(r, 1e-4); return x < 1.0 ? (1.0 - x*x)*(1.0 - x*x) : 0.0; }
+vec2 kick(vec2 q, vec2 a, vec2 b, float r){
+  vec2 ab = b - a; float len = length(ab);
+  if (len < 1e-6 || uDelta <= 0.0) return vec2(0.0);
+  vec2 along = ab/len;
+  float t = clamp(dot(q - a, along)/len, 0.0, 1.0);
+  vec2 off = q - a - ab*t; float d = length(off);
+  float f = falloff(d, r);
+  if (f <= 0.0) return vec2(0.0);
+  vec2 away = off/max(d, 0.08*r);
+  float speed = min(len/uDelta, 1.0);
+  return (0.55*away + 1.0*along)*speed*min(len/r, 1.0)*f;
+}
+void main(){
+  vec4 was = texelFetch(uPrevious, ivec2(gl_FragCoord.xy), 0);
+  vec2 x = was.rg*0.3, v = was.ba;
+  vec2 ax = vec2(uResolution.x/uResolution.y, 1.0);
+  vec2 q = vUv*ax;
+  float r = clamp(uRadius, 0.02, 1.0), burst = clamp(uBurst, 0.0, 1.0);
+  float w = 5.0/max(uRecovery, 0.05);
+  vec2 k = kick(q, uMousePrev*ax, uMouse*ax, r)*uHover;
+  k *= burst*2.2*w*r;
+  if (uStir > 0.0)
+    k += vec2(gradientNoise(q/0.07 + 3.1, 17u), gradientNoise(q/0.07 - 5.7, 29u))*uStir*0.007;
+  float wa = radians(uWind);
+  k += vec2(cos(wa), sin(wa))*length(k)*0.6*clamp(uDrift, 0.0, 1.0);
+  vec2 om = q - uMouse*ax; float dm = length(om);
+  vec2 hold = dm > 1e-6 ? om/dm*0.06*r*burst*falloff(dm, r)*uHover : vec2(0.0);
+  float ang = clamp(gradientNoise(q/0.12, 5u)*2.2, -1.0, 1.0)*clamp(uTurbulence, 0.0, 1.0)*7.0*uDelta;
+  mat2 turn = mat2(cos(ang), sin(ang), -sin(ang), cos(ang));
+  float e = exp(-w*uDelta);
+  vec2 y = x - hold;
+  v += k;
+  vec2 c = v + w*y;
+  y = (y + c*uDelta)*e;
+  v = turn*((v - w*c*uDelta)*e);
+  x = y + hold;
+  float lim = min(0.75*r, 0.3), l = length(x);
+  if (l > lim){ vec2 n = x/l; x = n*lim; v -= n*max(dot(v, n), 0.0); }
+  outColor = vec4(clamp(x/0.3, -1.0, 1.0), v);
+}`;
+
+const LAG_FS = COMMON + `
+uniform sampler2D uPrevious; uniform sampler2D uBurstTex;
+void main(){
+  ivec2 p = ivec2(gl_FragCoord.xy);
+  vec2 x = texelFetch(uBurstTex, p, 0).rg;
+  vec2 y = texelFetch(uPrevious, p, 0).ba;
+  y = x + (y - x)*exp(-uDelta/0.16);
+  outColor = vec4(x, y);
+}`;
+
+const DISPLAY_FS = COMMON + `
+uniform sampler2D uLagTex;
+uniform float uSize, uRadius, uGlow, uFade; uniform vec3 uGlowColor;
+const float AMOUNT[4] = float[4](0.84, 1.14, 0.94, 1.24);
+const float TURN[4]   = float[4](0.26, -0.18, -0.34, 0.10);
+const float LAGS[4]   = float[4](0.0, 0.5, 0.2, 0.1);
+float aspect; vec2 ax;
+vec4 fieldAt(vec2 q, out vec4 dx, out vec4 dy){
+  vec2 uv = q/ax + 0.5;
+  ivec2 size = textureSize(uLagTex, 0), hi = size - 1;
+  vec2 g = uv*vec2(size) - 0.5;
+  ivec2 i = ivec2(floor(g)); vec2 fr = g - floor(g);
+  vec4 a = texelFetch(uLagTex, clamp(i, ivec2(0), hi), 0);
+  vec4 b = texelFetch(uLagTex, clamp(i + ivec2(1,0), ivec2(0), hi), 0);
+  vec4 c = texelFetch(uLagTex, clamp(i + ivec2(0,1), ivec2(0), hi), 0);
+  vec4 d = texelFetch(uLagTex, clamp(i + ivec2(1,1), ivec2(0), hi), 0);
+  dx = mix(b - a, d - c, fr.y)*(float(size.x)/aspect*0.3);
+  dy = mix(c - a, d - b, fr.x)*(float(size.y)*0.3);
+  return mix(mix(a, b, fr.x), mix(c, d, fr.x), fr.y)*0.3;
+}
+mat2 rot(int j){ float c = cos(TURN[j]), s = sin(TURN[j]); return mat2(c, s, -s, c); }
+vec2 burstOf(vec4 f, int j){ return rot(j)*(mix(f.xy, f.zw, LAGS[j])*AMOUNT[j]); }
+mat2 burstSlope(vec4 dx, vec4 dy, int j){ return rot(j)*(mat2(mix(dx.xy, dx.zw, LAGS[j]), mix(dy.xy, dy.zw, LAGS[j]))*AMOUNT[j]); }
+uint cellHash(ivec2 c){ uint h = uint(c.x)*0x8da6b343u ^ uint(c.y)*0xd8163841u; h ^= h>>16; h *= 0x7feb352du; return h ^ (h>>15); }
+float cover(vec2 d, float h, float px){
+  vec2 o = clamp(min(d + h, vec2(0.5*px)) - max(d - h, vec2(-0.5*px)), 0.0, px)/px;
+  return o.x*o.y;
+}
+vec2 newton(vec2 p, vec2 s, mat2 m, vec2 miss){
+  float det = m[0][0]*m[1][1] - m[1][0]*m[0][1];
+  return p - (det > 0.1 ? mat2(m[1][1], -m[0][1], -m[1][0], m[0][0])*miss/det : miss);
+}
+void main(){
+  aspect = uResolution.x/uResolution.y; ax = vec2(aspect, 1.0);
+  float px = 1.0/uResolution.y;
+  float cell = max(uSize, 0.05)*0.01;
+  vec2 s = (vUv - 0.5)*ax;
+  vec4 dx, dy;
+  vec4 here = fieldAt(s, dx, dy);
+  float still = 0.02*px;
+  if (max(dot(here.xy, here.xy), dot(here.zw, here.zw)) <= still*still){ outColor = texture(uInput, vUv); return; }
+
+  float solidFrom = 0.5*cell, solidTo = 4.0*cell;
+  ivec2 own = ivec2(floor(s/cell));
+  vec4 ownField = fieldAt((vec2(own) + 0.5)*cell, dx, dy);
+  float gone = smoothstep(solidFrom, solidTo, length(ownField.xy));
+
+  /* invert the mean field: where did the content now at s come from? */
+  vec2 p = s - mix(here.xy, here.zw, 0.5);
+  vec4 base;
+  for (int i = 0; i < 2; i++){
+    base = fieldAt(p, dx, dy);
+    mat2 m = mat2(1.0) + mat2(mix(dx.xy, dx.zw, 0.5), mix(dy.xy, dy.zw, 0.5));
+    p = newton(p, s, m, p + mix(base.xy, base.zw, 0.5) - s);
+  }
+  base = fieldAt(p, dx, dy);
+
+  float fadeAt = 0.75*clamp(uRadius, 0.02, 1.0);
+  vec4 acc = vec4(0.0);
+  for (int j = 0; j < 4; j++){
+    vec2 r = s - burstOf(base, j);
+    vec4 fv = fieldAt(r, dx, dy);
+    r = newton(r, s, mat2(1.0) + burstSlope(dx, dy, j), r + burstOf(fv, j) - s);
+    ivec2 c0 = ivec2(floor(r/cell - 0.5));
+    for (int oy = 0; oy < 2; oy++) for (int ox = 0; ox < 2; ox++){
+      ivec2 c = c0 + ivec2(ox, oy);
+      uint h = cellHash(c);
+      if (int(h % 4u) != j) continue;
+      vec2 rest = (vec2(c) + 0.5)*cell;
+      if (abs(rest.x) > 0.5*aspect || abs(rest.y) > 0.5) continue;
+      vec4 f = fieldAt(rest, dx, dy);
+      vec2 moved = burstOf(f, j);
+      vec2 d = s - rest - moved;
+      if (max(abs(d.x), abs(d.y)) > 1.05*cell + px) continue;
+      float shown = smoothstep(solidFrom, solidTo, length(f.xy));
+      if (shown <= 0.0) continue;
+      float far = smoothstep(0.0, fadeAt, length(moved));
+      float spread = smoothstep(0.0, 2.0*cell, length(moved));
+      float jitter = float((h >> 8) & 255u)/255.0;
+      float ext = 0.5*cell*(1.0 - 0.28*shown*jitter)*(1.0 + 0.3*spread)*(1.0 - 0.5*uFade*far);
+      float cv = cover(d, ext, px);
+      if (cv <= 0.0) continue;
+      vec4 col = texture(uInput, rest/ax + 0.5);
+      if (col.a < 0.004) continue;
+      vec3 rgb = col.rgb/col.a;
+      rgb *= 1.0 + 0.22*shown*(float((h >> 16) & 255u)/255.0 - 0.5);
+      float lit = smoothstep(0.0, 0.03, length(moved));
+      rgb = mix(rgb, uGlowColor, clamp(uGlow, 0.0, 1.0)*lit*step(0.5, dot(rgb, vec3(0.299, 0.587, 0.114))));   // moving dots take the accent
+      float alpha = col.a*cv*shown*(1.0 - uFade*far*0.85);
+      acc += (1.0 - acc.a)*vec4(rgb*alpha, alpha);
+    }
+  }
+  acc += (1.0 - acc.a)*texture(uInput, vUv)*(1.0 - gone);
+  outColor = acc;
+}`;
+
+const OUT_FS = `#version 300 es
+precision highp float;
+uniform sampler2D uInput; uniform vec3 uBg;
+in vec2 vUv; out vec4 outColor;
+void main(){ vec4 c = texture(uInput, vUv); outColor = vec4(c.rgb + uBg*(1.0 - c.a), 1.0); }`;
+
+/* =================================================================== matrices (column-major) */
+const rad = d => d * Math.PI / 180;
+const mul = (a, b) => {
+  const o = new Array(16).fill(0);
+  for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) o[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+  return o;
+};
+const chain = (...ms) => ms.reduce((a, b) => mul(a, b));
+const Rx = a => { const c = Math.cos(rad(a)), s = Math.sin(rad(a)); return [1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1]; };
+const Ry = a => { const c = Math.cos(rad(a)), s = Math.sin(rad(a)); return [c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1]; };
+const Sc = (x, y, z) => [x,0,0,0, 0,y,0,0, 0,0,z,0, 0,0,0,1];
+function normalMatrix(m) {           // inverse-transpose of the upper 3x3
+  const a00 = m[0], a01 = m[1], a02 = m[2], a10 = m[4], a11 = m[5], a12 = m[6], a20 = m[8], a21 = m[9], a22 = m[10];
+  const b01 = a22 * a11 - a12 * a21, b11 = -a22 * a10 + a12 * a20, b21 = a21 * a10 - a11 * a20;
+  const id = 1 / (a00 * b01 + a01 * b11 + a02 * b21);
+  const inv = [b01, -a22 * a01 + a02 * a21, a12 * a01 - a02 * a11,
+               b11,  a22 * a00 - a02 * a20, -a12 * a00 + a02 * a10,
+               b21, -a21 * a00 + a01 * a20,  a11 * a00 - a01 * a10].map(v => v * id);
+  return [inv[0], inv[3], inv[6], inv[1], inv[4], inv[7], inv[2], inv[5], inv[8]];
+}
+
+/* =================================================================== GLB reader + mesh prep */
+function parseGLB(buf) {
+  const dv = new DataView(buf);
+  if (dv.getUint32(0, true) !== 0x46546C67) throw new Error('Not a GLB file');
+  const jsonLen = dv.getUint32(12, true);
+  const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, jsonLen)));
+  const binStart = 20 + jsonLen + 8;
+  const SIZE = { 5120: 1, 5121: 1, 5122: 2, 5123: 2, 5125: 4, 5126: 4 };
+  const read = (index, comps) => {
+    const acc = json.accessors[index], bv = json.bufferViews[acc.bufferView];
+    const size = SIZE[acc.componentType], stride = bv.byteStride || size * comps;
+    const base = binStart + (bv.byteOffset || 0) + (acc.byteOffset || 0);
+    const out = new (acc.componentType === 5126 ? Float32Array : Uint32Array)(acc.count * comps);
+    const get = { 5126: o => dv.getFloat32(o, true), 5125: o => dv.getUint32(o, true), 5123: o => dv.getUint16(o, true), 5121: o => dv.getUint8(o) }[acc.componentType];
+    for (let i = 0; i < acc.count; i++) for (let k = 0; k < comps; k++) out[i * comps + k] = get(base + i * stride + k * size);
+    return out;
+  };
+  const prim = json.meshes[0].primitives[0];
+  const p = read(prim.attributes.POSITION, 3), n = read(prim.attributes.NORMAL, 3), ix = read(prim.indices, 1);
+  const V = p.length / 3;
+
+  // the export faces +x; turn it to face the camera (+z): x' = -z, z' = x
+  for (const a of [p, n]) for (let i = 0; i < V; i++) { const x = a[i * 3], z = a[i * 3 + 2]; a[i * 3] = -z; a[i * 3 + 2] = x; }
+
+  const mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity];
+  for (let i = 0; i < V; i++) for (let k = 0; k < 3; k++) { const v = p[i * 3 + k]; if (v < mn[k]) mn[k] = v; if (v > mx[k]) mx[k] = v; }
+  const ctr = [0, 1, 2].map(k => (mn[k] + mx[k]) / 2);
+  const hw = (mx[0] - mn[0]) / 2, hh = (mx[1] - mn[1]) / 2, m = Math.min(hw, hh), sc = [hw, hh, m];
+
+  const data = new Float32Array(V * 6);
+  for (let i = 0; i < V; i++) {
+    let l = 0;
+    for (let k = 0; k < 3; k++) {
+      data[i * 6 + k] = (p[i * 3 + k] - ctr[k]) / sc[k];
+      const nk = n[i * 3 + k] * sc[k]; data[i * 6 + 3 + k] = nk; l += nk * nk;
+    }
+    l = Math.sqrt(l) || 1;
+    for (let k = 3; k < 6; k++) data[i * 6 + k] /= l;
+  }
+  const idx = V > 65535 ? new Uint32Array(ix) : new Uint16Array(ix);
+  return { data, idx, V, aspect: hw / hh };
+}
+
+// fitBox: posed at rotX -20, rotY 30, distance 4|half|; shrink only if the projection leaves the box
+function fitFactor(data, V, aspect) {
+  const hw = aspect >= 1 ? aspect : 1, hh = aspect >= 1 ? 1 : 1 / aspect;
+  const D = 4 * Math.hypot(hw, hh, 1);
+  const m = chain(Ry(30), Rx(-20), Sc(hw, hh, 1));
+  let ex = 0, ey = 0;
+  const step = Math.max(1, Math.floor(V / 4096));
+  for (let i = 0; i < V; i += step) {
+    const x = data[i * 6], y = data[i * 6 + 1], z = data[i * 6 + 2];
+    const X = m[0] * x + m[4] * y + m[8] * z, Y = m[1] * x + m[5] * y + m[9] * z, Z = m[2] * x + m[6] * y + m[10] * z;
+    const k = D / (D - Z);
+    ex = Math.max(ex, Math.abs(X * k)); ey = Math.max(ey, Math.abs(Y * k));
+  }
+  return Math.min(1, hw / (ex || 1), hh / (ey || 1));
+}
+
+/* =================================================================== GL state */
+let gl = null, halfOK = false, P = null, tri = null;
+const meshCPU = {}, meshes = {};
+let W = 0, H = 0, T = {}, msaa = null, maxSamples = 4, maxTex = 4096;
+
+function compile(vsSrc, fsSrc) {
+  const prog = gl.createProgram();
+  for (const [type, src] of [[gl.VERTEX_SHADER, vsSrc], [gl.FRAGMENT_SHADER, fsSrc]]) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src); gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS) && !gl.isContextLost()) throw new Error(gl.getShaderInfoLog(sh));
+    gl.attachShader(prog, sh);
+  }
+  gl.bindAttribLocation(prog, 0, 'aPosition');
+  gl.bindAttribLocation(prog, 1, 'aNormal');
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS) && !gl.isContextLost()) throw new Error(gl.getProgramInfoLog(prog));
+  const loc = {};
+  const n = gl.getProgramParameter(prog, gl.ACTIVE_UNIFORMS) || 0;
+  for (let i = 0; i < n; i++) { const u = gl.getActiveUniform(prog, i); loc[u.name.replace(/\[0\]$/, '')] = gl.getUniformLocation(prog, u.name); }
+  return { prog, loc };
+}
+
+// uniform helpers that ignore names the compiler optimised away
+const use = p => (gl.useProgram(p.prog), p);
+const u1 = (p, n, x) => { if (p.loc[n]) gl.uniform1f(p.loc[n], x); };
+const u2 = (p, n, x, y) => { if (p.loc[n]) gl.uniform2f(p.loc[n], x, y); };
+const u3 = (p, n, v) => { if (p.loc[n]) gl.uniform3f(p.loc[n], v[0], v[1], v[2]); };
+const tex = (p, n, unit, t) => { if (!p.loc[n]) return; gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.uniform1i(p.loc[n], unit); };
+
+function makeTarget(w, h, half) {
+  const t = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, half ? gl.RGBA16F : gl.RGBA8, w, h, 0, gl.RGBA, half ? gl.HALF_FLOAT : gl.UNSIGNED_BYTE, null);
+  const f = half ? gl.NEAREST : gl.LINEAR;
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, f);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, f);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  const fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+  if (half) { gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); }
+  return { t, fb, w, h };
+}
+const freeTarget = o => { if (o) { gl.deleteTexture(o.t); gl.deleteFramebuffer(o.fb); if (o.depth) gl.deleteRenderbuffer(o.depth); } };
+
+function initGL() {
+  gl = canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false, premultipliedAlpha: true, preserveDrawingBuffer: false });
+  if (!gl) return false;
+  halfOK = !!(gl.getExtension('EXT_color_buffer_float') || gl.getExtension('EXT_color_buffer_extfloat'));
+  maxSamples = gl.getParameter(gl.MAX_SAMPLES) || 0;
+  maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
+  P = {
+    model: compile(MODEL_VS, MODEL_FS),
+    dither: compile(FS_VERT, DITHER_FS),
+    out: compile(FS_VERT, OUT_FS),
+    burst: halfOK ? compile(FS_VERT, BURST_FS) : null,
+    lag: halfOK ? compile(FS_VERT, LAG_FS) : null,
+    display: halfOK ? compile(FS_VERT, DISPLAY_FS) : null
+  };
+  tri = gl.createVertexArray();
+  gl.bindVertexArray(tri);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  gl.bindVertexArray(null);
+  W = H = 0; T = {}; msaa = null; for (const k in meshes) meshes[k] = null;
+  for (const k in meshCPU) if (meshCPU[k]) uploadMesh(k);
+  return true;
+}
+
+function uploadMesh(name) {
+  const { data, idx, V, aspect, fit } = meshCPU[name];
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 24, 12);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, idx, gl.STATIC_DRAW);
+  gl.bindVertexArray(null);
+  meshes[name] = { vao, count: idx.length, type: V > 65535 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT, aspect, fit };
+}
+
+function resizeTargets() {
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  const dpr = Math.min(devicePixelRatio || 1, opts.dprMax || 2, coarse ? 1.5 : 2);
+  let w = Math.max(1, Math.round(ART_W * K * dpr)), h = Math.max(1, Math.round(ART_H * K * dpr));
+  const cap = Math.min(maxTex, 4096) / Math.max(w, h);
+  if (cap < 1) { w = Math.max(1, Math.floor(w * cap)); h = Math.max(1, Math.floor(h * cap)); }
+  if (w === W && h === H) return;
+  W = w; H = h; canvas.width = W; canvas.height = H;
+
+  for (const k in T) (Array.isArray(T[k]) ? T[k] : [T[k]]).forEach(freeTarget);
+  T = { model: makeTarget(W, H), modelB: makeTarget(W, H), dither: makeTarget(W, H), dis: makeTarget(W, H) };
+  // the scales render straight into their own target with a depth buffer: no shared multisample resolve
+  T.modelB.depth = gl.createRenderbuffer();
+  gl.bindRenderbuffer(gl.RENDERBUFFER, T.modelB.depth);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, W, H);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, T.modelB.fb);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, T.modelB.depth);
+  if (halfOK) {
+    let sw = Math.ceil(W * CFG.dis.quality), sh = Math.ceil(H * CFG.dis.quality);
+    const m = Math.max(sw, sh);
+    if (m > CFG.dis.maxSide) { sw = Math.max(1, Math.floor(sw * CFG.dis.maxSide / m)); sh = Math.max(1, Math.floor(sh * CFG.dis.maxSide / m)); }
+    T.burst = [makeTarget(sw, sh, true), makeTarget(sw, sh, true)];
+    T.lag = [makeTarget(sw, sh, true), makeTarget(sw, sh, true)];
+  }
+
+  if (msaa) { gl.deleteRenderbuffer(msaa.c); gl.deleteRenderbuffer(msaa.d); gl.deleteFramebuffer(msaa.fb); }
+  const samples = Math.min(4, maxSamples);
+  msaa = { fb: gl.createFramebuffer(), c: gl.createRenderbuffer(), d: gl.createRenderbuffer() };
+  gl.bindRenderbuffer(gl.RENDERBUFFER, msaa.c);
+  gl.renderbufferStorageMultisample(gl.RENDERBUFFER, samples, gl.RGBA8, W, H);
+  gl.bindRenderbuffer(gl.RENDERBUFFER, msaa.d);
+  gl.renderbufferStorageMultisample(gl.RENDERBUFFER, samples, gl.DEPTH_COMPONENT24, W, H);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, msaa.fb);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, msaa.c);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, msaa.d);
+}
+
+function fullscreen(dst) {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, dst ? dst.fb : null);
+  gl.viewport(0, 0, dst ? dst.w : W, dst ? dst.h : H);
+  gl.bindVertexArray(tri);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+function common(p, mouse, prev, hover, delta) {
+  use(p);
+  u2(p, 'uResolution', W, H); u1(p, 'uDelta', delta);
+  u2(p, 'uMouse', mouse[0], mouse[1]); u2(p, 'uMousePrev', prev[0], prev[1]); u1(p, 'uHover', hover);
+}
+
+/* =================================================================== pointer */
+let pointer = null, pointerActive = false, lastStep = null, acc = 0;
+let mouseS = [0.5, 0.5], hoverS = 0;
+const onPointer = e => {
+  pointer = [e.clientX, e.clientY];
+  pointerActive = e.pointerType !== 'touch' || e.type === 'pointerdown' || e.buttons > 0;
+};
+addEventListener('pointermove', onPointer, { passive: true });
+addEventListener('pointerdown', onPointer, { passive: true });
+addEventListener('pointerup', e => { if (e.pointerType === 'touch') pointerActive = false; }, { passive: true });
+addEventListener('pointercancel', () => { pointerActive = false; }, { passive: true });
+addEventListener('pointerout', e => { if (!e.relatedTarget) pointerActive = false; }, { passive: true });
+addEventListener('blur', () => { pointerActive = false; });
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const toUV = p => {                                         // pointer -> artboard UV, relative to the sticky layer
+  const r = pin.getBoundingClientRect(), x = p[0] - r.left, y = p[1] - r.top;
+  return [clamp01((x - boardRect.left) / boardRect.width), clamp01(1 - (y - boardRect.top) / boardRect.height)];
+};
+const overHero = p => {
+  const r = pin.getBoundingClientRect();
+  return p[0] >= Math.max(0, r.left) && p[0] <= Math.min(innerWidth, r.right) && p[1] >= Math.max(0, r.top) && p[1] <= Math.min(innerHeight, r.bottom);
+};
+const ease = (cur, target, tau, dt) => dt > 0 ? target + (cur - target) * Math.exp(-dt / tau) : cur;
+
+/* =================================================================== frame */
+let time = 0, prevNow = 0, dirty = true, running = false, lost = false, heroVisible = true;
+let spinCur = opts.autoSpin ? CFG.spinStart : opts.poses[0].spin;
+if ('IntersectionObserver' in window) new IntersectionObserver(e => { heroVisible = e[0].isIntersecting; prevNow = 0; }).observe(stage);
+
+/* the hero spins; once the page scrolls on, the spin stops and each object turns to its pose */
+let morph = 0, pair = CFG.sequence[0];
+function updateStage(dt) {
+  placeBoard();
+  pair = CFG.sequence[Math.min(Math.floor(stageF), CFG.sequence.length - 1)];   // which two objects are in play
+  morph = smooth(clamp01((stageF - pair.at[0]) / (pair.at[1] - pair.at[0])));
+  if (reduced) { spinCur = stageF === 0 && opts.autoSpin ? CFG.spinStart : spinTarget(stageF); return; }
+  if (opts.autoSpin && stageF < 0.02) spinCur += 360 / CFG.spinPeriod * dt;
+  else spinCur += angleTo(spinCur, spinTarget(stageF)) * (1 - Math.exp(-dt / 0.35));
+  spinCur = ((spinCur % 360) + 360) % 360;
+}
+
+function drawModel(mesh, b, target) {
+  const direct = !!target.depth;                          // own depth buffer: draw in place, no resolve
+  gl.bindFramebuffer(gl.FRAMEBUFFER, direct ? target.fb : msaa.fb);
+  gl.viewport(0, 0, W, H);
+  gl.clearColor(0, 0, 0, 0); gl.clearDepth(1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  if (mesh) {
+    const px = W / ART_W, bw = b.h * mesh.aspect;
+    const c = bw / 2 * px, l = b.h / 2 * px, u = Math.min(bw, b.h) / 2 * px, d = mesh.fit;
+    const radius = Math.hypot(c, l, u) * d, D = 4 * radius;
+    const cx = b.cx * px, cy = H - (b.top + b.h / 2) * px;
+    const spin = spinCur;
+    const M = chain(Sc(d, d, d), Ry(CFG.rotY), Rx(CFG.rotX), Ry(spin), Sc(c, l, u));
+    const p = use(P.model), L = p.loc, lk = CFG.look;
+    gl.uniformMatrix4fv(L.uModel, false, M);
+    gl.uniformMatrix3fv(L.uNormalMatrix, false, normalMatrix(M));
+    u3(p, 'uStretch', [c / u, l / u, 1]); u1(p, 'uDistance', D);
+    u2(p, 'uCenter', cx, cy); u2(p, 'uSize', W, H);
+    u1(p, 'uFlowTime', (reduced ? 0 : time) * lk.flow);
+    if (L.uLookPointer) gl.uniform4f(L.uLookPointer, mouseS[0] * W - cx, mouseS[1] * H - cy, radius, reduced ? 0 : hoverS);
+    u3(p, 'uTint', lk.tint); u1(p, 'uScale', lk.scale); u1(p, 'uSharpness', lk.sharp);
+    u1(p, 'uBrightness', lk.bright); u1(p, 'uDepth', lk.depth); u1(p, 'uContrast', lk.contrast);
+    u1(p, 'uRoughness', lk.rough); u1(p, 'uCursor', lk.cursor);
+    gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE);
+    gl.bindVertexArray(mesh.vao);
+    gl.drawElements(gl.TRIANGLES, mesh.count, mesh.type, 0);
+    gl.disable(gl.DEPTH_TEST);
+  }
+  if (direct) { gl.bindFramebuffer(gl.FRAMEBUFFER, null); return; }
+  gl.bindFramebuffer(gl.READ_FRAMEBUFFER, msaa.fb);
+  gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, target.fb);
+  gl.blitFramebuffer(0, 0, W, H, 0, 0, W, H, gl.COLOR_BUFFER_BIT, gl.NEAREST);
+  gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
+  gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+}
+
+function simulate(dt, raw, hovering, stir) {
+  const steps = Math.min(Math.floor((acc + dt) / STEP), MAX_STEPS);
+  acc = Math.max(0, acc + dt - Math.floor((acc + dt) / STEP) * STEP);
+  if (!hovering) lastStep = null;                        // re-entering never kicks
+  const from = lastStep || raw, d = CFG.dis;
+  const hover = hovering && lastStep ? 1 : 0;
+  for (let i = 0; i < steps; i++) {
+    const a = [from[0] + (raw[0] - from[0]) * i / steps, from[1] + (raw[1] - from[1]) * i / steps];
+    const b = [from[0] + (raw[0] - from[0]) * (i + 1) / steps, from[1] + (raw[1] - from[1]) * (i + 1) / steps];
+
+    const bp = P.burst; common(bp, b, a, hover, STEP);
+    u1(bp, 'uBurst', d.burst); u1(bp, 'uRadius', d.radius); u1(bp, 'uRecovery', d.recovery);
+    u1(bp, 'uTurbulence', d.turb); u1(bp, 'uDrift', d.drift); u1(bp, 'uWind', d.wind); u1(bp, 'uStir', stir);
+    tex(bp, 'uPrevious', 1, T.burst[0].t);
+    fullscreen(T.burst[1]); T.burst.reverse();
+
+    const lp = P.lag; common(lp, b, a, hover, STEP);
+    tex(lp, 'uBurstTex', 2, T.burst[0].t);
+    tex(lp, 'uPrevious', 1, T.lag[0].t);
+    fullscreen(T.lag[1]); T.lag.reverse();
+  }
+  if (steps > 0 && hovering) lastStep = raw;
+  // unbind field textures so nothing is both sampled and rendered to next frame
+  for (const unit of [1, 2, 3]) { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, null); }
+}
+
+function render(dt) {
+  resizeTargets();
+  updateStage(dt);
+  const hovering = !reduced && !!pointer && pointerActive && overHero(pointer);
+  const raw = pointer ? toUV(pointer) : [0.5, 0.5];
+  if (pointer) mouseS = [ease(mouseS[0], raw[0], 0.12, dt), ease(mouseS[1], raw[1], 0.12, dt)];
+  hoverS = ease(hoverS, hovering ? 1 : 0, 0.25, dt);
+
+  // render only what is on screen: the bust, the scales, or both while one turns into the other
+  if (morph < 1) drawModel(meshes[pair.from], CFG.boxes[pair.from], T.model);
+  if (morph > 0) drawModel(meshes[pair.to], CFG.boxes[pair.to], T.modelB);
+
+  const dp = P.dither; common(dp, mouseS, mouseS, hoverS, dt);
+  u1(dp, 'uSize', CFG.ditherSize); u3(dp, 'uDark', BG); u3(dp, 'uLight', DOT); u1(dp, 'uMorph', morph);
+  tex(dp, 'uInput', 0, morph < 1 ? T.model.t : T.modelB.t);
+  tex(dp, 'uInputB', 4, morph > 0 ? T.modelB.t : T.model.t);
+  fullscreen(T.dither);
+
+  let group = T.dither.t;
+  if (halfOK && !reduced) {
+    simulate(dt, raw, hovering, 4 * morph * (1 - morph));
+    const sp = P.display, d = CFG.dis; common(sp, mouseS, mouseS, hoverS, dt);
+    u1(sp, 'uSize', d.size); u1(sp, 'uRadius', d.radius); u1(sp, 'uGlow', d.glow); u1(sp, 'uFade', d.fade); u3(sp, 'uGlowColor', d.glowColor);
+    tex(sp, 'uInput', 0, T.dither.t);
+    tex(sp, 'uLagTex', 3, T.lag[0].t);
+    fullscreen(T.dis);
+    group = T.dis.t;
+  }
+
+  const op = use(P.out); u3(op, 'uBg', BG);
+  tex(op, 'uInput', 0, group);
+  fullscreen(null);
+}
+
+function loop(now) {
+  if (lost) { running = false; return; }
+  requestAnimationFrame(loop);
+  const dt = prevNow ? Math.min((now - prevNow) / 1000, 0.1) : 0;
+  prevNow = now;
+  if (document.hidden || !heroVisible) return;           // paused while the stage is scrolled away
+  time += dt;
+  render(dt);
+}
+function start() {
+  if (reduced) { requestStill(); return; }
+  if (!running) { running = true; prevNow = 0; requestAnimationFrame(loop); }
+}
+let stillQueued = false;
+function requestStill() {                     // reduced motion: one frame at time 0, redrawn on demand
+  if (stillQueued || lost) return;
+  stillQueued = true;
+  requestAnimationFrame(() => { stillQueued = false; time = 0; render(0); });
+}
+
+/* =================================================================== lifecycle */
+addEventListener('resize', () => { layout(); if (reduced) requestStill(); });
+addEventListener('load', () => layout());
+if ('ResizeObserver' in window) new ResizeObserver(() => layout()).observe(document.body);   // fonts and content can shift the scenes
+let lastStill = 0;
+addEventListener('scroll', () => {                         // reduced motion has no loop: redraw when the section in view changes
+  if (!reduced) return;
+  const f = Math.round(stagePos());
+  if (f !== lastStill) { lastStill = f; requestStill(); }
+}, { passive: true });
+document.addEventListener('visibilitychange', () => { prevNow = 0; });
+
+canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; });
+canvas.addEventListener('webglcontextrestored', () => {
+  lost = false;
+  try { initGL(); start(); } catch (err) { console.error(err); }
+});
+
+const MODEL_FILES = {"ear-glb": "assets/models/ear.glb", "magnifier-glb": "assets/models/magnifying-glass.glb", "knight-glb": "assets/models/chess-knight.glb", "stamp-glb": "assets/models/approval-stamp.glb", "gavel-glb": "assets/models/gavel.glb", "scales-glb": "assets/models/scales-of-justice.glb", "bust-glb": "assets/models/bust.glb"};
+async function embeddedMesh(id) {                          // the site's own models, from assets/models
+  const res = await fetch(MODEL_FILES[id]);
+  if (!res.ok) throw new Error('Model not found: ' + MODEL_FILES[id]);
+  return res.arrayBuffer();
+}
+async function meshBuffer(id) {
+  if (MESH_URL) {
+    try {
+      const res = await fetch(MESH_URL, { mode: 'cors' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.arrayBuffer();
+    } catch (err) { console.warn('Logios: external mesh unavailable, using the built-in bust', err); }
+  }
+  return embeddedMesh(id);
+}
+function prepare(name, buffer) {
+  const parsed = parseGLB(buffer);
+  meshCPU[name] = { ...parsed, fit: fitFactor(parsed.data, parsed.V, parsed.aspect) };
+  ASPECT[name] = parsed.aspect;
+  if (gl && !lost) uploadMesh(name);
+}
+async function loadMesh() {
+  const entries = Object.entries(opts.objects);              // download all models in parallel
+  const buffers = await Promise.all(entries.map(([name, id]) => MESH_URL && name === opts.urlObject ? meshBuffer(id) : embeddedMesh(id)));
+  entries.forEach(([name], i) => prepare(name, buffers[i]));
+  layout();                                               // poses depend on each object's proportions
+  if (reduced) requestStill();
+}
+
+try {
+  if (!initGL()) return;                      // no WebGL2: the copy still shows on orange
+} catch (err) { console.error(err); return; }
+start();
+loadMesh().catch(err => console.error('Aequitas: could not load a 3D object', err));
+}
+</script>
+
+<script>
+/* hero stage: the bust spins, then becomes the scales of justice (first scene) and a gavel (second scene) */
+mountStage({
+  stage: document.getElementById('stage'), pin: document.getElementById('pin'), board: document.getElementById('board'),
+  canvas: document.getElementById('gl'), ui: document.getElementById('ui'), scenes: [...document.querySelectorAll('.scene')],
+  objects: { bust: 'bust-glb', scales: 'scales-glb', gavel: 'gavel-glb' }, urlObject: 'bust', meshUrl: '',
+  poseObj: ['bust', 'scales', 'gavel'], aspect: { bust: 0.63, scales: 1.2, gavel: 1.0 },
+  boxes: { bust: { cx: 765, top: 80, h: 1050 }, scales: { cx: 765, top: 140, h: 690 }, gavel: { cx: 765, top: 140, h: 690 } },
+  sequence: [{ from: 'bust', to: 'scales', at: [0.25, 0.85] }, { from: 'scales', to: 'gavel', at: [1.25, 1.85] }],
+  poses: [null, { x: 0.72, s: 0.92, spin: -26 }, { x: 0.28, s: 0.92, spin: 20 }],
+  posesPortrait: [null, { x: 0.50, s: 0.86, spin: -26 }, { x: 0.50, s: 0.86, spin: 20 }],
+  heroPose: true, autoSpin: true, spinStart: -30
+});
+
+/* how we work: ear -> magnifying glass -> chess knight -> approval stamp, turning as the steps slide past */
+{
+  const hs = document.getElementById('approach'), hsPin = document.getElementById('hs-pin');
+  const POSE = (spin, x) => ({ x, s: 0.92, spin });
+  mountStage({
+    stage: hs, pin: hsPin, board: document.getElementById('hs-board'), canvas: document.getElementById('hs-gl'),
+    objects: { ear: 'ear-glb', magnifier: 'magnifier-glb', knight: 'knight-glb', stamp: 'stamp-glb' },
+    poseObj: ['ear', 'magnifier', 'knight', 'stamp'], aspect: { ear: 0.6, magnifier: 0.94, knight: 0.62, stamp: 1.3 },
+    boxes: { ear: { cx: 765, top: 110, h: 720 }, magnifier: { cx: 765, top: 150, h: 660 },
+             knight: { cx: 765, top: 90, h: 760 }, stamp: { cx: 765, top: 230, h: 540 } },
+    sequence: [{ from: 'ear', to: 'magnifier', at: [0.35, 0.65] }, { from: 'magnifier', to: 'knight', at: [1.35, 1.65] },
+               { from: 'knight', to: 'stamp', at: [2.35, 2.65] }],
+    /* each object faces you squarely (-16 is straight on) when its step is centred */
+    poses: [POSE(-34, 0.73), POSE(-16, 0.73), POSE(20, 0.73), POSE(-22, 0.73)],
+    posesPortrait: [POSE(-34, 0.5), POSE(-16, 0.5), POSE(20, 0.5), POSE(-22, 0.5)].map(p => ({ ...p, s: 0.86 })),
+    progress: () => { const r = hs.getBoundingClientRect(); return Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - hsPin.clientHeight))); },
+    linearSpin: true, dprMax: 1.75
+  });
+}
+</script>
+<script>
+/* sticky bar after the hero, and the enquiry form */
+{
+  const hero = document.getElementById('top'), bar = document.getElementById('bar');
+  const links = bar.querySelectorAll('a');
+  let shown = false, queued = false;
+  const check = () => {
+    queued = false;
+    const show = hero.getBoundingClientRect().bottom < 64;
+    if (show === shown) return;
+    shown = show;
+    bar.classList.toggle('show', show);
+    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+    links.forEach(a => a.tabIndex = show ? 0 : -1);
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(check); } }, { passive: true });
+  addEventListener('resize', check);
+  check();
+
+  // how we work: slide the four steps sideways as the page scrolls through the pinned section
+  const hs = document.getElementById('approach'), hsPin = document.getElementById('hs-pin');
+  const track = document.getElementById('hs-track'), steps = [...document.querySelectorAll('.hs-steps li')];
+  const panels = [...document.querySelectorAll('.hs-panel')];
+  let hsQueued = false;
+  const slide = () => {
+    hsQueued = false;
+    const r = hs.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - hsPin.clientHeight)));
+    const f = p * (steps.length - 1);
+    track.style.transform = `translate3d(${-f * 100 / steps.length}%,0,0)`;
+    steps.forEach((li, i) => { li.classList.toggle('on', i <= Math.round(f)); li.style.setProperty('--fill', Math.min(1, Math.max(0, f - i + 1))); });
+    panels.forEach((el, i) => el.classList.toggle('active', Math.abs(f - i) < 0.5));
+  };
+  addEventListener('scroll', () => { if (!hsQueued) { hsQueued = true; requestAnimationFrame(slide); } }, { passive: true });
+  addEventListener('resize', slide);
+  slide();
+
+  // practice areas: the shared card follows the pointer down the list and wipes to each row's picture
+  {
+    const pa = document.getElementById('pa'), card = document.getElementById('pa-float');
+    const list = pa.querySelector('.rows'), rows = [...list.querySelectorAll('a')], imgs = [...card.querySelectorAll('img')];
+    const num = card.querySelector('.pa-num'), label = card.querySelector('.pa-name');
+    rows.forEach((a, i) => { const t = a.querySelector('.pa-thumb'); if (t) t.src = imgs[i].src; });
+    const fine = matchMedia('(hover: hover) and (pointer: fine)'), wide = matchMedia('(min-width: 901px)');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let cur = -1, active = false, x = 0, y = 0, r = 0, vy = 0, clientY = 0, raf = 0, rowFocus = null;
+    const W = () => card.offsetWidth, H = () => card.offsetHeight;
+    const target = () => {
+      const pr = pa.getBoundingClientRect(), a = rows[Math.max(cur, 0)], s = a.querySelector('.pa-slot').getBoundingClientRect();
+      const tx = s.left + s.width / 2 - pr.left - W() / 2;
+      let ty = (rowFocus ? rowFocus.getBoundingClientRect().top + rowFocus.offsetHeight / 2 : clientY) - pr.top - H() / 2;
+      ty = Math.min(Math.max(ty, 0), list.offsetHeight - H());            // stays within the list, never over the heading
+      return [tx, ty];
+    };
+    const frame = () => {
+      raf = 0;
+      if (!active && !card.classList.contains('show')) return;
+      const [tx, ty] = target();
+      const k = still ? 1 : 0.14, ny = y + (ty - y) * k;
+      vy = ny - y; x += (tx - x) * k; y = ny;
+      r += ((still ? 0 : Math.max(-7, Math.min(7, vy * 0.35))) - r) * 0.12;
+      card.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(${r.toFixed(2)}deg)`;
+      if (active || Math.abs(r) > 0.05 || Math.abs(ty - y) > 0.5) raf = requestAnimationFrame(frame);
+    };
+    const loop = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const swap = i => {
+      if (i === cur) return;
+      const first = cur < 0, down = i > cur;
+      imgs.forEach((im, k) => {
+        if (k === i) {
+          im.style.transition = 'none';
+          im.style.clipPath = first ? 'inset(0 0 0 0)' : down ? 'inset(100% 0 0 0)' : 'inset(0 0 100% 0)';
+          im.style.zIndex = 2; void im.offsetWidth; im.style.transition = '';
+          im.style.clipPath = 'inset(0 0 0 0)'; im.classList.add('on');
+        } else if (k === cur) {
+          im.style.zIndex = 1; im.style.clipPath = down ? 'inset(0 0 100% 0)' : 'inset(100% 0 0 0)'; im.classList.remove('on');
+        } else { im.style.zIndex = 0; im.classList.remove('on'); }
+      });
+      rows.forEach((a, k) => a.classList.toggle('cur', k === i));
+      num.textContent = String(i + 1).padStart(2, '0');
+      label.textContent = rows[i].querySelector('h3').textContent;
+      cur = i;
+    };
+    const show = i => {
+      if (!(fine.matches && wide.matches)) return;
+      const appearing = !active && !card.classList.contains('show');
+      active = true; swap(i); list.classList.add('dim'); card.classList.add('show');
+      if (appearing) { const [tx, ty] = target(); x = tx; y = ty; r = 0; card.style.transform = `translate3d(${x}px,${y}px,0)`; }
+      loop();
+    };
+    const hide = () => {
+      active = false; rowFocus = null; list.classList.remove('dim'); card.classList.remove('show');
+      rows.forEach(a => a.classList.remove('cur'));
+      setTimeout(() => { if (!active) { cur = -1; imgs.forEach(im => { im.style.clipPath = ''; im.classList.remove('on'); }); } }, 700);
+      loop();
+    };
+    rows.forEach((a, i) => {
+      a.addEventListener('pointerenter', e => { rowFocus = null; clientY = e.clientY; show(i); });
+      a.addEventListener('focus', () => { rowFocus = a; show(i); });
+      a.addEventListener('blur', () => { if (rowFocus === a) hide(); });
+    });
+    list.addEventListener('pointermove', e => { clientY = e.clientY; if (active) loop(); });
+    list.addEventListener('pointerleave', () => { if (!rowFocus) hide(); });
+    addEventListener('scroll', () => { if (active) loop(); }, { passive: true });
+  }
+
+  const form = document.getElementById('enquiry'), status = document.getElementById('status');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); status.textContent = 'Please complete the highlighted fields.'; return; }
+    const name = (form.elements.name.value || '').trim().split(/\s+/)[0];
+    const button = form.querySelector('.submit');
+    button.disabled = true; status.textContent = 'Sending…';
+    // posts to Netlify Forms on the live site; anywhere else the request fails and says so
+    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                 body: new URLSearchParams(new FormData(form)).toString() })
+      .then(r => {
+        if (!r.ok) throw new Error(r.status);
+        form.reset();
+        status.textContent = `Thank you, ${name}. Your enquiry has reached us, and a partner will reply within 24 hours on working days.`;
+      })
+      .catch(() => { status.textContent = 'Sorry, your enquiry couldn’t be sent. Please email hello@aequitas.law or call us instead.'; })
+      .finally(() => { button.disabled = false; });
+  });
+}
+</script>
+<script>
+/* motion: words rise out of masks, sections reveal as they enter, the hero plays in, stats count up,
+   buttons lean towards the pointer, and a hairline tracks reading progress. Reduced motion: none of it. */
+{
+  window.__motion = true;
+  const root = document.documentElement, motion = root.classList.contains('motion');
+
+  // split headings into masked words (text nodes only, so <br> and line breaks survive)
+  const split = el => {
+    let i = 0;
+    const walk = node => {
+      for (const n of [...node.childNodes]) {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const part of n.textContent.split(/(\s+)/)) {
+            if (!part) continue;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); continue; }
+            const w = document.createElement('span'), inner = document.createElement('span');
+            w.className = 'w'; inner.textContent = part; inner.style.setProperty('--i', i++);
+            w.appendChild(inner); frag.appendChild(w);
+          }
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+      }
+    };
+    walk(el);
+  };
+  document.querySelectorAll('[data-split]').forEach(split);
+
+  // footer wordmark, letter by letter
+  const wm = document.querySelector('.wordmark');
+  if (wm && !wm.querySelector('svg')) {
+    const text = wm.textContent; wm.textContent = '';
+    [...text].forEach((ch, i) => {
+      const o = document.createElement('span'), c = document.createElement('span');
+      o.className = 'cw'; c.className = 'c'; c.textContent = ch; c.style.setProperty('--i', i);
+      o.appendChild(c); wm.appendChild(o);
+    });
+  }
+
+  // staggers for repeated items
+  document.querySelectorAll('.rows li').forEach((el, i) => { el.setAttribute('data-reveal', ''); el.style.setProperty('--i', i); });
+  document.querySelectorAll('.post').forEach((el, i) => { el.setAttribute('data-reveal', ''); el.style.setProperty('--i', i); });
+  document.querySelectorAll('.person').forEach((el, i) => el.style.setProperty('--i', i));
+  document.querySelectorAll('.points li').forEach((el, i) => el.style.setProperty('--d', (0.35 + i * 0.08) + 's'));
+
+  // reveal on entry, once
+  const targets = [...document.querySelectorAll('[data-split], [data-reveal], .person, .wordmark, .label, .points li')]
+    .filter(el => !el.closest('.hs-panel') && !el.closest('.ui'));
+  if (motion && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
+    targets.forEach(t => io.observe(t));
+  } else targets.forEach(t => t.classList.add('in'));
+
+  // hero intro: nav drops in, headline rises, stats count up
+  const counters = () => document.querySelectorAll('.ui .stat b').forEach((b, k) => {
+    const m = b.textContent.match(/^([\d,]+)(.*)$/);
+    if (!m || !motion) return;
+    const end = +m[1].replace(/,/g, ''), rest = m[2], fmt = n => n.toLocaleString('en-US');
+    const t0 = performance.now() + 1050 + k * 120, dur = 1700;
+    b.textContent = fmt(0) + rest;
+    const tick = now => {
+      const t = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - t, 4);
+      b.textContent = fmt(Math.round(end * e)) + rest;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  const intro = () => {
+    root.classList.add('loaded');
+    document.querySelectorAll('.ui [data-split]').forEach(el => el.classList.add('in'));
+    counters();
+  };
+  Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1200))])
+    .then(() => requestAnimationFrame(() => requestAnimationFrame(intro)));
+
+  // reading progress
+  const bar = document.getElementById('progress');
+  let pq = false;
+  const progress = () => {
+    pq = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+  };
+  addEventListener('scroll', () => { if (!pq) { pq = true; requestAnimationFrame(progress); } }, { passive: true });
+  addEventListener('resize', progress);
+  progress();
+
+  // magnetic buttons (fine pointers only), eased towards the pointer and back
+  if (motion && matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.btn').forEach(el => {
+      let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+      const step = () => {
+        x += (tx - x) * 0.18; y += (ty - y) * 0.18;
+        el.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
+        raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.05 ? requestAnimationFrame(step) : 0;
+        if (!raf && !tx && !ty) el.style.translate = '';
+      };
+      const go = () => { if (!raf) raf = requestAnimationFrame(step); };
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        tx = (e.clientX - r.left - r.width / 2) * 0.22; ty = (e.clientY - r.top - r.height / 2) * 0.35; go();
+      });
+      el.addEventListener('pointerleave', () => { tx = ty = 0; go(); });
+    });
+  }
+}
+</script>
+</body>
+</html>
