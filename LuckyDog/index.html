@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucky Dog Mobile Groomers</title>
+<meta name="description" content="Lucky Dog Mobile Groomers homepage concept: mobile dog grooming brought to your doorstep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,800;6..12,900&amp;family=Figtree:wght@400;500;700&amp;display=swap">
+<style>
+body{margin:0;background:#FFFFFF}
+.ld{--ink:#060000;--or:#FFAC19;--or6:#E89D17;--or4:#FFBD47;--or3:#FFC765;--or2:#FFD995;--or1:#FFE5B8;--cream:#FFF7E8;--grey:#6F6D6D;font-family:'Figtree',Arial,sans-serif;color:#060000;background:#FFFFFF;overflow-x:hidden}
+.ld *{box-sizing:border-box}
+.ld h1,.ld h2,.ld h3,.ld p{margin:0}
+.ld a{color:inherit;text-decoration:none}
+.ld img{display:block;max-width:100%}
+.hd{font-family:'Nunito Sans','Avenir',Arial,sans-serif;font-weight:900;letter-spacing:-0.04em}
+.wrap{max-width:1232px;margin:0 auto;padding:0 16px}
+.band{position:relative}
+.wave{display:block;width:100%;height:42px;margin-bottom:-1px}
+.lead{font-size:18px;line-height:27px;letter-spacing:-0.02em;font-weight:500}
+.body{font-size:16px;line-height:24px;letter-spacing:-0.02em;font-weight:500}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:12px 32px;border-radius:500px;border:1px solid #060000;font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:20px;line-height:28px;white-space:nowrap;transition:transform .2s ease,box-shadow .2s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #060000}
+.ld .btn-or{background:#FFAC19;color:#060000}
+.ld .btn-ink{background:#060000;color:#FFFFFF}
+.hero-band{background:#FFFFFF url(assets/images/hero-bg.webp) center top/cover no-repeat}
+.ld .paws.paws{background-image:url(assets/images/paws.svg);background-size:300px 300px}
+.ears{position:absolute;top:-38px;left:50%;transform:translateX(-50%);width:212px;height:77px;z-index:2}
+.dogs-wrap{position:relative;width:100%;max-width:1076px;margin-top:32px}
+.bubbles{position:absolute;left:6.4%;top:2%;width:94.2%;height:auto}
+.sec-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;max-width:790px;margin:0 auto}
+.sec-head h2{font-size:clamp(32px,4.2vw,49px);line-height:1.14}
+.badge{height:auto;width:auto;max-height:96px;margin-bottom:-4px}
+/* header */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:33px 0}
+.nav-links{display:flex;align-items:center;gap:24px;font-size:18px;font-weight:500;letter-spacing:-0.02em}
+.nav-links a{padding:8px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{border-color:#FFAC19}
+.burger{display:none;width:48px;height:48px;border-radius:14px;border:1px solid #060000;background:#FFAC19;align-items:center;justify-content:center;cursor:pointer}
+.mob-menu{display:none}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:24px;padding:20px 0 60px}
+.hero-txt{position:relative;padding-top:70px}
+.hero-txt .bone{position:absolute;top:0;left:-42px;width:166px;height:88px}
+.bone-in{position:absolute;inset:0;transform:rotate(-9.5deg);transform-origin:50% 50%}
+.bone-in svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.bone-stars{position:absolute;left:50%;top:13px;transform:translateX(-50%);background:#FFAC19;border:1.2px solid #060000;border-radius:4px;font-size:9px;line-height:1;padding:2px 7px;letter-spacing:1.5px;color:#060000;white-space:nowrap}
+.bone-txt{position:absolute;left:0;right:0;top:31px;text-align:center;font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:23px;line-height:26px;letter-spacing:-0.02em;color:#060000;white-space:nowrap}
+.hero h1{font-size:clamp(40px,5.2vw,61px);line-height:1;letter-spacing:-0.04em}
+.cta-paw{padding:10px 11px 10px 40px;gap:16px;min-height:85px}
+.cta-paw img{width:63px;height:63px}
+.proof{display:flex;align-items:center;gap:20px;margin-top:16px}
+.proof b{font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:25px;line-height:32px;color:#A86A00;letter-spacing:-0.04em;display:block}
+/* reviews */
+.rev-row{display:flex;align-items:center;gap:35px;margin-top:24px}
+.arrow{flex:none;width:46px;height:46px;border-radius:10px;border:2px solid #FFC765;background:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.arrow:hover{background:#FFE5B8}
+.rev-track{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:35px;min-width:0}
+.rcard{background:#FFFFFF;border:5px solid #FFC765;border-radius:40px;padding:28px 24px 30px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;min-height:362px}
+.rcard h3{font-family:'Nunito Sans',Arial,sans-serif;font-weight:800;font-size:20px;line-height:28px}
+.rcard .date{color:#6F6D6D}
+.rbody{display:flex;gap:13px;align-items:flex-start}
+.rbody img{width:102px;height:102px;border-radius:12px;object-fit:cover;flex:none}
+/* stats */
+.board{position:relative;max-width:1058px;margin:80px auto 0;padding-top:96px}
+.string{position:absolute;top:0;left:7.5%;width:85%;height:130px}
+.board-card{position:relative;background:#FFFFFF;border:6px solid #FFAC19;border-radius:40px;padding:56px 32px 52px;box-shadow:8px 10px 0 #FFE5B8;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;margin-top:24px}
+.stat{display:flex;flex-direction:column;align-items:center;gap:8px}
+.stat img{height:120px;width:auto}
+.cur,.cur-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;display:none}
+.has-cur .cur,.has-cur .cur-dot{display:block}
+.cur{width:40px;height:40px;margin:-20px 0 0 -20px}
+.cur svg{width:100%;height:100%;display:block}
+.cur-dot{width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#060000}
+.has-cur,.has-cur *{cursor:none!important}
+.stat b{font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:clamp(36px,3.6vw,49px);line-height:56px;letter-spacing:-0.04em}
+.stat span{font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:20px;line-height:28px}
+.photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px;margin-top:80px;padding-bottom:96px}
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;align-items:end;margin-top:72px}
+.scard{position:relative;background:#FFFFFF;border:5px solid #FFC765;border-radius:40px;box-shadow:8px 10px 0 #FFD995;padding:36px 28px 36px;display:flex;flex-direction:column;align-items:center;gap:24px;min-height:710px;text-align:center}
+.scard.feat{background:#FFAC19;border-color:#FFE5B8;min-height:752px}
+.scard h3{font-size:39px;line-height:48px;letter-spacing:-0.02em}
+.feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;align-self:stretch;text-align:left}
+.feats li{display:flex;gap:8px;align-items:flex-start;font-weight:700;font-size:16px;line-height:27px}
+.feats li img{width:22px;height:22px;margin-top:2px;flex:none}
+.scard .spacer{flex:1}
+.pawpular{position:absolute;top:-62px;right:-44px;width:124px}
+/* locations */
+.loc-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:32px;align-items:start}
+.loc-col{display:flex;flex-direction:column;gap:16px}
+.state{background:#FFFFFF;border:2px solid #E9E9E9;border-radius:24px;padding:13px 15px}
+.state.open{background:#FFAC19;border:5px solid #FFE5B8;padding:10px 12px}
+.state-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:none;border:0;padding:0;cursor:pointer;text-align:left;font:inherit;color:#060000;min-height:56px}
+.state-btn b{display:block;font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:25px;line-height:32px;letter-spacing:-0.04em}
+.state-btn small{font-size:16px;line-height:24px}
+.chev{width:34px;height:34px;border-radius:50%;background:#FFAC19;display:flex;align-items:center;justify-content:center;flex:none}
+.state.open .chev{background:#FFFFFF}
+.cities{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.city{display:flex;align-items:center;justify-content:space-between;background:#FFFFFF;border-radius:500px;padding:10px 8px;font-size:18px;font-weight:500;min-height:46px}
+.city span{display:flex;align-items:center;gap:6px}
+.city img{width:22px;height:27px;object-fit:contain}
+.go{width:25px;height:25px;border-radius:50%;background:#FFAC19;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px}
+/* steps */
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:40px}
+.dash{position:absolute;top:28px;left:17%;right:17%;border-top:3px dashed #FFC765}
+.step{position:relative;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.num{width:56px;height:56px;border-radius:50%;background:#FFAC19;display:flex;align-items:center;justify-content:center;font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:25px}
+.step h3{font-size:31px;line-height:40px;letter-spacing:-0.04em}
+.step img{width:100%;max-width:260px;height:auto}
+/* promo */
+.promo{position:relative;margin-top:120px}
+.promo .tail{position:absolute;left:-12px;top:-96px;width:72px}
+.promo-card{position:relative;background:#FFAC19;border:6px solid #FFD995;border-radius:40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:24px;padding:0 0 0 72px;overflow:visible}
+.promo-txt{display:flex;flex-direction:column;gap:24px;align-items:flex-start;padding:56px 0}
+.promo-txt h2{font-size:clamp(32px,3.6vw,49px);line-height:1.14}
+.promo-art{align-self:end;margin:-110px -20px -6px 0}
+.promo-art img{width:100%;height:auto}
+.biz{padding:72px 0 96px}
+.btn-row{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;margin-top:8px}
+/* daytona */
+.day{background:#FFAC19 url(assets/images/day-bg.webp) center top/cover no-repeat}
+.reel{position:relative;aspect-ratio:322/474;filter:drop-shadow(0 0 14px rgba(0,0,0,.1))}
+.reel video{position:absolute;left:4%;top:6.1%;width:92%;height:87.8%;object-fit:cover;background:#DDD8D0}
+.ld .reel .reel-frame{position:absolute;inset:0;width:100%;height:100%}
+.hero-vid{width:100%;height:auto;display:block;mix-blend-mode:multiply}
+.day-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;padding:48px 0 0;text-align:center}
+.car{width:100%;max-width:1120px;height:auto;margin:0 0 -4px}
+.day-in .lead{font-size:16px;max-width:790px}
+.car-ph{width:100%;max-width:980px;aspect-ratio:1370/946;max-height:560px;border:3px dashed #060000;border-radius:32px;display:flex;align-items:center;justify-content:center;padding:24px;margin-top:24px;margin-bottom:56px;background:rgba(255,255,255,.35);font-weight:700}
+/* faq */
+.faq{max-width:865px;margin:32px auto 0;display:flex;flex-direction:column;gap:24px}
+.q{border-radius:24px;border:2px solid #FFAC19;background:#FFFFFF;box-shadow:8px 6px 0 #FFD995}
+.q.open{background:#FFAC19;border-color:#FFE5B8}
+.q-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:30px 32px;background:none;border:0;cursor:pointer;text-align:left;font:inherit;color:#060000}
+.q-btn span{font-family:'Nunito Sans',Arial,sans-serif;font-weight:900;font-size:25px;line-height:32px;letter-spacing:-0.04em}
+.pm{width:32px;height:32px;border-radius:16px;background:#FFAC19;display:flex;align-items:center;justify-content:center;flex:none}
+.q.open .pm{background:#060000}
+.a{padding:0 32px 32px}
+/* why */
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 31px;margin-top:32px;padding-bottom:110px}
+.wcard{background:#FFFFFF;border:5px solid #FFAC19;border-radius:40px;padding:46px 30px 40px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;min-height:323px}
+.wcard img{height:84px;width:auto}
+.wcard h3{font-size:25px;line-height:1;letter-spacing:-0.04em;max-width:250px}
+/* experience */
+.exp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:31px;margin-top:40px;padding-bottom:80px}
+.exp img{width:100%;height:auto}
+/* footer */
+.foot{background:#060000 url(assets/images/paws-dark.svg);background-size:420px 420px;color:#FFFFFF}
+.foot-in{display:flex;flex-direction:column;align-items:center;gap:24px;padding:96px 0 0;text-align:center}
+.foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 32px}
+.foot-links a:hover,.legal a:hover{color:#FFAC19}
+.social{display:flex;gap:16px}
+.social a{width:44px;height:44px;border-radius:50%;background:#FFAC19;display:flex;align-items:center;justify-content:center}
+.legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px;width:100%;max-width:644px;font-size:14px;line-height:20px}
+.legal div{display:flex;gap:16px}
+.dogs{width:100%;height:auto}
+@media (max-width:1100px){
+.nav-links{display:none}
+.nav .btn{display:none}
+.burger{display:flex}
+.mob-menu{display:flex;flex-direction:column;gap:4px;background:#FFFFFF;border:2px solid #FFC765;border-radius:24px;padding:16px 20px 20px;margin-bottom:16px;font-size:18px;font-weight:500}
+.mob-menu a{padding:12px 0;border-bottom:1px solid #F0EADF}
+.mob-menu .btn{margin-top:12px;border-bottom:1px solid #060000}
+.hero{grid-template-columns:1fr;gap:8px}
+.hero-txt .bone{left:0}
+.hero-img{max-width:640px;margin:0 auto}
+.rev-track{grid-template-columns:repeat(2,minmax(0,1fr))}
+.rev-track .rcard:nth-child(3){display:none}
+.photos{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.svc-grid{grid-template-columns:1fr;max-width:460px;margin-left:auto;margin-right:auto;gap:48px}
+.scard,.scard.feat{min-height:0}
+.loc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+.promo-card{grid-template-columns:1fr;padding:0 32px}
+.promo-txt{padding:48px 0 8px}
+.promo-art{margin:0 auto -6px;max-width:520px}
+.why{grid-template-columns:repeat(2,minmax(0,1fr))}
+.exp{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+.nav{padding:20px 0}
+.hero-txt{padding-top:64px}
+.bone-in{transform:scale(.8) rotate(-9.5deg);transform-origin:0 0}
+.cta-paw{font-size:18px;padding-left:28px;min-height:72px}
+.cta-paw img{width:52px;height:52px}
+.proof{gap:12px}
+.rev-row{gap:12px}
+.rev-track{grid-template-columns:1fr}
+.rev-track .rcard:nth-child(2){display:none}
+.rcard{min-height:0;border-radius:32px}
+.rbody img{width:84px;height:84px}
+.board{padding-top:72px}
+.string{height:96px}
+.board-card{padding:40px 16px}
+.stats{grid-template-columns:1fr;gap:28px}
+.photos{gap:14px;padding-bottom:64px;margin-top:56px}
+.pawpular{right:-8px;top:-70px;width:108px}
+.loc-cols{grid-template-columns:1fr;gap:16px}
+.steps{grid-template-columns:1fr;gap:56px}
+.dash{display:none}
+.promo{margin-top:96px}
+.promo .tail{display:none}
+.promo-card{padding:0 20px}
+.promo-art{margin:0 -8px -6px}
+.btn{font-size:18px;padding:12px 24px;white-space:normal;text-align:center}
+.q-btn{padding:22px 20px}
+.q-btn span{font-size:20px;line-height:26px}
+.a{padding:0 20px 24px}
+.why{grid-template-columns:1fr;padding-bottom:80px}
+.wcard{min-height:0}
+.exp{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}
+.legal{justify-content:center;text-align:center}
+}
+
+.mob-menu[hidden],.cities[hidden],.q .a[hidden]{display:none!important}
+.state .chev path{stroke:#FFFFFF}
+.state.open .chev path{stroke:#FFAC19}
+.chev svg{transition:transform .3s ease}
+.state.open .chev svg{transform:rotate(180deg)}
+.q.open .pm .v{display:none}
+</style>
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/motion.js" defer></script>
+</head>
+<body>
+<div class="ld">
+<div class="cur" aria-hidden="true"><svg viewBox="0 0 40 40"><g fill="#FFAC19" stroke="#060000" stroke-width="1.6"><path d="M20 19c5 0 9 4.5 9 9.5 0 3.2-2.6 4.7-5.2 4-1.4-.4-2.4-1-3.8-1s-2.4.6-3.8 1c-2.6.7-5.2-.8-5.2-4 0-5 4-9.5 9-9.5z"></path><ellipse cx="9" cy="17" rx="3.2" ry="4.2" transform="rotate(-25 9 17)"></ellipse><ellipse cx="15.5" cy="10.5" rx="3.3" ry="4.5" transform="rotate(-8 15.5 10.5)"></ellipse><ellipse cx="24.5" cy="10.5" rx="3.3" ry="4.5" transform="rotate(8 24.5 10.5)"></ellipse><ellipse cx="31" cy="17" rx="3.2" ry="4.2" transform="rotate(25 31 17)"></ellipse></g></svg></div>
+<div class="cur-dot" aria-hidden="true"></div>
+
+<!-- HEADER + HERO -->
+<section class="band hero-band">
+<div class="wrap">
+<header>
+<nav class="nav" aria-label="Main">
+<a href="#top" aria-label="Lucky Dog Mobile Groomers home"><img src="assets/images/logo.webp" alt="Lucky Dog Mobile Groomers" style="width: 128px; height: 54px"></a>
+<div class="nav-links">
+<a href="#services">Services</a>
+<a href="#why">About</a>
+<a href="#business">Own A Lucky Dog</a>
+<a href="#locations" style="display: flex; align-items: center; gap: 8px">Locations <svg width="18" height="11" viewBox="0 0 21 12" aria-hidden="true"><path d="M2 2l8.5 8L19 2" fill="none" stroke="#060000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+<a href="#">Careers</a>
+</div>
+<a class="btn btn-or" href="#book" style="min-height: 50px; padding: 10px 20px; width: 168px; font-size: 20px">Book Now</a>
+<button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobMenu" id="burger"><svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><path d="M1 2h20M1 9h20M1 16h20" stroke="#060000" stroke-width="2.5" stroke-linecap="round"></path></svg></button>
+</nav>
+<div class="mob-menu" id="mobMenu" hidden>
+<a href="#services">Services</a>
+<a href="#why">About</a>
+<a href="#business">Own A Lucky Dog</a>
+<a href="#locations">Locations</a>
+<a href="#">Careers</a>
+<a class="btn btn-or" href="#book">Book Now</a>
+</div>
+
+</header>
+
+<div class="hero" id="top">
+<div class="hero-txt">
+<div class="bone" role="img" aria-label="Top rated, five stars"><div class="bone-in"><svg viewBox="0 0 166 88" aria-hidden="true"><g fill="#060000"><circle cx="24" cy="28" r="19.5"></circle><circle cx="24" cy="60" r="19.5"></circle><circle cx="142" cy="28" r="19.5"></circle><circle cx="142" cy="60" r="19.5"></circle><rect x="24" y="23.5" width="118" height="41"></rect></g><g fill="#FFFFFF"><circle cx="24" cy="28" r="17"></circle><circle cx="24" cy="60" r="17"></circle><circle cx="142" cy="28" r="17"></circle><circle cx="142" cy="60" r="17"></circle><rect x="24" y="26" width="118" height="36"></rect></g></svg><span class="bone-stars" aria-hidden="true">★★★★★</span><span class="bone-txt" aria-hidden="true">Top Rated</span></div></div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h1 class="hd">Mobile Groomers<br>You Can Trust</h1>
+<p class="lead">Skip the trip and get expert grooming for your pet, right at your doorstep.</p>
+</div>
+<div style="margin-top: 32px">
+<a class="btn btn-or cta-paw" href="#book" id="book">Book a Grooming Session <img src="assets/images/pawbtn.webp" alt=""></a>
+</div>
+<div class="proof">
+<img src="assets/images/avatars.webp" alt="Photos of dogs groomed by Lucky Dog" style="width: 166px; height: auto">
+<div><b>100,000+</b><span class="body">Happy Pups (and Their Humans)</span></div>
+</div>
+</div>
+<div class="hero-img">
+<video class="hero-vid" data-auto="1" src="assets/video/hero.mp4" poster="assets/images/hero-poster.jpg" muted loop playsinline preload="auto" aria-label="Animation: a smiling groomer holding a fluffy Pomeranian beside the yellow Lucky Dog grooming van"></video>
+</div>
+</div>
+</div>
+</section>
+
+<!-- REVIEWS + STATS -->
+<section class="band" style="background: #FFFFFF; padding-top: 40px">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -42px; left: 0; width: 100%; height: 44px"><defs><pattern id="wv0" x="0" y="0" width="120" height="44" patternUnits="userSpaceOnUse"><path d="M0 44 V21 C30 21 30 1 60 1 C90 1 90 21 120 21 V44 Z" fill="#FFFFFF"></path><path d="M0 21 C30 21 30 1 60 1 C90 1 90 21 120 21" fill="none" stroke="#060000" stroke-width="2"></path></pattern></defs><rect x="0" y="0" width="100%" height="44" fill="url(#wv0)"></rect></svg>
+<div class="wrap">
+<div class="sec-head">
+<img class="badge" src="assets/images/b-reviews.webp" alt="Happy Customers">
+<h2 class="hd">See Why Pet Owners<br>Keep Coming Back</h2>
+<p class="lead">Happy pets and happy owners are what we’re all about. Here’s what some of our clients have to say about their mobile grooming experience with Lucky Dog.</p>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 16px">
+<p class="hd" style="font-size: 31px; line-height: 40px">Excellent</p>
+<img src="assets/images/stars-big.webp" alt="Five stars" style="width: 226px; height: auto">
+<p class="lead">Based on 3,414 reviews</p>
+</div>
+</div>
+<div class="rev-row">
+<button class="arrow" type="button" aria-label="Previous review" id="revPrev"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2L2 10l8 8" fill="none" stroke="#060000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<div class="rev-track">
+<article class="rcard">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div><h3>Patty Thomas</h3><p class="body date">July 7, 2026</p></div>
+<img src="assets/images/google.webp" alt="Google review" style="width: 32px; height: 32px">
+</div>
+<img src="assets/images/stars-sm.webp" alt="Five stars, verified" style="width: 144px; height: auto">
+<div class="rbody"><p class="body" style="flex: 1">Brooke is amazing. She takes such great care of Bella and she always looks so good!!! I will continue to use Lucky Dog from here on out. They ...</p><img src="assets/images/rv1.webp" alt="Bella, a black and white dog, after grooming"></div>
+</div>
+<a class="body" href="#">Read More →</a>
+</article>
+
+<article class="rcard">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div><h3>GunFreedom</h3><p class="body date">July 7, 2026</p></div>
+<img src="assets/images/google.webp" alt="Google review" style="width: 32px; height: 32px">
+</div>
+<img src="assets/images/stars-sm.webp" alt="Five stars, verified" style="width: 144px; height: auto">
+<div class="rbody"><p class="body" style="flex: 1">Our dog Fillmore’s FIRST grooming done by “Lucky Dog Mobile Groomers”.. Amazing folks and Kayla was kind, caring &amp; professional. On time, prompt &amp; ...</p><img src="assets/images/rv2.webp" alt="Fillmore relaxing after his first grooming"></div>
+</div>
+<a class="body" href="#">Read More →</a>
+</article>
+
+<article class="rcard">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div><h3>PEGGY Bubier</h3><p class="body date">July 6, 2026</p></div>
+<img src="assets/images/google.webp" alt="Google review" style="width: 32px; height: 32px">
+</div>
+<img src="assets/images/stars-sm.webp" alt="Five stars, verified" style="width: 144px; height: auto">
+<div class="rbody"><p class="body" style="flex: 1">Peanut looks great, he was so dirty. He got in the mud and he looked like sheep dog. He looks very cute now I love it. He smells so good.</p><img src="assets/images/rv3.webp" alt="Peanut wearing a bandana after grooming"></div>
+</div>
+<a class="body" href="#">Read More →</a>
+</article>
+</div>
+<button class="arrow" type="button" aria-label="Next review" id="revNext"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M2 2l8 8-8 8" fill="none" stroke="#060000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+
+<div class="board">
+<svg class="string" viewBox="0 0 904 130" preserveAspectRatio="none" aria-hidden="true"><path d="M452 14 L14 116 M452 14 L890 116" stroke="#6B480B" stroke-width="2" fill="none"></path><circle cx="452" cy="14" r="12" fill="#FFAC19"></circle><circle cx="14" cy="116" r="10" fill="#EFE9E0"></circle><circle cx="890" cy="116" r="10" fill="#EFE9E0"></circle></svg>
+<div class="board-card">
+<h2 class="hd" style="font-size: clamp(32px, 4.2vw, 49px); line-height: 1.14">Why Pet Parents<br>Choose Lucky Dog</h2>
+<div class="stats">
+<div class="stat"><img src="assets/images/ic1.png" alt=""><b>100k</b><span>Dogs Groomed</span></div>
+<div class="stat"><img src="assets/images/ic2.png" alt=""><b>3,000+</b><span>5-Star Google Reviews</span></div>
+<div class="stat"><img src="assets/images/ic3.png" alt=""><b>30+</b><span>Service Areas<br>and Expanding</span></div>
+</div>
+</div>
+</div>
+
+<div class="photos">
+<div class="reel"><video data-auto="1" src="assets/video/ph1.mp4" poster="assets/images/poster1.jpg" muted loop playsinline preload="metadata" aria-label="Video: a groomer waving inside the van, captioned The phases of Dog Grooming"></video><img class="reel-frame" src="assets/images/frame1.png" alt=""></div>
+<div class="reel"><video data-auto="1" src="assets/video/ph2.mp4" poster="assets/images/poster2.jpg" muted loop playsinline preload="metadata" aria-label="Video: a groomer carrying a dog from a house, captioned Mom Help! I'm being Dognapped!"></video><img class="reel-frame" src="assets/images/frame2.png" alt=""></div>
+<div class="reel"><video data-auto="1" src="assets/video/ph3.mp4" poster="assets/images/poster3.jpg" muted loop playsinline preload="metadata" aria-label="Video: a Bernese mountain dog in the grooming van"></video><img class="reel-frame" src="assets/images/frame3.png" alt=""></div>
+<div class="reel"><video data-auto="1" src="assets/video/ph4.mp4" poster="assets/images/poster4.jpg" muted loop playsinline preload="metadata" aria-label="Video: a schnauzer on the grooming table"></video><img class="reel-frame" src="assets/images/frame4.png" alt=""></div>
+</div>
+</div>
+</section>
+
+<!-- SERVICES -->
+<section class="band" id="services" style="background: #FFF7E8">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv1" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#FFF7E8"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv1)"></rect></svg>
+<div class="wrap" style="padding-top: 64px; padding-bottom: 110px">
+<div class="sec-head">
+<img class="badge" src="assets/images/b-services.webp" alt="Service Options">
+<h2 class="hd">Our Grooming Services</h2>
+<p class="lead" style="max-width: 644px">We offer full-service grooming for dogs of all sizes. From simple baths to breed-specific cuts, we help your pet look and feel fresh, fluffy, and lucky!</p>
+</div>
+<div class="svc-grid">
+<div class="scard">
+<h3 class="hd">Lil’ Lucky</h3>
+<p class="body">Pamper your pup with all the essentials to feeling fresh and fluffy.</p>
+<img src="assets/images/wave-o.webp" alt="" style="width: 230px; height: auto">
+<ul class="feats">
+<li><img src="assets/images/bone-o.webp" alt="">Warm Filtered Body Bath</li>
+<li><img src="assets/images/bone-o.webp" alt="">Blow Dry &amp; Brush Out</li>
+<li><img src="assets/images/bone-o.webp" alt="">Nail Trimming &amp; File</li>
+<li><img src="assets/images/bone-o.webp" alt="">Gentle Ear Cleaning</li>
+<li><img src="assets/images/bone-o.webp" alt="">Face, Paw, Sanitary Hair Trim</li>
+<li><img src="assets/images/bone-o.webp" alt="">Fresh Pet Fragrance</li>
+</ul>
+<div class="spacer"></div>
+<p class="body" style="align-self: flex-start"><span style="color: #E89D17">* </span>Full Body Haircut not included</p>
+<a class="btn btn-or" href="#book">Book This Service Now</a>
+</div>
+<div class="scard feat paws">
+<svg class="ears" viewBox="0 0 212 77" aria-hidden="true"><path d="M1.92341 74.4926C1.37387 56.8144 2.19819 34.8879 6.31978 19.8134C10.7162 4.73893 18.9593 -0.742697 25.8287 0.0795471C34.0719 1.17587 43.6889 8.85015 49.8713 20.4986C54.6799 29.4062 56.878 39.2732 56.878 47.4956C53.0312 50.0994 48.7722 52.4291 43.5515 54.0736C47.9479 50.0994 49.047 43.1103 46.4367 34.3397C42.7272 21.732 35.5831 12.4132 25.6913 7.75382C18.6846 11.0428 12.9143 18.1689 8.93013 28.3099C4.80853 38.9991 3.57205 54.6217 4.25898 74.4926C3.98421 76.0001 2.88512 76.8223 1.92341 76.8223C0.82432 76.8223 0 76.0001 0 74.4926H1.92341Z" fill="#FFAC19"></path><path d="M4.75533 68.1883C3.70121 52.2449 5.10671 33.8215 10.7287 21.244C14.7695 12.3866 20.2158 7.60361 25.6621 6.71786C33.568 5.83212 40.0684 13.4495 44.9877 24.6098C50.0826 36.3016 50.7853 45.8676 47.4473 53.3078C43.4065 62.3424 33.0409 62.6967 20.2158 71.0226C13.364 75.2742 7.56632 75.097 4.75533 68.1883Z" fill="#FFFFFF"></path><path d="M13.9697 57.9142C13.0149 48.0932 14.3789 36.6353 17.9254 28.8603C20.9263 22.313 24.0636 19.1757 27.61 19.0393C32.1113 18.7665 35.7942 22.995 38.7951 29.6788C42.2052 37.3173 43.0236 43.4555 41.2504 48.2296C38.9315 54.0949 33.0662 53.8221 25.564 58.7327C19.9715 62.4155 15.6066 62.2791 13.9697 57.9142Z" fill="#060000"></path><path d="M210.052 74.4926C210.608 56.8144 209.773 34.8879 205.598 19.8134C201.145 4.73893 192.794 -0.742697 185.836 0.0795471C177.486 1.17587 167.744 8.85015 161.481 20.4986C156.61 29.4062 154.383 39.2732 154.383 47.4956C158.28 50.0994 162.594 52.4291 167.883 54.0736C163.429 50.0994 162.316 43.1103 164.96 34.3397C168.718 21.732 175.955 12.4132 185.975 7.75382C193.073 11.0428 198.918 18.1689 202.954 28.3099C207.129 38.9991 208.382 54.6217 207.686 74.4926C207.964 76.0001 209.077 76.8223 210.052 76.8223C211.165 76.8223 212 76.0001 212 74.4926H210.052Z" fill="#FFAC19"></path><path d="M206.517 64.7447C207.536 49.5021 206.177 31.8886 200.739 19.8639C196.831 11.3958 191.563 6.82307 186.295 5.97627C178.649 5.12946 172.361 12.412 167.603 23.0818C162.676 34.2596 161.996 43.4051 165.224 50.5183C169.133 59.1557 179.158 59.4945 191.563 67.4544C198.19 71.5191 203.798 71.3497 206.517 64.7447Z" fill="#FFFFFF"></path><path d="M198.362 57.9142C199.317 48.0932 197.953 36.6353 194.406 28.8603C191.405 22.313 188.268 19.1757 184.722 19.0393C180.22 18.7665 176.537 22.995 173.536 29.6788C170.126 37.3173 169.308 43.4555 171.081 48.2296C173.4 54.0949 179.265 53.8221 186.768 58.7327C192.36 62.4155 196.725 62.2791 198.362 57.9142Z" fill="#060000"></path></svg>
+<img class="pawpular" src="assets/images/pawpular.webp" alt="Most Pawpular!">
+<h3 class="hd">Lucky Charm</h3>
+<p class="body">The ultimate grooming experience with all the spa essentials plus a fully personalized haircut.</p>
+<img src="assets/images/wave-w.webp" alt="" style="width: 230px; height: auto">
+<ul class="feats">
+<li><img src="assets/images/bone-w.webp" alt="">Warm Filtered Body Bath</li>
+<li><img src="assets/images/bone-w.webp" alt="">Blow Dry &amp; Brush Out</li>
+<li><img src="assets/images/bone-w.webp" alt="">Nail Trimming &amp; File</li>
+<li><img src="assets/images/bone-w.webp" alt="">Gentle Ear Cleaning</li>
+<li><img src="assets/images/bone-w.webp" alt="">Personalized Full Body Haircut</li>
+<li><img src="assets/images/bone-w.webp" alt="">Anal Gland Expression</li>
+<li><img src="assets/images/bone-w.webp" alt="">Fresh Pet Fragrance</li>
+</ul>
+<div class="spacer"></div>
+<a class="btn btn-ink" href="#book">Book This Service Now <span style="color: #FFAC19">→</span></a>
+</div>
+<div class="scard">
+<h3 class="hd">Lucky Lux</h3>
+<p class="body">Get the premium spa experience with only the best ingredients from head to tail.</p>
+<img src="assets/images/wave-o.webp" alt="" style="width: 230px; height: auto">
+<ul class="feats">
+<li><img src="assets/images/bone-o.webp" alt="">Silky Oatmeal Shampoo &amp; Conditioner Bath</li>
+<li><img src="assets/images/bone-o.webp" alt="">Blow Dry &amp; Brush Out</li>
+<li><img src="assets/images/bone-o.webp" alt="">Nail Trimming &amp; File</li>
+<li><img src="assets/images/bone-o.webp" alt="">Gentle Ear Cleaning</li>
+<li><img src="assets/images/bone-o.webp" alt="">Personalized Full Body Haircut</li>
+<li><img src="assets/images/bone-o.webp" alt="">Anal Gland Expression</li>
+<li><img src="assets/images/bone-o.webp" alt="">Teeth Brushing</li>
+<li><img src="assets/images/bone-o.webp" alt="">Fresh Pet Fragrance</li>
+</ul>
+<div class="spacer"></div>
+<a class="btn btn-or" href="#book">Book This Service Now</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- LOCATIONS -->
+<section class="band" id="locations" style="background: #FFFFFF">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv2" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#FFFFFF"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv2)"></rect></svg>
+<div class="wrap" style="padding-top: 64px; padding-bottom: 110px">
+<div class="sec-head">
+<img class="badge" src="assets/images/b-locations.webp" alt="Service Areas">
+<h2 class="hd">Find a Location<br>Near You</h2>
+<p class="lead">Mobile grooming made for your dog’s comfort</p>
+</div>
+<div class="loc-cols">
+<div class="loc-col">
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-1"><span><b>Alabama</b><small>3 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-1" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Birmingham</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Huntsville</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Mobile</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-2"><span><b>Connecticut</b><small>3 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-2" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Hartford</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">New Haven</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Stamford</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-3"><span><b>Iowa</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-3" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Des Moines</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-4"><span><b>Massachusetts</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-4" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Boston</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-5"><span><b>New Jersey</b><small>3 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-5" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Newark</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Jersey City</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Princeton</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-6"><span><b>Ohio</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-6" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Columbus</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-7"><span><b>S. Carolina</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-7" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Charleston</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-8"><span><b>Washington, D.C.</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-8" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Washington</span><span class="go" aria-hidden="true">→</span></a></div></div>
+</div>
+<div class="loc-col">
+<div class="state open paws"><button class="state-btn" type="button" aria-expanded="true" aria-controls="city-9"><span><b>Arizona</b><small>2 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-9"><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Phoenix</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Tucson</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-10"><span><b>Delaware</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-10" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Wilmington</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-11"><span><b>Kansas</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-11" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Wichita</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-12"><span><b>Minnesota</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-12" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Minneapolis</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-13"><span><b>New York</b><small>9 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-13" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Manhattan</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Brooklyn</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Queens</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Long Island</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Westchester</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Albany</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Buffalo</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Rochester</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Syracuse</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-14"><span><b>Oklahoma</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-14" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Oklahoma City</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-15"><span><b>Texas</b><small>10 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-15" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Houston</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Dallas</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Austin</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">San Antonio</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Fort Worth</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Plano</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Katy</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Sugar Land</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">The Woodlands</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">El Paso</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-16"><span><b>West Virginia</b><small>1 location</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-16" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Charleston</span><span class="go" aria-hidden="true">→</span></a></div></div>
+</div>
+<div class="loc-col">
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-17"><span><b>Colorado</b><small>2 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-17" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Denver</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Colorado Springs</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-18"><span><b>Florida</b><small>2 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-18" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Miami</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Orlando</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-19"><span><b>Maryland</b><small>2 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-19" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Baltimore</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Bethesda</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-20"><span><b>Nebraska</b><small>2 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-20" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Omaha</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Lincoln</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-21"><span><b>N. Carolina</b><small>3 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-21" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Charlotte</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Raleigh</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Durham</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-22"><span><b>Pennsylvania</b><small>2 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-22" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Philadelphia</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Pittsburgh</span><span class="go" aria-hidden="true">→</span></a></div></div>
+<div class="state"><button class="state-btn" type="button" aria-expanded="false" aria-controls="city-23"><span><b>Virginia</b><small>5 locations</small></span><span class="chev"><svg width="14" height="9" viewBox="0 0 14 9" aria-hidden="true"><path d="M1.5 1.5L7 7l5.5-5.5" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="cities" id="city-23" hidden><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Richmond</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Virginia Beach</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Arlington</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Norfolk</span><span class="go" aria-hidden="true">→</span></a><a class="city" href="#"><span><img src="assets/images/pin.webp" alt="">Alexandria</span><span class="go" aria-hidden="true">→</span></a></div></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- STEPS + PROMO + BUSINESS -->
+<section class="band" style="background: #FFF7E8">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv3" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#FFF7E8"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv3)"></rect></svg>
+<div class="wrap" style="padding-top: 64px">
+<div class="sec-head" style="max-width: 680px">
+<img class="badge" src="assets/images/b-steps.webp" alt="We Come to You">
+<h2 class="hd">Grooming Made Easy,<br>We Come to You!</h2>
+<p class="lead">Life gets busy, but your pet deserves the best. Lucky Dog brings a fully-equipped grooming van right to your door, at your convenience. After each visit, you’ll get a detailed grooming report.</p>
+</div>
+<div class="steps">
+<div class="dash" aria-hidden="true"></div>
+<div class="step"><div class="num">1</div><h3 class="hd">Book Your Appointment Online or Call</h3><p class="lead">Pick your service, groomer &amp; time</p><img src="assets/images/st1.webp" alt="Illustration of the grooming van parked outside a house"></div>
+<div class="step"><div class="num">2</div><h3 class="hd">Certified &amp; Trained Professionals</h3><p class="lead">Peace of mind from start to finish</p><img src="assets/images/st2.webp" alt="Illustration of a groomer brushing a dog on a grooming table"></div>
+<div class="step"><div class="num">3</div><h3 class="hd">Fresh &amp; Happy Pups Guaranteed</h3><p class="lead">Back to what you love with your BFF</p><img src="assets/images/st3.webp" alt="Illustration of a happy, freshly groomed dog by a front door"></div>
+</div>
+
+<div class="promo">
+<img class="tail" src="assets/images/tail.webp" alt="">
+<div class="promo-card paws">
+<div class="promo-txt">
+<h2 class="hd">Treat your furry friend to a stress-free grooming experience.</h2>
+<p class="lead">Reserve your spot with Lucky Dog Mobile Groomers!</p>
+<a class="btn btn-ink" href="#book">Schedule a Grooming Session</a>
+</div>
+<div class="promo-art"><img src="assets/images/promo-art2.webp" alt="A smiling man hugging a French bulldog above the Lucky Dog grooming van"></div>
+</div>
+</div>
+
+<div class="biz" id="business">
+<div class="sec-head" style="max-width: 790px">
+<img class="badge" src="assets/images/b-business.webp" alt="Start Your Business">
+<h2 class="hd">Bring Lucky Dog<br>to Your City</h2>
+<p class="lead">Build something of your own with a brand people already trust. Low overhead, high demand, and the freedom to shape success on your terms.</p>
+<div class="btn-row">
+<a class="btn btn-or" href="#">Learn About Licensing</a>
+<a class="btn btn-ink" href="#">See Available Territories</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- DAYTONA -->
+<section class="band day">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv4" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#FFAC19"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv4)"></rect></svg>
+<div class="wrap">
+<div class="day-in">
+<img class="badge" src="assets/images/b-daytona.webp" alt="Making History" style="max-height: 104px">
+<h2 class="hd" style="font-size: clamp(32px, 4.2vw, 49px); line-height: 1.14">From Doorsteps<br>To Daytona</h2>
+<p class="lead">Our brand made its NASCAR debut at Daytona with driver Ryan Vargas and the #91 car. Just like racing, providing a great grooming experience comes down to performance, reliability, and a team you can trust.</p>
+<a class="btn btn-ink" href="#">Our Partnership</a>
+<img class="car" src="assets/images/car.webp" alt="The Lucky Dog team posing with driver Ryan Vargas and the yellow #91 Lucky Dog race car">
+</div>
+</div>
+</section>
+
+<!-- FAQ + WHY -->
+<section class="band" style="background: #FFF7E8">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv5" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#FFF7E8"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv5)"></rect></svg>
+<div class="wrap" style="padding-top: 64px">
+<div class="sec-head">
+<img class="badge" src="assets/images/b-faq.webp" alt="Quick Answers">
+<h2 class="hd">Frequently Asked Questions</h2>
+<p class="lead">Curious about how mobile grooming works? Here are some common questions and answers.</p>
+</div>
+<div class="faq">
+<div class="q open paws"><button class="q-btn" type="button" aria-expanded="true" aria-controls="faq-1"><span>Do you come to my house or do I need to provide anything?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-1">We come to your house and our mobile salon vehicle is equipped with all of our spa essential tools to bath, dry, groom, trim and freshen up your dog</p></div>
+<div class="q"><button class="q-btn" type="button" aria-expanded="false" aria-controls="faq-2"><span>My dog has sensitive skin, do you have a shampoo for that?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-2" hidden>Yes. We carry gentle, hypoallergenic and oatmeal-based shampoos for sensitive skin. Just mention any allergies or skin conditions when you book, and your groomer will choose the right products for your pup.</p></div>
+<div class="q"><button class="q-btn" type="button" aria-expanded="false" aria-controls="faq-3"><span>What if my dog is nervous or aggressive during grooming?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-3" hidden>Our one-on-one setup is calmer than a busy salon: no cages, no barking dogs, just your pet and their groomer. We take breaks as needed and go at your dog’s pace. If a groom isn’t safe to finish, we’ll stop and talk with you about next steps.</p></div>
+<div class="q"><button class="q-btn" type="button" aria-expanded="false" aria-controls="faq-4"><span>Are your groomers certified or trained?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-4" hidden>Yes. Every Lucky Dog groomer completes our hands-on training program and is experienced with breed-specific cuts, safe handling, and pet first aid.</p></div>
+<div class="q"><button class="q-btn" type="button" aria-expanded="false" aria-controls="faq-5"><span>How often should I have my dog groomed?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-5" hidden>Most dogs do best with a full groom every 4 to 8 weeks. Long or curly coats, like doodles and poodles, usually need it more often, while short-coated breeds can go longer. Your groomer can recommend a schedule for your dog.</p></div>
+<div class="q"><button class="q-btn" type="button" aria-expanded="false" aria-controls="faq-6"><span>How long does a grooming session typically take?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-6" hidden>Most appointments take about 1 to 2 hours, depending on your dog’s size, coat condition, and the package you choose.</p></div>
+<div class="q"><button class="q-btn" type="button" aria-expanded="false" aria-controls="faq-7"><span>How do I book an appointment?</span><span class="pm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M0 6h12" stroke="#FFFFFF" stroke-width="2"></path><path class="v" d="M6 0v12" stroke="#FFFFFF" stroke-width="2"></path></svg></span></button><p class="lead a" id="faq-7" hidden>Book online in a few minutes: pick your service, choose a time, and we’ll come to you. You can also call your local Lucky Dog team at [PHONE NUMBER].</p></div>
+</div>
+
+<div style="padding-top: 110px" id="why">
+<div class="sec-head">
+<img class="badge" src="assets/images/b-why.webp" alt="Why Choose Us">
+<h2 class="hd">Why Pet Parents Choose<br>Lucky Dog Mobile Groomers?</h2>
+<p class="lead">Your pet’s comfort and safety are always the priority. Here’s what makes us special:</p>
+</div>
+<div class="why">
+<div class="wcard"><img src="assets/images/w1.png" alt=""><h3 class="hd">Climate Controlled Environment</h3><p class="body">Perfect temperature for your pup, rain or shine.</p></div>
+<div class="wcard"><img src="assets/images/w2.png" alt=""><h3 class="hd">Stress Free 1 on 1 Experience</h3><p class="body">Private sessions for a calmer, happier grooming experience.</p></div>
+<div class="wcard"><img src="assets/images/w3.png" alt=""><h3 class="hd">All Natural Ingredients</h3><p class="body">Only pure and safe products that protect your pup and the planet.</p></div>
+<div class="wcard"><img src="assets/images/w4.png" alt=""><h3 class="hd">Trained Professional Groomers</h3><p class="body">Handled with care by certified grooming pros.</p></div>
+<div class="wcard"><img src="assets/images/w5.png" alt=""><h3 class="hd">Warm Bath, Brush &amp; Blowout</h3><p class="body">Deep clean and brushing for a fresh &amp; fluffy coat.</p></div>
+<div class="wcard"><img src="assets/images/w6.png" alt=""><h3 class="hd">Ear Cleaning &amp; Nail Trimming</h3><p class="body">Keep your dog feeling great from head to paw.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="band" style="background: #FFFFFF">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv6" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#FFFFFF"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv6)"></rect></svg>
+<div class="wrap" style="padding-top: 64px">
+<div class="sec-head">
+<img class="badge" src="assets/images/b-exp.webp" alt="Mobile Convenience" style="max-height: 106px">
+<h2 class="hd">Experience the Convenience<br>of Mobile Grooming</h2>
+<p class="lead">Skip the car rides, noisy salons, and stressful cage times. Lucky Dog Mobile Groomers comes to you so your pet gets personalized care and attention without ever leaving your home.</p>
+</div>
+<div class="exp">
+<img src="assets/images/ex1.webp" alt="A fluffy apricot poodle sitting on the grass">
+<img src="assets/images/ex2.webp" alt="A smiling owner with her sheepadoodle beside the Lucky Dog van">
+<img src="assets/images/ex3.webp" alt="A groomer walking a black poodle past the Lucky Dog van">
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="band foot">
+<svg class="wave" aria-hidden="true" style="position: absolute; top: -41px; left: 0; width: 100%; height: 42px"><defs><pattern id="wv7" x="0" y="0" width="120" height="42" patternUnits="userSpaceOnUse"><path d="M0 42 V20 C30 20 30 0 60 0 C90 0 90 20 120 20 V42 Z" fill="#060000"></path></pattern></defs><rect x="0" y="0" width="100%" height="42" fill="url(#wv7)"></rect></svg>
+<div class="wrap">
+<div class="foot-in">
+<img src="assets/images/logo-white.webp" alt="Lucky Dog Mobile Groomers" style="width: 166px; height: auto">
+<p class="body">Professional mobile dog grooming brought straight to your driveway.<br>No stress. No cages. Just love.</p>
+<nav class="foot-links body" aria-label="Footer">
+<a href="#top">Home</a><a href="#services">Services</a><a href="#why">About</a><a href="#locations">Locations</a><a href="#">Blog</a><a href="#">Careers</a><a href="#business">Own A Lucky Dog</a>
+</nav>
+<div class="social">
+<a href="#" aria-label="Lucky Dog on Facebook"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4 1.7-4 4.2V10H7v4h3v8h4v-8h3l1-4h-4V8.6c0-.4.3-.6.7-.6z" fill="#060000"></path></svg></a>
+<a href="#" aria-label="Lucky Dog on Instagram"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="#060000" stroke-width="2.2"></rect><circle cx="12" cy="12" r="4" fill="none" stroke="#060000" stroke-width="2.2"></circle><circle cx="17.3" cy="6.7" r="1.3" fill="#060000"></circle></svg></a>
+</div>
+<div class="legal">
+<p>© 2026 Lucky Dog Mobile Groomers. All Rights Reserved.</p>
+<div><a href="#">Privacy Policy</a><a href="#">Terms and Conditions</a></div>
+</div>
+<div class="dogs-wrap">
+<img class="dogs" src="assets/images/dogs.webp" alt="Illustration of six cartoon dogs saying hi and hello">
+<svg class="bubbles" viewBox="0 0 1015 152" aria-hidden="true"><path d="M71.9742 76.647C72.0575 68.5253 59.9543 63.3434 44.1889 61.4457C33.5582 60.1703 12.0441 61.9291 6.13692 66.5498C0.229769 71.1705 -0.0258532 99.1697 2.61375 104.696C4.6254 108.906 9.76846 110.898 14.8393 112.179C15.2699 114.935 16.0174 119.836 16.1146 121.348C16.2119 122.859 20.1741 117.255 22.6386 113.629C32.2134 114.532 55.7753 114.805 60.007 111.762C67.6091 106.308 71.8519 88.4252 71.9742 76.647Z" fill="#FFFFFF"></path><path d="M15.8952 122.582C15.6548 122.497 15.4461 122.341 15.2971 122.134C15.1481 121.928 15.0659 121.68 15.0616 121.426C14.9949 120.398 14.5754 117.352 13.903 113.018C9.23783 111.784 3.84469 109.742 1.64965 105.146C-0.867692 99.8671 -1.1511 70.9093 5.47013 65.7273C11.5829 60.9538 33.3277 59.095 44.289 60.412C62.6273 62.6126 73.0829 68.5364 72.9995 76.658C72.8884 87.6471 68.8706 106.666 60.6017 112.618C55.9143 115.999 32.2329 115.513 23.1527 114.735C17.4901 123.015 16.7954 122.826 15.9619 122.604L15.8952 122.582ZM15.7646 111.345L15.8702 112.026C16.2647 114.552 16.7259 117.605 16.9816 119.622C17.8151 118.65 19.2711 116.752 21.7773 113.065L22.1246 112.554L22.7387 112.612C33.3971 113.618 55.692 113.601 59.4153 110.945C66.7645 105.666 70.835 87.6332 70.9489 76.6525C71.0184 69.9257 60.7184 64.4992 44.0694 62.4987C33.6916 61.2511 12.4137 62.9821 6.78437 67.3861C1.29955 71.6761 1.08006 99.0613 3.56128 104.266C5.4868 108.3 10.7438 110.084 15.1116 111.187L15.7646 111.345Z" fill="#000000"></path><path d="M23.7417 68.3137C22.5062 79.6501 21.6615 91.0133 21.2077 102.403C21.1271 104.407 24.2474 104.626 24.328 102.612C24.7818 91.2161 25.6265 79.852 26.862 68.5193C27.0787 66.5215 23.9612 66.3131 23.7417 68.3137Z" fill="#000000"></path><path d="M25.2393 86.8186L32.1856 87.4466C34.189 87.6272 34.4085 84.5097 32.394 84.3263L25.4477 83.7011C23.4444 83.5178 23.2249 86.638 25.2393 86.8186Z" fill="#000000"></path><path d="M33.8222 67.3579C32.4885 79.9261 30.8399 92.4499 28.8764 104.929C28.5652 106.913 31.6855 107.116 31.9967 105.138C33.9602 92.6545 35.6088 80.1308 36.9425 67.5663C37.1536 65.5657 34.0334 65.3435 33.8222 67.3579Z" fill="#000000"></path><path d="M41.7355 83.6538C41.365 90.9206 40.988 98.1864 40.6046 105.451C40.499 107.457 43.6193 107.674 43.7249 105.66C44.0954 98.3948 44.4723 91.129 44.8558 83.8622C44.9586 81.8561 41.8411 81.6394 41.7355 83.6538Z" fill="#000000"></path><path d="M44.4945 77.3277C46.3922 77.9918 47.4258 75.041 45.5225 74.3769C43.6193 73.7129 42.5912 76.6637 44.4945 77.3277Z" fill="#000000"></path><path d="M1008.79 14.8068C1005.32 4.43421 989.983 -1.89824 968.14 2.28275C953.424 5.09808 913.552 12.2814 902.296 29.3982C896.7 37.912 910.604 73.3542 916.549 79.2856C921.076 83.8026 940.992 84.3987 948.325 83.9083C950.11 87.233 953.259 93.159 954.058 95.0558C954.839 96.9092 957.665 88.1516 959.35 82.5101C972.497 79.6568 1003.99 70.1541 1008.29 64.5126C1016.01 54.3812 1013.8 29.8453 1008.79 14.8068Z" fill="#FFFFFF"></path><path d="M953.123 95.4524C952.386 93.7019 949.56 88.3612 947.739 84.9633C940.48 85.3427 920.702 84.863 915.836 80.0073C909.94 74.122 895.384 38.0674 901.45 28.841C912.633 11.8298 950.517 4.60315 966.693 1.52499L967.951 1.28383C988.644 -2.67768 1005.83 2.75247 1009.75 14.488C1014.41 28.4508 1017.42 54.206 1009.1 65.1286C1004.58 71.0682 973.262 80.4544 960.155 83.3754C956.286 96.2219 955.278 96.2761 954.394 96.3249H954.316C954.052 96.3191 953.796 96.2323 953.582 96.0762C953.369 95.9202 953.209 95.7024 953.123 95.4524ZM968.333 3.28084L967.075 3.522C951.151 6.55681 913.858 13.6642 903.149 29.9574C898.001 37.7639 911.346 72.6561 917.269 78.5685C921.217 82.5056 939.543 83.4811 948.26 82.904L948.913 82.8606L949.224 83.4378C950.75 86.2802 953.235 90.9543 954.462 93.5041C955.085 92.2197 956.291 89.212 958.38 82.2292L958.554 81.6521L959.139 81.5247C973.833 78.3382 1003.66 68.9249 1007.48 63.912C1014.62 54.5502 1013.21 31.3068 1007.82 15.1383C1005.11 7.031 995.202 2.26743 982.044 2.03711C977.443 1.97904 972.848 2.39582 968.333 3.28084Z" fill="#000000"></path><path d="M911.389 34.1382C912.473 41.2998 914.151 48.3205 915.874 55.3494C917.345 61.3567 918.54 67.6268 921.355 73.1735C922.242 74.9185 925.019 73.6612 924.127 71.9081C918.494 60.7985 916.237 45.9198 914.4 33.6532C914.107 31.7104 911.097 32.1981 911.389 34.1382Z" fill="#000000"></path><path d="M917.177 55.1403L927.536 52.2925C929.411 51.7777 928.94 48.77 927.051 49.2821L916.698 52.1299C914.823 52.6448 915.291 55.6525 917.183 55.1403H917.177Z" fill="#000000"></path><path d="M920.841 30.1251C924.898 43.5849 928.525 57.1584 931.723 70.8458C932.167 72.7425 935.178 72.2711 934.733 70.3608C931.534 56.6716 927.907 43.0981 923.851 29.6401C923.29 27.784 920.274 28.2501 920.841 30.1251Z" fill="#000000"></path><path d="M936.535 51.9458C938.302 56.9153 946.366 57.5358 948.373 52.3658C950.471 46.96 944.203 43.153 939.703 45.6648C928.593 51.8591 941.58 72.1029 951.823 62.3427C953.235 60.9879 951.281 58.6495 949.864 60.007C945.528 64.1474 939.773 60.3376 938.868 55.2191C938.47 52.9646 938.806 50.0274 940.795 48.556L942.293 47.8813C944.385 47.4116 945.367 48.7177 945.238 51.7995C943.404 53.3955 940.196 53.1895 939.302 50.6777C938.643 48.8324 935.874 50.1087 936.53 51.9458H936.535Z" fill="#000000"></path><path d="M946.704 25.1089C951.125 39.517 956.087 53.7337 961.591 67.7588C962.309 69.5851 965.081 68.3143 964.366 66.4907C958.86 52.4638 953.892 38.2471 949.463 23.8408C948.888 21.9711 946.122 23.2555 946.691 25.1089H946.704Z" fill="#000000"></path><path d="M957.852 21.0014C961.297 34.7646 964.62 48.5558 967.823 62.375C968.265 64.2718 971.278 63.803 970.834 61.89C967.631 48.0708 964.307 34.2796 960.862 20.5163C960.388 18.6196 957.375 19.0992 957.852 21.0014Z" fill="#000000"></path><path d="M977.919 36.8474C972.844 38.5274 973.495 48.1927 974.633 52.2572C975.904 56.7877 980.442 61.1367 985.447 58.9852C995.933 54.4737 987.376 31.6692 976.405 38.3919C974.752 39.4026 976.001 42.1854 977.67 41.1638C986.569 35.712 990.785 56.5926 982.477 56.2864C978.684 56.1482 977.35 51.8886 977.131 48.7427C976.985 46.6292 976.654 40.4539 979.188 39.6166C981.049 39.0015 979.765 36.2323 977.919 36.8447V36.8474Z" fill="#000000"></path><path d="M992.243 23.1394C994.176 32.2984 996.584 41.3508 999.456 50.2603C1000.05 52.1245 1002.82 50.8429 1002.23 48.9949C999.449 40.3412 997.121 31.5492 995.253 22.6544C994.849 20.7386 991.839 21.2182 992.243 23.1394Z" fill="#000000"></path><path d="M1003.29 57.4409C1005.08 56.628 1003.81 53.8533 1002.02 54.6689C1000.24 55.4845 1001.51 58.2538 1003.29 57.4409Z" fill="#000000"></path><path d="M543.964 96.4838C545.355 85.5603 532.074 77.0774 514 72.5613C501.831 69.5158 476.473 69.2064 468.859 74.6925C461.246 80.1786 456.5 117.844 458.697 125.614C460.373 131.524 466.047 134.852 471.766 137.212C471.828 140.974 471.919 147.666 471.79 149.728C471.662 151.79 477.172 144.722 480.617 140.15C491.628 142.559 519.034 145.855 524.447 142.288C534.167 135.874 541.955 112.327 543.964 96.4838Z" fill="#FFFFFF"></path><path d="M545.178 96.6307C546.568 85.7073 535.311 76.4282 514.305 71.1855C501.741 68.0566 476.115 67.841 468.234 73.5044C459.698 79.6545 455.429 118.7 457.529 126.109C459.365 132.565 465.317 135.996 470.552 138.228C470.65 144.239 470.657 148.279 470.552 149.701C470.5 150.657 470.952 151.213 471.408 151.401C471.54 151.473 471.683 151.521 471.832 151.544C472.708 151.69 474.265 150.622 481.02 141.708C491.478 143.881 518.985 147.483 525.003 143.52C527.593 141.809 530.027 139 532.224 135.544C539.034 124.829 543.756 107.794 545.178 96.6307ZM480.186 138.618L479.699 139.257C476.191 143.905 474.189 146.28 473.073 147.486C473.104 144.747 473.073 140.578 472.986 137.116V136.201L472.235 135.888C467.326 133.862 461.489 130.795 459.879 125.111C457.821 117.81 462.414 80.9582 469.499 75.872C475.809 71.3141 495.594 70.963 508.458 72.9134C510.221 73.1651 511.971 73.5051 513.7 73.932C521.717 75.9311 528.333 78.6115 533.222 81.7126C539.973 85.9993 543.429 91.0994 542.761 96.3317C540.898 111.107 533.295 134.859 523.883 141.055C519.131 144.184 493.164 141.444 480.913 138.753L480.186 138.618Z" fill="#000000"></path><path d="M490.988 130.089C488.763 122.722 484.101 110.884 482.689 103.319C481.726 98.1493 481.014 92.5415 483.385 87.8481C484.869 84.9278 487.511 82.6506 490.783 82.515C495.351 82.3238 499.735 90.4695 500.01 96.5466C504.818 90.2887 511.562 87.789 518.609 91.3317C520 92.027 521.304 92.9344 522.086 94.252C523.167 96.0529 523.098 98.3579 522.434 100.35C521.356 103.587 518.908 106.173 516.374 108.457C508.34 115.713 498.859 123.476 490.967 130.103L490.988 130.089Z" fill="#FFAC19"></path><path d="M491.954 129.706C488.947 119.923 484.654 110.366 483.218 100.155C482.714 96.5986 482.456 92.7535 483.85 89.3499C485.008 86.52 487.821 83.026 491.294 83.5475C496.391 84.3123 498.682 92.4962 498.998 96.6508C499.064 97.5547 500.288 97.8537 500.83 97.1792C504.07 93.1498 508.527 90.0765 513.933 90.8553C516.715 91.2551 520.501 92.6805 521.582 95.5452C523.014 99.293 520.049 103.274 517.639 105.794C509.428 114.381 499.453 121.616 490.362 129.244C489.343 130.096 490.567 131.768 491.593 130.909C498.23 125.347 504.919 119.836 511.462 114.155C516.284 109.984 523.63 104.96 523.929 97.8815C524.169 92.1694 518.397 89.117 513.339 88.7067C507.54 88.2409 502.701 91.5297 499.207 95.879L501.039 96.4074C500.66 91.4185 498.403 84.8999 493.766 82.275C488.652 79.386 483.371 84.5209 481.747 89.0718C479.428 95.5661 481.319 103.142 483.138 109.539C485.165 116.596 487.845 123.445 489.997 130.461C490.39 131.733 492.312 130.961 491.923 129.692L491.954 129.706Z" fill="#000000"></path></svg>
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script>
+(function () {
+  var burger = document.getElementById('burger'), menu = document.getElementById('mobMenu');
+  function setMenu(open) { menu.hidden = !open; burger.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  burger.addEventListener('click', function () { setMenu(menu.hidden); });
+  menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+
+  var track = document.querySelector('.rev-track');
+  document.getElementById('revPrev').addEventListener('click', function () { track.insertBefore(track.lastElementChild, track.firstElementChild); });
+  document.getElementById('revNext').addEventListener('click', function () { track.appendChild(track.firstElementChild); });
+
+  function accordion(itemSel, btnSel) {
+    var items = document.querySelectorAll(itemSel);
+    function set(item, open) {
+      var btn = item.querySelector(btnSel), panel = document.getElementById(btn.getAttribute('aria-controls'));
+      item.classList.toggle('open', open); item.classList.toggle('paws', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false'); panel.hidden = !open;
+    }
+    items.forEach(function (item) {
+      item.querySelector(btnSel).addEventListener('click', function () {
+        var wasOpen = item.classList.contains('open');
+        items.forEach(function (o) { if (o.classList.contains('open')) set(o, false); });
+        if (!wasOpen) set(item, true);
+        if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+      });
+    });
+  }
+  accordion('.state', '.state-btn');
+  accordion('.q', '.q-btn');
+
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('video[data-auto]').forEach(function (v) {
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+    if (!still) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  });
+})();
+</script>
+</body>
+</html>
