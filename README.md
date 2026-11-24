@@ -10,6 +10,7 @@ Live: https://mmbalbuenajr-hue.github.io/Portfolio/
 | Ottoline Booksellers | https://mmbalbuenajr-hue.github.io/Portfolio/Ottoline/ |
 | Ashline Freight | https://mmbalbuenajr-hue.github.io/Portfolio/Ashline/ |
 | AERIS ONE | https://mmbalbuenajr-hue.github.io/Portfolio/Aeris/ |
+| Altura | https://mmbalbuenajr-hue.github.io/Portfolio/Altura/ |
 
 ## Adding a project
 
