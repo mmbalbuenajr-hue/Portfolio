@@ -343,6 +343,8 @@ body{color:var(--ink)}
   .foot .lbl:last-child{white-space:nowrap}
   .price{font-size:26px}
 }
+.foot{gap:24px}.foot .credit{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap}.foot .credit:hover{text-decoration:underline;text-underline-offset:3px}
+@media (max-width:767px){.foot{flex-wrap:wrap;row-gap:8px}.foot .credit{position:static;transform:none;order:3;width:100%}}
 
 /* ---------- night library: dark theme over a blurred bookcase ---------- */
 :root{--paper:#0F0D0B;--sheet:#14110E;--ink:#EFE8DC;--muted:#A0968A;--cobalt:#EFE8DC;--rule:rgba(239,232,220,.85)}
@@ -658,6 +660,7 @@ html,body{background:#120604}
 
 <footer class="foot">
   <span class="lbl">© 2026 Ottoline Booksellers · Sample store, prices are illustrative</span>
+  <a class="lbl credit" href="https://internetdesign.sg" target="_blank" rel="noopener">internetdesign.sg 2026</a>
   <span class="lbl"><a href="#">Help</a> / <a href="#">Instagram</a></span>
 </footer>
 
