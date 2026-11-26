@@ -12,6 +12,7 @@ Live: https://mmbalbuenajr-hue.github.io/Portfolio/
 | AERIS ONE | https://mmbalbuenajr-hue.github.io/Portfolio/Aeris/ |
 | Altura | https://mmbalbuenajr-hue.github.io/Portfolio/Altura/ |
 | Lucky Dog Mobile Groomers | https://mmbalbuenajr-hue.github.io/Portfolio/LuckyDog/ |
+| THAIKO · Thai street kitchen | https://mmbalbuenajr-hue.github.io/Portfolio/Thaiko/ |
 
 ## Adding a project
 
