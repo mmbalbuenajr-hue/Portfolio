@@ -11,6 +11,7 @@ Live: https://mmbalbuenajr-hue.github.io/Portfolio/
 | Ashline Freight | https://mmbalbuenajr-hue.github.io/Portfolio/Ashline/ |
 | AERIS ONE | https://mmbalbuenajr-hue.github.io/Portfolio/Aeris/ |
 | THAIKO · Thai street kitchen | https://mmbalbuenajr-hue.github.io/Portfolio/Thaiko/ |
+| Blendy · Real fruit smoothies | https://mmbalbuenajr-hue.github.io/Portfolio/Blendy/ |
 
 ## Adding a project
 
